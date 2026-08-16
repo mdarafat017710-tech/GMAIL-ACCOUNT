@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Account Setup - iOS Style</title>
+  <title>Account Setup Wizard - iOS Style</title>
   <style>
     :root {
       --bg-color: #f2f2f7;
@@ -99,9 +99,9 @@
       flex-direction: column;
       gap: 16px;
       background: var(--card-bg);
-      padding: 20px;
-      border-radius: 14px;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+      padding: 24px 20px;
+      border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
     }
 
     .step-card.active {
@@ -112,6 +112,7 @@
       display: flex;
       flex-direction: column;
       gap: 6px;
+      position: relative;
     }
 
     .box-label {
@@ -129,11 +130,11 @@
       width: 100%;
     }
 
-    /* Compact Input/Box */
+    /* Compact Input/Box with Glowing Shadows */
     .ios-box {
       width: 100%;
-      padding: 10px 44px 10px 12px;
-      background: #fafafa;
+      padding: 11px 44px 11px 12px;
+      background: var(--card-bg);
       border-radius: 10px;
       font-size: 14.5px;
       font-family: monospace, var(--font-family);
@@ -144,7 +145,6 @@
       -webkit-user-select: text;
     }
 
-    /* Dynamic Validation States */
     .ios-box.valid {
       border: 1.5px solid var(--accent-green);
       box-shadow: 0 0 10px rgba(52, 199, 89, 0.25), 0 2px 6px rgba(52, 199, 89, 0.15);
@@ -153,6 +153,22 @@
     .ios-box.invalid {
       border: 1.5px solid var(--accent-red);
       box-shadow: 0 0 10px rgba(255, 59, 48, 0.25), 0 2px 6px rgba(255, 59, 48, 0.15);
+    }
+
+    /* Helper Error or Status text */
+    .status-msg {
+      font-size: 12px;
+      font-weight: 500;
+      padding-left: 4px;
+      display: none;
+    }
+    .status-msg.error {
+      color: var(--accent-red);
+      display: block;
+    }
+    .status-msg.success {
+      color: var(--accent-green);
+      display: block;
     }
 
     /* Copy Button inside Box */
@@ -201,21 +217,21 @@
       opacity: 0.8;
     }
 
-    /* iOS Spinner Animation */
-    .ios-spinner {
-      display: none;
-      width: 20px;
-      height: 20px;
-      animation: iosRotate 0.8s steps(8, end) infinite;
-    }
-
-    @keyframes iosRotate {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
+    /* Confirmation Summary Styling */
+    .summary-box {
+      background: #f8f8f1;
+      padding: 12px;
+      border-radius: 10px;
+      border: 1px solid var(--border-color);
+      font-size: 13.5px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      font-family: monospace;
     }
   </style>
 </head>
-<body onload="initGenerator()">
+<body onload="initWizard()">
 
   <!-- Toast Notification -->
   <div id="toast">
@@ -227,27 +243,28 @@
     <span>Copied Successfully!</span>
   </div>
 
-  <h1 class="header-title">Account Registration</h1>
+  <h1 class="header-title" id="page-heading">Enter Email Address</h1>
 
   <div class="container">
     
-    <!-- STEP 1: Email -->
+    <!-- STEP 1: Email Input & Checker -->
     <div class="step-card active" id="step-1">
       <div class="info-box-group">
         <label class="box-label">Email Address</label>
         <div class="input-wrapper">
-          <input type="text" id="email-box" class="ios-box valid" readonly>
+          <input type="text" id="email-box" class="ios-box valid" placeholder="Enter or generate email..." oninput="checkEmailInput()">
           <button class="box-copy-btn" onclick="copyValue('email-box', this)" title="Copy">
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
           </button>
         </div>
+        <span id="email-status" class="status-msg"></span>
       </div>
-      <button class="btn-proceed" onclick="proceedStep(2)">
+      <button class="btn-proceed" onclick="proceedToPassword()">
         <span>Proceed</span>
       </button>
     </div>
 
-    <!-- STEP 2: Password -->
+    <!-- STEP 2: Password Setup -->
     <div class="step-card" id="step-2">
       <div class="info-box-group">
         <label class="box-label">Password (10-12 Chars)</label>
@@ -258,7 +275,7 @@
           </button>
         </div>
       </div>
-      <button class="btn-proceed" onclick="proceedStep(3)">
+      <button class="btn-proceed" onclick="proceedToRecovery()">
         <span>Proceed</span>
       </button>
     </div>
@@ -274,8 +291,21 @@
           </button>
         </div>
       </div>
-      <button class="btn-proceed" onclick="resetAll()">
-        <span>Complete / Reset</span>
+      <button class="btn-proceed" onclick="proceedToConfirm()">
+        <span>Proceed to Confirm</span>
+      </button>
+    </div>
+
+    <!-- STEP 4: Confirmation Page (Story / Save Style) -->
+    <div class="step-card" id="step-4">
+      <div class="info-box-group">
+        <label class="box-label">Account Summary / Ready to Save</label>
+        <div class="summary-box" id="summary-content">
+          <!-- Populated via JS -->
+        </div>
+      </div>
+      <button class="btn-proceed" onclick="saveAndReset()">
+        <span>Save & Finish</span>
       </button>
     </div>
 
@@ -285,6 +315,9 @@
     const copyIconSVG = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>`;
     const copiedCheckSVG = `<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>`;
     let toastTimer;
+
+    // Simulated existing submitted emails database check
+    const submittedEmails = ["sohan123@gmail.com", "testaccount@gmail.com", "admin99@gmail.com"];
 
     function showToast() {
       const toast = document.getElementById('toast');
@@ -307,11 +340,14 @@
       });
     }
 
-    function initGenerator() {
+    function initWizard() {
+      // Check URL Params for pre-filled email if any (e.g. ?email=xyz@gmail.com)
+      const urlParams = new URLSearchParams(window.location.search);
+      const paramEmail = urlParams.get('email');
+
       let chars = "abcdefghijklmnopqrstuvwxyz";
       let nums = "0123456789";
 
-      // 1. Generate Username / Email
       let uLength = Math.floor(Math.random() * 3) + 8;
       let nLength = Math.floor(Math.random() * 3) + 2;
       let username = "";
@@ -324,9 +360,13 @@
       for (let j = 0; j < nLength; j++) {
         username += nums.charAt(Math.floor(Math.random() * nums.length));
       }
-      let email = username + "@gmail.com";
+      let generatedEmail = username + "@gmail.com";
 
-      // 2. Generate Password (10 to 12 chars)
+      // Set Email box value
+      document.getElementById('email-box').value = paramEmail ? paramEmail : generatedEmail;
+      checkEmailInput();
+
+      // Password generation (10 to 12 chars)
       let passStartUpper = randomChar.toUpperCase();
       let password = passStartUpper;
       let blocksCount = Math.random() < 0.5 ? 2 : 3; 
@@ -339,23 +379,79 @@
       if (password.length < 10) password += chars.charAt(Math.floor(Math.random() * chars.length));
       else if (password.length > 12) password = password.substring(0, 12);
 
-      // 3. Generate Recovery Email
-      let recoveryEmail = username + "sec" + Math.floor(Math.random() * 90 + 10) + "@gmail.com";
-
-      // Set values
-      document.getElementById('email-box').value = email;
       document.getElementById('password-box').value = password;
-      document.getElementById('recovery-box').value = recoveryEmail;
+      document.getElementById('recovery-box').value = username + "sec" + Math.floor(Math.random() * 90 + 10) + "@gmail.com";
     }
 
-    function proceedStep(stepNumber) {
+    function checkEmailInput() {
+      const emailBox = document.getElementById('email-box');
+      const statusMsg = document.getElementById('email-status');
+      const val = emailBox.value.trim().toLowerCase();
+
+      emailBox.classList.remove('valid', 'invalid');
+      statusMsg.className = "status-msg";
+      statusMsg.textContent = "";
+
+      if (!val) {
+        emailBox.classList.add('invalid');
+        return;
+      }
+
+      // Check if already submitted
+      if (submittedEmails.includes(val)) {
+        emailBox.classList.add('invalid');
+        statusMsg.textContent = "Already Submitted!";
+        statusMsg.classList.add('error');
+        return;
+      }
+
+      // Simple email validation regex
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (emailRegex.test(val)) {
+        emailBox.classList.add('valid');
+        statusMsg.textContent = "Available & Ready";
+        statusMsg.classList.add('success');
+      } else {
+        emailBox.classList.add('invalid');
+      }
+    }
+
+    function switchStep(stepIndex, titleText) {
       document.querySelectorAll('.step-card').forEach(card => card.classList.remove('active'));
-      document.getElementById('step-' + stepNumber).classList.add('active');
+      document.getElementById('step-' + stepIndex).classList.add('active');
+      document.getElementById('page-heading').textContent = titleText;
     }
 
-    function resetAll() {
-      initGenerator();
-      proceedStep(1);
+    function proceedToPassword() {
+      const emailBox = document.getElementById('email-box');
+      if (emailBox.classList.contains('invalid')) {
+        alert("Please provide a valid and unique email address before proceeding.");
+        return;
+      }
+      switchStep(2, "Create Password");
+    }
+
+    function proceedToRecovery() {
+      switchStep(3, "Recovery Email Setup");
+    }
+
+    function proceedToConfirm() {
+      // Populate confirmation summary
+      const email = document.getElementById('email-box').value;
+      const pass = document.getElementById('password-box').value;
+      const recovery = document.getElementById('recovery-box').value;
+
+      document.getElementById('summary-content').innerHTML = `
+        <div><b>Email:</b> ${email}</div>
+        <div><b>Password:</b> ${pass}</div>
+        <div><b>Recovery:</b> ${recovery}</div>
+      `;
+      switchStep(4, "Confirm & Save Account");
+    }
+
+    function saveAndReset() {
+      alert("Account saved successfully!");
+      window.location.reload();
     }
   </script>
 </body>
