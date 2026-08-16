@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Account Setup - iOS Minimal</title>
+  <title>Account Setup - iOS Style</title>
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <style>
     :root {
@@ -14,8 +14,6 @@
       --accent-red: #ff3b30;
       --text-main: #000000;
       --text-muted: #8e8e93;
-      --border-color: #e5e5ea;
-      --divider-color: #f0f0f3;
       --font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Helvetica Neue", Arial, sans-serif;
     }
 
@@ -32,13 +30,15 @@
     body {
       background-color: var(--bg-color);
       color: var(--text-main);
-      padding: 20px 14px 40px;
+      padding: 20px 16px;
       display: flex;
       flex-direction: column;
       align-items: center;
       min-height: 100vh;
+      position: relative;
     }
 
+    /* Toast Notification */
     #toast {
       position: fixed;
       top: -60px;
@@ -48,87 +48,78 @@
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
       color: #ffffff;
-      padding: 7px 14px;
+      padding: 8px 16px;
       border-radius: 20px;
       font-size: 13px;
-      font-weight: 600;
+      font-weight: 500;
       display: flex;
       align-items: center;
-      gap: 7px;
-      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
+      gap: 8px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
       transition: top 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s ease;
       opacity: 0;
       z-index: 9999;
-      white-space: nowrap;
     }
 
     #toast.show {
-      top: 18px;
+      top: 14px;
       opacity: 1;
     }
 
     #toast .toast-icon {
       background: var(--accent-green);
-      width: 18px;
-      height: 18px;
+      width: 16px;
+      height: 16px;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
     }
 
-    .header {
-      width: 100%;
-      max-width: 440px;
-      text-align: center;
-      margin-bottom: 16px;
-    }
-
-    .header h1 {
+    /* Top Nav / Title */
+    .header-title {
       font-size: 20px;
-      font-weight: 700;
+      font-weight: 600;
+      margin-bottom: 20px;
       letter-spacing: -0.4px;
+      text-align: center;
     }
 
-    .container {
-      width: 100%;
-      max-width: 440px;
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-    }
-
-    /* general.html এর মূল বক্স স্টাইল (styled-box) */
-    .styled-box {
-      background: var(--card-bg);
-      border-radius: 18px;
-      padding: 18px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.03);
-      border: 1px solid var(--border-color);
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-
-    /* Step Card Control */
+    /* Step System */
     .step-card {
       display: none;
+      width: 100%;
+      flex-direction: column;
+      align-items: center;
     }
 
     .step-card.active {
       display: flex;
     }
 
-    .input-group {
+    /* Main Container (Boxes) */
+    .container {
+      width: 100%;
+      max-width: 420px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    /* Box Item Style */
+    .info-box-group {
       display: flex;
       flex-direction: column;
       gap: 6px;
+      width: 100%;
     }
 
-    .input-label {
+    .box-label {
       font-size: 12px;
       font-weight: 600;
-      color: #3a3a3c;
+      color: var(--text-muted);
+      letter-spacing: 0.3px;
+      padding-left: 4px;
     }
 
     .input-wrapper {
@@ -138,38 +129,47 @@
       width: 100%;
     }
 
-    /* general.html এর ইনপুট ফিল্ড স্টাইল */
-    .custom-input {
+    /* Compact Input/Box */
+    .ios-box {
       width: 100%;
-      padding: 10px 34px 10px 12px;
-      background: #ffffff;
-      border: 1.5px solid var(--accent-blue);
-      box-shadow: 0 0 6px rgba(0, 122, 255, 0.3);
+      padding: 10px 44px 10px 12px;
+      background: var(--card-bg);
       border-radius: 10px;
-      font-size: 13.5px;
+      font-size: 14.5px;
+      font-family: monospace, var(--font-family);
       color: var(--text-main);
       outline: none;
-      transition: all 0.25s ease;
+      transition: all 0.3s ease;
       user-select: text;
       -webkit-user-select: text;
     }
 
-    .custom-input.valid-glow {
-      border-color: var(--accent-green) !important;
-      box-shadow: 0 0 8px rgba(52, 199, 89, 0.45) !important;
+    /* Validation Glows */
+    .default-glow {
+      border: 1.5px solid var(--accent-blue);
+      box-shadow: 0 0 10px rgba(0, 122, 255, 0.25), 0 2px 6px rgba(0, 122, 255, 0.15);
+    }
+    .default-glow:focus {
+      box-shadow: 0 0 14px rgba(0, 122, 255, 0.4), 0 2px 8px rgba(0, 122, 255, 0.2);
     }
 
-    .custom-input.invalid-glow {
-      border-color: var(--accent-red) !important;
-      box-shadow: 0 0 8px rgba(255, 59, 48, 0.45) !important;
+    .valid-glow {
+      border: 1.5px solid var(--accent-green) !important;
+      box-shadow: 0 0 10px rgba(52, 199, 89, 0.25), 0 2px 6px rgba(52, 199, 89, 0.15) !important;
     }
 
+    .invalid-glow {
+      border: 1.5px solid var(--accent-red) !important;
+      box-shadow: 0 0 10px rgba(255, 59, 48, 0.25), 0 2px 6px rgba(255, 59, 48, 0.15) !important;
+    }
+
+    /* Check Badge for Inputs */
     .valid-check-badge {
       position: absolute;
-      right: 10px;
+      right: 12px;
       background: var(--accent-green);
-      width: 16px;
-      height: 16px;
+      width: 20px;
+      height: 20px;
       border-radius: 50%;
       display: none;
       align-items: center;
@@ -182,57 +182,92 @@
       display: flex;
     }
 
+    /* Copy Button inside Box (Right Side) */
+    .box-copy-btn {
+      position: absolute;
+      right: 8px;
+      width: 26px;
+      height: 26px;
+      background: #f0f0f5;
+      color: var(--accent-blue);
+      border: none;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+      transition: background 0.2s ease, color 0.2s ease;
+    }
+
+    .box-copy-btn.copied {
+      background: var(--accent-green) !important;
+      color: #ffffff !important;
+    }
+
     .error-text {
       font-size: 12px;
       color: var(--accent-red);
       font-weight: 600;
       display: none;
-      margin-top: 4px;
-      align-items: center;
-      gap: 5px;
+      margin-top: 2px;
+      padding-left: 4px;
+    }
+    .error-text.show {
+      display: block;
     }
 
-    .error-text.show {
+    /* Action Button Area (Bottom Full Width) */
+    .action-container {
+      width: 100%;
+      max-width: 420px;
+      margin-top: 16px;
       display: flex;
     }
 
-    .error-text svg {
-      flex-shrink: 0;
-    }
-
-    /* general.html এর বাটন স্টাইল */
-    .submit-btn {
+    .btn-full {
+      width: 100%;
       background: var(--accent-blue);
       color: #ffffff;
       border: none;
-      padding: 8px 14px;
-      border-radius: 10px;
-      font-size: 13px;
+      padding: 14px;
+      border-radius: 12px;
+      font-size: 16px;
       font-weight: 600;
       cursor: pointer;
-      display: inline-flex;
+      display: flex;
       align-items: center;
       justify-content: center;
-      gap: 6px;
-      align-self: flex-end;
-      min-width: 85px;
-      height: 36px;
-      transition: opacity 0.2s;
+      gap: 10px;
+      box-shadow: 0 4px 12px rgba(0, 122, 255, 0.25);
+      transition: opacity 0.2s ease, background 0.2s ease;
     }
 
-    .submit-btn:hover {
-      opacity: 0.9;
+    .btn-full:active {
+      opacity: 0.8;
     }
 
-    .submit-btn:disabled {
-      opacity: 0.4;
+    .btn-full:disabled {
+      opacity: 0.5;
       cursor: not-allowed;
     }
 
+    .btn-green {
+      background: var(--accent-green) !important;
+      box-shadow: 0 4px 12px rgba(52, 199, 89, 0.25) !important;
+    }
+
+    .btn-content {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* iOS Spinner Animation */
     .ios-spinner {
       display: none;
-      width: 14px;
-      height: 14px;
+      width: 20px;
+      height: 20px;
       animation: iosRotate 0.8s steps(8, end) infinite;
     }
 
@@ -241,78 +276,28 @@
       100% { transform: rotate(360deg); }
     }
 
-    .account-card {
-      background: var(--card-bg);
-      border-radius: 14px;
-      border: 1px solid var(--border-color);
-      padding: 4px 12px 8px;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.02);
-      display: flex;
-      flex-direction: column;
-    }
-
-    .field-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 8px;
-      padding: 8px 0;
-      border-bottom: 0.5px solid var(--divider-color);
-    }
-
-    .field-item:last-child {
-      border-bottom: none;
-    }
-
-    .field-left {
-      font-size: 12px;
-      font-weight: 700;
-      color: var(--text-main);
-      white-space: nowrap;
-    }
-
-    .label-blue {
-      color: var(--accent-blue) !important;
-    }
-
-    .field-right-group {
-      display: flex;
-      align-items: center;
-      justify-content: flex-end;
-      gap: 10px;
-      flex: 1;
-    }
-
-    .field-right {
-      font-size: 12px;
-      font-family: monospace, var(--font-family);
-      color: #3a3a3c;
-      text-align: right;
-      word-break: break-all;
-      line-height: 1.35;
-    }
-
-    .totp-value {
-      font-size: 15px;
-      font-weight: 700;
+    /* Specific styles for TOTP Timer */
+    .totp-input {
+      padding-right: 74px; /* Make room for timer and button */
+      font-weight: bold;
       color: var(--accent-blue) !important;
       letter-spacing: 1.5px;
     }
 
     .auth-timer-wrapper {
-      position: relative;
-      width: 24px;
-      height: 24px;
-      display: inline-flex;
+      position: absolute;
+      right: 42px;
+      width: 22px;
+      height: 22px;
+      display: flex;
       align-items: center;
       justify-content: center;
-      flex-shrink: 0;
     }
 
     .auth-timer-wrapper svg {
       transform: rotate(-90deg);
-      width: 24px;
-      height: 24px;
+      width: 22px;
+      height: 22px;
     }
 
     .auth-timer-bg { stroke: #e5e5ea; }
@@ -322,117 +307,75 @@
       stroke-dashoffset: 0;
       transition: stroke-dashoffset 1s linear;
     }
-
     .auth-timer-text {
       position: absolute;
       font-size: 9px;
       font-weight: 700;
       color: var(--accent-blue);
     }
-
-    .copy-btn {
-      background: #e5e5ea;
-      color: var(--accent-blue);
-      border: none;
-      width: 26px;
-      height: 26px;
-      border-radius: 50%;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      flex-shrink: 0;
-    }
-
-    .copy-btn.copied {
-      background: var(--accent-green) !important;
-      color: #ffffff !important;
-    }
-
-    .save-account-btn {
-      width: 100%;
-      background: var(--accent-green);
-      color: #ffffff;
-      border: none;
-      padding: 12px;
-      border-radius: 12px;
-      font-size: 14px;
-      font-weight: 700;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-      margin-top: 10px;
-      box-shadow: 0 4px 12px rgba(52, 199, 89, 0.25);
-    }
   </style>
 </head>
 <body onload="initApp()">
 
+  <!-- Toast Notification -->
   <div id="toast">
     <div class="toast-icon">
-      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+      <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
         <polyline points="20 6 9 17 4 12"></polyline>
       </svg>
     </div>
     <span>Copied Successfully!</span>
   </div>
 
-  <div class="header">
-    <h1 id="page-title">Your Email Address</h1>
+  <h1 class="header-title" id="page-title">Email Address</h1>
+
+  <!-- STEP 1: EMAIL -->
+  <div class="step-card active" id="step-1">
+    <div class="container">
+      <div class="info-box-group">
+        <label class="box-label">Email Address</label>
+        <div class="input-wrapper">
+          <input type="email" id="email-input" class="ios-box default-glow" placeholder="Enter email address..." oninput="validateEmail()">
+          <div class="valid-check-badge" id="email-check">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+          </div>
+        </div>
+        <span class="error-text" id="email-error">Email already submitted</span>
+      </div>
+    </div>
+    <div class="action-container">
+      <button class="btn-full" id="btn-step-1" disabled onclick="processNextStep(1, 2, 'Password')">
+        <div class="btn-content">Proceed</div>
+        <svg class="ios-spinner" viewBox="0 0 24 24">
+          <line x1="12" y1="3" x2="12" y2="6" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="1"/>
+          <line x1="18.36" y1="5.64" x2="16.24" y2="7.76" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.875"/>
+          <line x1="21" y1="12" x2="18" y2="12" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.75"/>
+          <line x1="18.36" y1="18.36" x2="16.24" y2="16.24" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.625"/>
+          <line x1="12" y1="21" x2="12" y2="18" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.5"/>
+          <line x1="5.64" y1="18.36" x2="7.76" y2="16.24" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.375"/>
+          <line x1="3" y1="12" x2="6" y2="12" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.25"/>
+          <line x1="5.64" y1="5.64" x2="7.76" y2="7.76" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.125"/>
+        </svg>
+      </button>
+    </div>
   </div>
 
-  <div class="container">
-
-    <!-- STEP 1: EMAIL (general.html-এর styled-box কন্টেইনারে তৈরি) -->
-    <div class="styled-box step-card active" id="step-1">
-      <div class="input-group">
-        <label class="input-label">Email Address</label>
+  <!-- STEP 2: PASSWORD -->
+  <div class="step-card" id="step-2">
+    <div class="container">
+      <div class="info-box-group">
+        <label class="box-label">Password (Min 8 Chars)</label>
         <div class="input-wrapper">
-          <input type="email" id="email-input" class="custom-input" placeholder="Enter your email address..." oninput="validateEmail()">
-          <div class="valid-check-badge" id="email-check">
-            <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
-          </div>
-        </div>
-        
-        <span class="error-text" id="email-error">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="12" cy="12" r="10"></circle>
-            <line x1="12" y1="8" x2="12" y2="12"></line>
-            <line x1="12" y1="16" x2="12.01" y2="16"></line>
-          </svg>
-          email already submitted
-        </span>
-      </div>
-      <button class="submit-btn" id="btn-step-1" disabled onclick="processNextStep(1, 2, 'Create Password')">
-        <span class="btn-txt">Proceed</span>
-        <svg class="ios-spinner" viewBox="0 0 24 24">
-          <line x1="12" y1="3" x2="12" y2="6" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="1"/>
-          <line x1="18.36" y1="5.64" x2="16.24" y2="7.76" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.875"/>
-          <line x1="21" y1="12" x2="18" y2="12" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.75"/>
-          <line x1="18.36" y1="18.36" x2="16.24" y2="16.24" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.625"/>
-          <line x1="12" y1="21" x2="12" y2="18" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.5"/>
-          <line x1="5.64" y1="18.36" x2="7.76" y2="16.24" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.375"/>
-          <line x1="3" y1="12" x2="6" y2="12" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.25"/>
-          <line x1="5.64" y1="5.64" x2="7.76" y2="7.76" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.125"/>
-        </svg>
-      </button>
-    </div>
-
-    <!-- STEP 2: PASSWORD -->
-    <div class="styled-box step-card" id="step-2">
-      <div class="input-group">
-        <label class="input-label">Password (Min 8 Chars)</label>
-        <div class="input-wrapper">
-          <input type="text" id="password-input" class="custom-input" placeholder="Enter password..." oninput="validatePassword()">
+          <input type="text" id="password-input" class="ios-box default-glow" placeholder="Enter password..." oninput="validatePassword()">
           <div class="valid-check-badge" id="pass-check">
-            <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
           </div>
         </div>
       </div>
-      <button class="submit-btn" id="btn-step-2" disabled onclick="processNextStep(2, 3, 'Recovery Email')">
-        <span class="btn-txt">Proceed</span>
+    </div>
+    <div class="action-container">
+      <button class="btn-full" id="btn-step-2" disabled onclick="processNextStep(2, 3, 'Recovery Email')">
+        <div class="btn-content">Proceed</div>
         <svg class="ios-spinner" viewBox="0 0 24 24">
           <line x1="12" y1="3" x2="12" y2="6" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="1"/>
           <line x1="18.36" y1="5.64" x2="16.24" y2="7.76" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.875"/>
@@ -445,20 +388,24 @@
         </svg>
       </button>
     </div>
+  </div>
 
-    <!-- STEP 3: RECOVERY EMAIL -->
-    <div class="styled-box step-card" id="step-3">
-      <div class="input-group">
-        <label class="input-label">Recovery Email</label>
+  <!-- STEP 3: RECOVERY EMAIL -->
+  <div class="step-card" id="step-3">
+    <div class="container">
+      <div class="info-box-group">
+        <label class="box-label">Recovery Email</label>
         <div class="input-wrapper">
-          <input type="email" id="recovery-input" class="custom-input" placeholder="Enter recovery email..." oninput="validateRecovery()">
+          <input type="email" id="recovery-input" class="ios-box default-glow" placeholder="Enter recovery email..." oninput="validateRecovery()">
           <div class="valid-check-badge" id="recovery-check">
-            <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
           </div>
         </div>
       </div>
-      <button class="submit-btn" id="btn-step-3" disabled onclick="processNextStep(3, 4, '2FA Secret Key')">
-        <span class="btn-txt">Proceed</span>
+    </div>
+    <div class="action-container">
+      <button class="btn-full" id="btn-step-3" disabled onclick="processNextStep(3, 4, '2FA Secret Key')">
+        <div class="btn-content">Proceed</div>
         <svg class="ios-spinner" viewBox="0 0 24 24">
           <line x1="12" y1="3" x2="12" y2="6" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="1"/>
           <line x1="18.36" y1="5.64" x2="16.24" y2="7.76" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.875"/>
@@ -471,20 +418,24 @@
         </svg>
       </button>
     </div>
+  </div>
 
-    <!-- STEP 4: 2FA SECRET KEY -->
-    <div class="styled-box step-card" id="step-4">
-      <div class="input-group">
-        <label class="input-label">2FA Secret Key</label>
+  <!-- STEP 4: 2FA SECRET KEY -->
+  <div class="step-card" id="step-4">
+    <div class="container">
+      <div class="info-box-group">
+        <label class="box-label">2FA Secret Key</label>
         <div class="input-wrapper">
-          <input type="text" id="tfa-input" class="custom-input" placeholder="Enter 2FA secret key..." oninput="handle2FAInput(this)">
+          <input type="text" id="tfa-input" class="ios-box default-glow" placeholder="Enter 2FA secret key..." oninput="handle2FAInput(this)">
           <div class="valid-check-badge" id="tfa-check">
-            <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
           </div>
         </div>
       </div>
-      <button class="submit-btn" id="btn-step-4" disabled onclick="processNextStep(4, 5, 'Confirm Details')">
-        <span class="btn-txt">Proceed</span>
+    </div>
+    <div class="action-container">
+      <button class="btn-full" id="btn-step-4" disabled onclick="processNextStep(4, 5, 'Account Details')">
+        <div class="btn-content">Proceed</div>
         <svg class="ios-spinner" viewBox="0 0 24 24">
           <line x1="12" y1="3" x2="12" y2="6" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="1"/>
           <line x1="18.36" y1="5.64" x2="16.24" y2="7.76" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.875"/>
@@ -497,80 +448,89 @@
         </svg>
       </button>
     </div>
+  </div>
 
-    <!-- STEP 5: CONFIRMATION PAGE -->
-    <div class="step-card" id="step-5">
-      <div class="account-card">
-        <div class="field-item">
-          <span class="field-left">Email</span>
-          <div class="field-right-group">
-            <span class="field-right" id="confirm-email-text"></span>
-            <button class="copy-btn" onclick="copyToClipboard(document.getElementById('confirm-email-text').innerText, this)">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-            </button>
-          </div>
-        </div>
-
-        <div class="field-item">
-          <span class="field-left">Password</span>
-          <div class="field-right-group">
-            <span class="field-right" id="confirm-pass-text"></span>
-            <button class="copy-btn" onclick="copyToClipboard(document.getElementById('confirm-pass-text').innerText, this)">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-            </button>
-          </div>
-        </div>
-
-        <div class="field-item">
-          <span class="field-left">Recovery Email</span>
-          <div class="field-right-group">
-            <span class="field-right" id="confirm-recovery-text"></span>
-            <button class="copy-btn" onclick="copyToClipboard(document.getElementById('confirm-recovery-text').innerText, this)">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-            </button>
-          </div>
-        </div>
-
-        <div class="field-item">
-          <span class="field-left">2FA Secret Key</span>
-          <div class="field-right-group">
-            <span class="field-right" id="confirm-tfa-text"></span>
-            <button class="copy-btn" onclick="copyToClipboard(document.getElementById('confirm-tfa-text').innerText, this)">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-            </button>
-          </div>
-        </div>
-
-        <div class="field-item">
-          <span class="field-left label-blue">2FA Verification Code</span>
-          <div class="field-right-group">
-            <div class="auth-timer-wrapper">
-              <svg viewBox="0 0 24 24">
-                <circle class="auth-timer-bg" cx="12" cy="12" r="9" fill="none" stroke-width="2.5"/>
-                <circle id="totp-ring" class="auth-timer-progress" cx="12" cy="12" r="9" fill="none" stroke-width="2.5" stroke-linecap="round"/>
-              </svg>
-              <span id="totp-timer" class="auth-timer-text">30</span>
-            </div>
-            <span id="totp-val" class="field-right totp-value">------</span>
-            <button id="totp-btn" class="copy-btn">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-            </button>
-          </div>
+  <!-- STEP 5: CONFIRMATION (MATCHES GENERATOR OUTPUT STYLE) -->
+  <div class="step-card" id="step-5">
+    <div class="container">
+      <!-- Email Box -->
+      <div class="info-box-group">
+        <label class="box-label">Email Address</label>
+        <div class="input-wrapper">
+          <input type="text" id="confirm-email-box" class="ios-box valid-glow" readonly>
+          <button class="box-copy-btn" onclick="copyValue('confirm-email-box', this)">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+          </button>
         </div>
       </div>
 
-      <button class="save-account-btn" onclick="saveAccountToTG()">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
-        <span>Save Account</span>
-      </button>
+      <!-- Password Box -->
+      <div class="info-box-group">
+        <label class="box-label">Password</label>
+        <div class="input-wrapper">
+          <input type="text" id="confirm-pass-box" class="ios-box valid-glow" readonly>
+          <button class="box-copy-btn" onclick="copyValue('confirm-pass-box', this)">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+          </button>
+        </div>
+      </div>
 
+      <!-- Recovery Box -->
+      <div class="info-box-group">
+        <label class="box-label">Recovery Email</label>
+        <div class="input-wrapper">
+          <input type="text" id="confirm-recovery-box" class="ios-box valid-glow" readonly>
+          <button class="box-copy-btn" onclick="copyValue('confirm-recovery-box', this)">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- 2FA Key Box -->
+      <div class="info-box-group">
+        <label class="box-label">2FA Secret Key</label>
+        <div class="input-wrapper">
+          <input type="text" id="confirm-tfa-box" class="ios-box valid-glow" readonly>
+          <button class="box-copy-btn" onclick="copyValue('confirm-tfa-box', this)">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Live TOTP Code Box -->
+      <div class="info-box-group">
+        <label class="box-label">2FA Verification Code</label>
+        <div class="input-wrapper">
+          <input type="text" id="totp-box" class="ios-box valid-glow totp-input" value="------" readonly>
+          
+          <div class="auth-timer-wrapper">
+            <svg viewBox="0 0 24 24">
+              <circle class="auth-timer-bg" cx="12" cy="12" r="9" fill="none" stroke-width="2.5"/>
+              <circle id="totp-ring" class="auth-timer-progress" cx="12" cy="12" r="9" fill="none" stroke-width="2.5" stroke-linecap="round"/>
+            </svg>
+            <span id="totp-timer" class="auth-timer-text">30</span>
+          </div>
+
+          <button class="box-copy-btn" id="totp-btn" onclick="copyValue('totp-box', this)">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+          </button>
+        </div>
+      </div>
     </div>
 
+    <div class="action-container">
+      <button class="btn-full btn-green" onclick="saveAccountToTG()">
+        <div class="btn-content">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+          <span>Save Account</span>
+        </div>
+      </button>
+    </div>
   </div>
 
   <script>
-    const copyIconSVG = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>`;
-    const checkIconSVG = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>`;
+    const copyIconSVG = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>`;
+    const copiedCheckSVG = `<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>`;
 
     let toastTimer;
     let existingAccounts = [];
@@ -583,11 +543,12 @@
       toastTimer = setTimeout(() => { toast.classList.remove('show'); }, 2000);
     }
 
-    function copyToClipboard(text, btnElement) {
-      if (!text || text === "------") return;
-      navigator.clipboard.writeText(text).then(() => {
+    function copyValue(elementId, btnElement) {
+      const val = document.getElementById(elementId).value;
+      if (!val || val === "------") return;
+      navigator.clipboard.writeText(val).then(() => {
         btnElement.classList.add('copied');
-        btnElement.innerHTML = checkIconSVG;
+        btnElement.innerHTML = copiedCheckSVG;
         showToast();
         setTimeout(() => {
           btnElement.classList.remove('copied');
@@ -608,127 +569,87 @@
               return item && item.email ? item.email.trim().toLowerCase() : "";
             }).filter(Boolean);
           }
-        } catch (e) {
-          console.error("Data parse error:", e);
+        } catch (e) {}
+      }
+    }
+
+    function updateValidationState(inputId, badgeId, btnId, isValid, isDuplicate = false) {
+      const input = document.getElementById(inputId);
+      const badge = document.getElementById(badgeId);
+      const btn = document.getElementById(btnId);
+
+      if (input.value.trim().length === 0) {
+        input.className = 'ios-box default-glow';
+        badge.classList.remove('show');
+        btn.disabled = true;
+      } else if (isValid) {
+        input.className = 'ios-box valid-glow';
+        badge.classList.add('show');
+        btn.disabled = false;
+      } else {
+        input.className = 'ios-box invalid-glow';
+        badge.classList.remove('show');
+        btn.disabled = true;
+      }
+
+      if (inputId === 'email-input') {
+        const errorText = document.getElementById('email-error');
+        if (isDuplicate) {
+          errorText.classList.add('show');
+          input.className = 'ios-box invalid-glow';
+          badge.classList.remove('show');
+          btn.disabled = true;
+        } else {
+          errorText.classList.remove('show');
         }
       }
     }
 
     function validateEmail() {
-      const input = document.getElementById('email-input');
-      const badge = document.getElementById('email-check');
-      const errorText = document.getElementById('email-error');
-      const btn = document.getElementById('btn-step-1');
-      const val = input.value.trim().toLowerCase();
-
-      errorText.classList.remove('show');
-
-      if (val.length === 0) {
-        input.className = 'custom-input';
-        badge.classList.remove('show');
-        btn.disabled = true;
-      } else if (existingAccounts.includes(val)) {
-        input.className = 'custom-input invalid-glow';
-        badge.classList.remove('show');
-        errorText.classList.add('show');
-        btn.disabled = true;
-      } else if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val)) {
-        input.className = 'custom-input valid-glow';
-        badge.classList.add('show');
-        btn.disabled = false;
-      } else {
-        input.className = 'custom-input invalid-glow';
-        badge.classList.remove('show');
-        btn.disabled = true;
-      }
+      const val = document.getElementById('email-input').value.trim().toLowerCase();
+      const isDuplicate = existingAccounts.includes(val);
+      const isValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val) && !isDuplicate;
+      updateValidationState('email-input', 'email-check', 'btn-step-1', isValid, isDuplicate);
     }
 
     function validatePassword() {
-      const input = document.getElementById('password-input');
-      const badge = document.getElementById('pass-check');
-      const btn = document.getElementById('btn-step-2');
-      const val = input.value.trim();
-
-      if (val.length === 0) {
-        input.className = 'custom-input';
-        badge.classList.remove('show');
-        btn.disabled = true;
-      } else if (val.length >= 8) {
-        input.className = 'custom-input valid-glow';
-        badge.classList.add('show');
-        btn.disabled = false;
-      } else {
-        input.className = 'custom-input invalid-glow';
-        badge.classList.remove('show');
-        btn.disabled = true;
-      }
+      const val = document.getElementById('password-input').value.trim();
+      updateValidationState('password-input', 'pass-check', 'btn-step-2', val.length >= 8);
     }
 
     function validateRecovery() {
-      const input = document.getElementById('recovery-input');
-      const badge = document.getElementById('recovery-check');
-      const btn = document.getElementById('btn-step-3');
-      const val = input.value.trim();
-
-      if (val.length === 0) {
-        input.className = 'custom-input';
-        badge.classList.remove('show');
-        btn.disabled = true;
-      } else if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val)) {
-        input.className = 'custom-input valid-glow';
-        badge.classList.add('show');
-        btn.disabled = false;
-      } else {
-        input.className = 'custom-input invalid-glow';
-        badge.classList.remove('show');
-        btn.disabled = true;
-      }
+      const val = document.getElementById('recovery-input').value.trim();
+      const isValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val);
+      updateValidationState('recovery-input', 'recovery-check', 'btn-step-3', isValid);
     }
 
     function handle2FAInput(el) {
       el.value = el.value.toUpperCase();
-      const badge = document.getElementById('tfa-check');
-      const btn = document.getElementById('btn-step-4');
       const clean2FA = el.value.replace(/\s+/g, '');
-      const isBase32Pattern = /^[A-Z2-7]{16,}$/.test(clean2FA);
-
-      if (el.value.length === 0) {
-        el.className = 'custom-input';
-        badge.classList.remove('show');
-        btn.disabled = true;
-      } else if (isBase32Pattern) {
-        el.className = 'custom-input valid-glow';
-        badge.classList.add('show');
-        btn.disabled = false;
-      } else {
-        el.className = 'custom-input invalid-glow';
-        badge.classList.remove('show');
-        btn.disabled = true;
-      }
+      const isValid = /^[A-Z2-7]{16,}$/.test(clean2FA);
+      updateValidationState('tfa-input', 'tfa-check', 'btn-step-4', isValid);
     }
 
     function processNextStep(currentStep, nextStep, titleText) {
       const btn = document.getElementById(`btn-step-${currentStep}`);
-      const btnTxt = btn.querySelector('.btn-txt');
+      const btnContent = btn.querySelector('.btn-content');
       const spinner = btn.querySelector('.ios-spinner');
 
-      btnTxt.style.display = 'none';
+      btnContent.style.display = 'none';
       spinner.style.display = 'inline-block';
       btn.disabled = true;
 
       setTimeout(() => {
         spinner.style.display = 'none';
-        btnTxt.style.display = 'inline';
+        btnContent.style.display = 'flex';
         btn.disabled = false;
 
         document.getElementById(`step-${currentStep}`).classList.remove('active');
         document.getElementById(`step-${nextStep}`).classList.add('active');
         document.getElementById('page-title').innerText = titleText;
 
-        if (nextStep === 5) {
-          setupConfirmationData();
-        }
-      }, 450);
+        if (nextStep === 5) setupConfirmationData();
+      }, 400);
     }
 
     function setupConfirmationData() {
@@ -737,10 +658,10 @@
       const recovery = document.getElementById('recovery-input').value.trim();
       const tfa = document.getElementById('tfa-input').value.trim().toUpperCase();
 
-      document.getElementById('confirm-email-text').innerText = email;
-      document.getElementById('confirm-pass-text').innerText = pass;
-      document.getElementById('confirm-recovery-text').innerText = recovery;
-      document.getElementById('confirm-tfa-text').innerText = tfa;
+      document.getElementById('confirm-email-box').value = email;
+      document.getElementById('confirm-pass-box').value = pass;
+      document.getElementById('confirm-recovery-box').value = recovery;
+      document.getElementById('confirm-tfa-box').value = tfa;
 
       startTOTPGenerator(tfa);
     }
@@ -789,10 +710,9 @@
     }
 
     function startTOTPGenerator(secretKey) {
-      const codeValEl = document.getElementById('totp-val');
+      const codeBox = document.getElementById('totp-box');
       const timerTextEl = document.getElementById('totp-timer');
       const ringProgressEl = document.getElementById('totp-ring');
-      const totpBtn = document.getElementById('totp-btn');
 
       async function updateCode() {
         const remainingSeconds = 30 - (Math.floor(Date.now() / 1000) % 30);
@@ -803,8 +723,7 @@
         ringProgressEl.style.strokeDashoffset = offset;
 
         const code = await generateTOTP(secretKey);
-        codeValEl.innerText = code;
-        totpBtn.setAttribute("onclick", `copyToClipboard('${code}', this)`);
+        codeBox.value = code;
       }
 
       updateCode();
@@ -815,11 +734,11 @@
     function saveAccountToTG() {
       const payload = {
         action: "save_account",
-        email: document.getElementById('confirm-email-text').innerText,
-        password: document.getElementById('confirm-pass-text').innerText,
-        recovery: document.getElementById('confirm-recovery-text').innerText,
-        tfa: document.getElementById('confirm-tfa-text').innerText,
-        secretKey: document.getElementById('confirm-tfa-text').innerText
+        email: document.getElementById('confirm-email-box').value,
+        password: document.getElementById('confirm-pass-box').value,
+        recovery: document.getElementById('confirm-recovery-box').value,
+        tfa: document.getElementById('confirm-tfa-box').value,
+        secretKey: document.getElementById('confirm-tfa-box').value
       };
 
       const jsonString = JSON.stringify(payload);
