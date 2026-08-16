@@ -98,29 +98,34 @@
       gap: 14px;
     }
 
-    /* মূল আইওএস স্টাইল বক্স */
-    .step-card {
-      display: none;
-      flex-direction: column;
-      gap: 12px;
+    /* general.html এর মূল বক্স স্টাইল (styled-box) */
+    .styled-box {
       background: var(--card-bg);
       border-radius: 18px;
       padding: 18px;
       box-shadow: 0 4px 15px rgba(0,0,0,0.03);
       border: 1px solid var(--border-color);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    /* Step Card Control */
+    .step-card {
+      display: none;
     }
 
     .step-card.active {
       display: flex;
     }
 
-    .modal-input-group {
+    .input-group {
       display: flex;
       flex-direction: column;
       gap: 6px;
     }
 
-    .modal-label {
+    .input-label {
       font-size: 12px;
       font-weight: 600;
       color: #3a3a3c;
@@ -133,7 +138,8 @@
       width: 100%;
     }
 
-    .modal-input {
+    /* general.html এর ইনপুট ফিল্ড স্টাইল */
+    .custom-input {
       width: 100%;
       padding: 10px 34px 10px 12px;
       background: #ffffff;
@@ -148,12 +154,12 @@
       -webkit-user-select: text;
     }
 
-    .modal-input.valid-glow {
+    .custom-input.valid-glow {
       border-color: var(--accent-green) !important;
       box-shadow: 0 0 8px rgba(52, 199, 89, 0.45) !important;
     }
 
-    .modal-input.invalid-glow {
+    .custom-input.invalid-glow {
       border-color: var(--accent-red) !important;
       box-shadow: 0 0 8px rgba(255, 59, 48, 0.45) !important;
     }
@@ -194,7 +200,8 @@
       flex-shrink: 0;
     }
 
-    .process-btn {
+    /* general.html এর বাটন স্টাইল */
+    .submit-btn {
       background: var(--accent-blue);
       color: #ffffff;
       border: none;
@@ -213,7 +220,11 @@
       transition: opacity 0.2s;
     }
 
-    .process-btn:disabled {
+    .submit-btn:hover {
+      opacity: 0.9;
+    }
+
+    .submit-btn:disabled {
       opacity: 0.4;
       cursor: not-allowed;
     }
@@ -374,12 +385,12 @@
 
   <div class="container">
 
-    <!-- STEP 1: EMAIL -->
-    <div class="step-card active" id="step-1">
-      <div class="modal-input-group">
-        <label class="modal-label">Email Address</label>
+    <!-- STEP 1: EMAIL (general.html-এর styled-box কন্টেইনারে তৈরি) -->
+    <div class="styled-box step-card active" id="step-1">
+      <div class="input-group">
+        <label class="input-label">Email Address</label>
         <div class="input-wrapper">
-          <input type="email" id="email-input" class="modal-input" placeholder="Enter your email address..." oninput="validateEmail()">
+          <input type="email" id="email-input" class="custom-input" placeholder="Enter your email address..." oninput="validateEmail()">
           <div class="valid-check-badge" id="email-check">
             <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
           </div>
@@ -394,7 +405,7 @@
           email already submitted
         </span>
       </div>
-      <button class="process-btn" id="btn-step-1" disabled onclick="processNextStep(1, 2, 'Create Password')">
+      <button class="submit-btn" id="btn-step-1" disabled onclick="processNextStep(1, 2, 'Create Password')">
         <span class="btn-txt">Proceed</span>
         <svg class="ios-spinner" viewBox="0 0 24 24">
           <line x1="12" y1="3" x2="12" y2="6" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="1"/>
@@ -410,17 +421,17 @@
     </div>
 
     <!-- STEP 2: PASSWORD -->
-    <div class="step-card" id="step-2">
-      <div class="modal-input-group">
-        <label class="modal-label">Password (Min 8 Chars)</label>
+    <div class="styled-box step-card" id="step-2">
+      <div class="input-group">
+        <label class="input-label">Password (Min 8 Chars)</label>
         <div class="input-wrapper">
-          <input type="text" id="password-input" class="modal-input" placeholder="Enter password..." oninput="validatePassword()">
+          <input type="text" id="password-input" class="custom-input" placeholder="Enter password..." oninput="validatePassword()">
           <div class="valid-check-badge" id="pass-check">
             <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
           </div>
         </div>
       </div>
-      <button class="process-btn" id="btn-step-2" disabled onclick="processNextStep(2, 3, 'Recovery Email')">
+      <button class="submit-btn" id="btn-step-2" disabled onclick="processNextStep(2, 3, 'Recovery Email')">
         <span class="btn-txt">Proceed</span>
         <svg class="ios-spinner" viewBox="0 0 24 24">
           <line x1="12" y1="3" x2="12" y2="6" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="1"/>
@@ -436,17 +447,17 @@
     </div>
 
     <!-- STEP 3: RECOVERY EMAIL -->
-    <div class="step-card" id="step-3">
-      <div class="modal-input-group">
-        <label class="modal-label">Recovery Email</label>
+    <div class="styled-box step-card" id="step-3">
+      <div class="input-group">
+        <label class="input-label">Recovery Email</label>
         <div class="input-wrapper">
-          <input type="email" id="recovery-input" class="modal-input" placeholder="Enter recovery email..." oninput="validateRecovery()">
+          <input type="email" id="recovery-input" class="custom-input" placeholder="Enter recovery email..." oninput="validateRecovery()">
           <div class="valid-check-badge" id="recovery-check">
             <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
           </div>
         </div>
       </div>
-      <button class="process-btn" id="btn-step-3" disabled onclick="processNextStep(3, 4, '2FA Secret Key')">
+      <button class="submit-btn" id="btn-step-3" disabled onclick="processNextStep(3, 4, '2FA Secret Key')">
         <span class="btn-txt">Proceed</span>
         <svg class="ios-spinner" viewBox="0 0 24 24">
           <line x1="12" y1="3" x2="12" y2="6" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="1"/>
@@ -462,17 +473,17 @@
     </div>
 
     <!-- STEP 4: 2FA SECRET KEY -->
-    <div class="step-card" id="step-4">
-      <div class="modal-input-group">
-        <label class="modal-label">2FA Secret Key</label>
+    <div class="styled-box step-card" id="step-4">
+      <div class="input-group">
+        <label class="input-label">2FA Secret Key</label>
         <div class="input-wrapper">
-          <input type="text" id="tfa-input" class="modal-input" placeholder="Enter 2FA secret key..." oninput="handle2FAInput(this)">
+          <input type="text" id="tfa-input" class="custom-input" placeholder="Enter 2FA secret key..." oninput="handle2FAInput(this)">
           <div class="valid-check-badge" id="tfa-check">
             <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
           </div>
         </div>
       </div>
-      <button class="process-btn" id="btn-step-4" disabled onclick="processNextStep(4, 5, 'Confirm Details')">
+      <button class="submit-btn" id="btn-step-4" disabled onclick="processNextStep(4, 5, 'Confirm Details')">
         <span class="btn-txt">Proceed</span>
         <svg class="ios-spinner" viewBox="0 0 24 24">
           <line x1="12" y1="3" x2="12" y2="6" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="1"/>
@@ -488,7 +499,7 @@
     </div>
 
     <!-- STEP 5: CONFIRMATION PAGE -->
-    <div class="step-card" id="step-5" style="padding: 0; background: transparent; border: none; box-shadow: none;">
+    <div class="step-card" id="step-5">
       <div class="account-card">
         <div class="field-item">
           <span class="field-left">Email</span>
@@ -613,20 +624,20 @@
       errorText.classList.remove('show');
 
       if (val.length === 0) {
-        input.className = 'modal-input';
+        input.className = 'custom-input';
         badge.classList.remove('show');
         btn.disabled = true;
       } else if (existingAccounts.includes(val)) {
-        input.className = 'modal-input invalid-glow';
+        input.className = 'custom-input invalid-glow';
         badge.classList.remove('show');
         errorText.classList.add('show');
         btn.disabled = true;
       } else if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val)) {
-        input.className = 'modal-input valid-glow';
+        input.className = 'custom-input valid-glow';
         badge.classList.add('show');
         btn.disabled = false;
       } else {
-        input.className = 'modal-input invalid-glow';
+        input.className = 'custom-input invalid-glow';
         badge.classList.remove('show');
         btn.disabled = true;
       }
@@ -639,15 +650,15 @@
       const val = input.value.trim();
 
       if (val.length === 0) {
-        input.className = 'modal-input';
+        input.className = 'custom-input';
         badge.classList.remove('show');
         btn.disabled = true;
       } else if (val.length >= 8) {
-        input.className = 'modal-input valid-glow';
+        input.className = 'custom-input valid-glow';
         badge.classList.add('show');
         btn.disabled = false;
       } else {
-        input.className = 'modal-input invalid-glow';
+        input.className = 'custom-input invalid-glow';
         badge.classList.remove('show');
         btn.disabled = true;
       }
@@ -660,15 +671,15 @@
       const val = input.value.trim();
 
       if (val.length === 0) {
-        input.className = 'modal-input';
+        input.className = 'custom-input';
         badge.classList.remove('show');
         btn.disabled = true;
       } else if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val)) {
-        input.className = 'modal-input valid-glow';
+        input.className = 'custom-input valid-glow';
         badge.classList.add('show');
         btn.disabled = false;
       } else {
-        input.className = 'modal-input invalid-glow';
+        input.className = 'custom-input invalid-glow';
         badge.classList.remove('show');
         btn.disabled = true;
       }
@@ -682,15 +693,15 @@
       const isBase32Pattern = /^[A-Z2-7]{16,}$/.test(clean2FA);
 
       if (el.value.length === 0) {
-        el.className = 'modal-input';
+        el.className = 'custom-input';
         badge.classList.remove('show');
         btn.disabled = true;
       } else if (isBase32Pattern) {
-        el.className = 'modal-input valid-glow';
+        el.className = 'custom-input valid-glow';
         badge.classList.add('show');
         btn.disabled = false;
       } else {
-        el.className = 'modal-input invalid-glow';
+        el.className = 'custom-input invalid-glow';
         badge.classList.remove('show');
         btn.disabled = true;
       }
