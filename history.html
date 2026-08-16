@@ -6,16 +6,19 @@
   <title>Gmail Account - iOS White Minimal</title>
   <style>
     /* --------------------------------------------------
-       📱 iOS Light Minimal Theme & Variables
+       📱 iOS Light Grouped Theme & Variables
     -------------------------------------------------- */
     :root {
-      --bg-color: #ffffff;
-      --search-bg: #f2f2f7;
+      --bg-color: #f2f2f7;
+      --card-bg: #ffffff;
+      --search-bg: #e3e3e8;
       --accent-blue: #007aff;
       --accent-green: #34c759;
       --accent-orange: #ff9500;
       --text-main: #000000;
       --text-muted: #8e8e93;
+      --border-color: #e5e5ea;
+      --divider-color: #e5e5ea;
       --font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Helvetica Neue", Arial, sans-serif;
     }
 
@@ -30,7 +33,7 @@
     body {
       background-color: var(--bg-color);
       color: var(--text-main);
-      padding: 24px 16px 40px;
+      padding: 20px 14px 40px;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -38,7 +41,7 @@
     }
 
     /* --------------------------------------------------
-       🔔 Toast Notification (Black Background)
+       🔔 Single Line Toast (Black Background)
     -------------------------------------------------- */
     #toast {
       position: fixed;
@@ -47,14 +50,14 @@
       transform: translateX(-50%);
       background: #000000;
       color: #ffffff;
-      padding: 10px 20px;
-      border-radius: 30px;
-      font-size: 14px;
+      padding: 8px 16px;
+      border-radius: 25px;
+      font-size: 13px;
       font-weight: 600;
       display: flex;
       align-items: center;
-      gap: 8px;
-      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
+      gap: 6px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
       transition: top 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s ease;
       opacity: 0;
       z-index: 9999;
@@ -62,31 +65,31 @@
     }
 
     #toast.show {
-      top: 20px;
+      top: 16px;
       opacity: 1;
     }
 
     /* --------------------------------------------------
-       🏷️ Header (Centered & Clean)
+       🏷️ Header (Centered)
     -------------------------------------------------- */
     .header {
       width: 100%;
       max-width: 440px;
       text-align: center;
-      margin-bottom: 20px;
+      margin-bottom: 16px;
     }
 
     .header h1 {
-      font-size: 24px;
+      font-size: 22px;
       font-weight: 700;
       letter-spacing: -0.4px;
     }
 
     .header p {
-      font-size: 13px;
+      font-size: 12px;
       font-weight: 600;
       color: var(--text-muted);
-      margin-top: 4px;
+      margin-top: 3px;
     }
 
     /* --------------------------------------------------
@@ -97,8 +100,8 @@
       max-width: 440px;
       display: flex;
       align-items: center;
-      gap: 8px;
-      margin-bottom: 24px;
+      gap: 6px;
+      margin-bottom: 16px;
     }
 
     .search-box {
@@ -110,18 +113,18 @@
 
     .search-box svg {
       position: absolute;
-      left: 12px;
+      left: 10px;
       color: var(--text-muted);
       pointer-events: none;
     }
 
     .search-box input {
       width: 100%;
-      padding: 9px 12px 9px 36px;
+      padding: 8px 10px 8px 32px;
       background: var(--search-bg);
       border: none;
       border-radius: 10px;
-      font-size: 14px;
+      font-size: 13px;
       color: var(--text-main);
       outline: none;
     }
@@ -134,105 +137,118 @@
       background: var(--accent-blue);
       color: #ffffff;
       border: none;
-      padding: 9px 14px;
+      padding: 8px 12px;
       border-radius: 10px;
-      font-size: 13px;
+      font-size: 12px;
       font-weight: 600;
       cursor: pointer;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      gap: 6px;
+      gap: 4px;
       flex-shrink: 0;
       transition: opacity 0.2s ease;
+      min-width: 60px;
+      height: 33px;
     }
 
     .search-btn:active {
       opacity: 0.8;
     }
 
-    .spinner {
-      animation: spin 0.8s linear infinite;
+    /* Authentic iOS Blade Spinner */
+    .ios-spinner {
       display: none;
+      width: 14px;
+      height: 14px;
+      animation: iosRotate 0.8s steps(8, end) infinite;
     }
 
-    @keyframes spin {
+    @keyframes iosRotate {
       0% { transform: rotate(0deg); }
       100% { transform: rotate(360deg); }
     }
 
     /* --------------------------------------------------
-       📦 Container & Pure Minimal List Layout
+       📦 Container & iOS Grouped Account Card
     -------------------------------------------------- */
     #container {
       width: 100%;
       max-width: 440px;
       display: flex;
       flex-direction: column;
-      gap: 20px;
+      gap: 14px;
     }
 
-    .account-block {
+    .account-card {
+      background: var(--card-bg);
+      border-radius: 14px;
+      border: 1px solid var(--border-color);
+      padding: 4px 12px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.02);
       display: flex;
       flex-direction: column;
-      gap: 12px;
-      padding-bottom: 16px;
     }
 
     .field-item {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      gap: 12px;
-      padding: 4px 0;
+      gap: 8px;
+      padding: 8px 0;
+      border-bottom: 0.5px solid var(--divider-color);
+    }
+
+    .field-item:last-child {
+      border-bottom: none;
     }
 
     .field-left {
-      font-size: 14px;
+      font-size: 12px;
       font-weight: 700;
       color: var(--text-main);
       white-space: nowrap;
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 4px;
     }
 
     .field-right {
-      font-size: 14px;
+      font-size: 12px;
       font-family: monospace, var(--font-family);
-      color: #2c2c2e;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
+      color: #3a3a3c;
       text-align: right;
       flex: 1;
+      word-break: break-all;
+      white-space: normal;
+      line-height: 1.35;
     }
 
     .totp-value {
-      font-size: 16px;
+      font-size: 14px;
       font-weight: 700;
       color: var(--accent-orange);
       letter-spacing: 1px;
     }
 
     .timer-badge {
-      font-size: 10px;
+      font-size: 9px;
       background: rgba(255, 149, 0, 0.15);
       color: var(--accent-orange);
-      padding: 2px 6px;
-      border-radius: 8px;
+      padding: 1px 5px;
+      border-radius: 6px;
       font-weight: 700;
     }
 
     /* --------------------------------------------------
-       🔘 Copy Button (Green Background + White Checkmark)
+       🔘 Micro Copy Button (Green BG + White Check)
     -------------------------------------------------- */
     .copy-btn {
-      background: #f2f2f7;
+      background: #e5e5ea;
       color: var(--accent-blue);
       border: none;
-      width: 32px;
-      height: 32px;
+      width: 26px;
+      height: 26px;
       border-radius: 50%;
       display: inline-flex;
       align-items: center;
@@ -243,8 +259,8 @@
     }
 
     .copy-btn:active {
-      transform: scale(0.9);
-      background: #e5e5ea;
+      transform: scale(0.88);
+      background: #d1d1d6;
     }
 
     .copy-btn.copied {
@@ -254,17 +270,20 @@
 
     .empty-state {
       text-align: center;
-      padding: 30px 20px;
+      padding: 24px 16px;
       color: var(--text-muted);
-      font-size: 14px;
+      font-size: 13px;
+      background: var(--card-bg);
+      border-radius: 14px;
+      border: 1px solid var(--border-color);
     }
   </style>
 </head>
 <body>
 
-  <!-- 🔔 Toast Notification -->
+  <!-- 🔔 Single Line Toast (Black Background) -->
   <div id="toast">
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
       <circle cx="12" cy="12" r="10" fill="#34c759"/>
       <path d="M8 12l3 3 5-5" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
     </svg>
@@ -280,13 +299,21 @@
   <!-- 🔍 Search Box -->
   <div class="search-container">
     <div class="search-box">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
       <input type="text" id="search-input" placeholder="Search exact match...">
     </div>
     <button class="search-btn" id="search-btn" onclick="handleSearch()">
       <span id="btn-text">Search</span>
-      <svg id="btn-spinner" class="spinner" width="14" height="14" viewBox="0 0 50 50">
-        <circle cx="25" cy="25" r="20" fill="none" stroke="#ffffff" stroke-width="5" stroke-linecap="round" stroke-dasharray="31.4 31.4"></circle>
+      <!-- iOS Radial Activity Indicator -->
+      <svg id="btn-spinner" class="ios-spinner" viewBox="0 0 24 24">
+        <line x1="12" y1="3" x2="12" y2="6" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="1"/>
+        <line x1="18.36" y1="5.64" x2="16.24" y2="7.76" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.875"/>
+        <line x1="21" y1="12" x2="18" y2="12" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.75"/>
+        <line x1="18.36" y1="18.36" x2="16.24" y2="16.24" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.625"/>
+        <line x1="12" y1="21" x2="12" y2="18" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.5"/>
+        <line x1="5.64" y1="18.36" x2="7.76" y2="16.24" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.375"/>
+        <line x1="3" y1="12" x2="6" y2="12" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.25"/>
+        <line x1="5.64" y1="5.64" x2="7.76" y2="7.76" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.125"/>
       </svg>
     </button>
   </div>
@@ -296,10 +323,10 @@
 
   <script>
     // --------------------------------------------------
-    // 🎨 SVG Icons
+    // 🎨 Micro SVG Icons
     // --------------------------------------------------
-    const copyIconSVG = `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>`;
-    const checkIconSVG = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>`;
+    const copyIconSVG = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>`;
+    const checkIconSVG = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>`;
 
     // --------------------------------------------------
     // 🔔 Toast System
@@ -405,7 +432,7 @@
     }, 1000);
 
     // --------------------------------------------------
-    // 🔗 Render & Search
+    // 🔗 Render & Search Logic
     // --------------------------------------------------
     function renderAccounts(accounts) {
       const container = document.getElementById('container');
@@ -422,8 +449,8 @@
       }
 
       accounts.forEach((acc, index) => {
-        const block = document.createElement('div');
-        block.className = 'account-block';
+        const card = document.createElement('div');
+        card.className = 'account-card';
 
         const emailVal = acc.email || "";
         const passVal = acc.password || "";
@@ -447,7 +474,7 @@
           `;
         }
 
-        block.innerHTML = `
+        card.innerHTML = `
           ${emailVal ? `
             <div class="field-item">
               <span class="field-left">Email</span>
@@ -482,7 +509,7 @@
           ` : ''}
         `;
 
-        container.appendChild(block);
+        container.appendChild(card);
 
         if (twoFactorSecret) {
           setTimeout(() => {
@@ -499,7 +526,7 @@
       });
     }
 
-    // iOS Spinner & Refresh Simulation Exact Match Search
+    // iOS Spinner & Exact Match Search
     function handleSearch() {
       const btnText = document.getElementById('btn-text');
       const btnSpinner = document.getElementById('btn-spinner');
@@ -513,7 +540,7 @@
         if (!query) {
           renderAccounts(loadedAccountsData);
         } else {
-          // Exact Match Search Logic
+          // Exact Match Search
           const filtered = loadedAccountsData.filter(acc => {
             return (acc.email && acc.email.toLowerCase().trim() === query) ||
                    (acc.password && acc.password.toLowerCase().trim() === query) ||
