@@ -37,7 +37,7 @@
       position: relative;
     }
 
-    /* Proper Sized Toast Notification */
+    /* Toast Notification */
     #toast {
       position: fixed;
       top: -60px;
@@ -183,14 +183,12 @@
       opacity: 0.8;
     }
 
-    /* Custom Button (Left) */
     .btn-custom {
       background: #ffffff;
       color: var(--accent-blue);
       border: 1px solid rgba(0, 122, 255, 0.3);
     }
 
-    /* Random Button (Right) */
     .btn-random {
       background: var(--accent-blue);
       color: #ffffff;
@@ -235,7 +233,7 @@
     .modal-card {
       background: var(--card-bg);
       width: 100%;
-      max-width: 360px;
+      max-width: 320px;
       border-radius: 16px;
       padding: 20px;
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
@@ -275,11 +273,12 @@
       color: var(--text-muted);
     }
 
+    /* 4 columns grid layout */
     .letter-grid {
       display: grid;
-      grid-template-columns: repeat(6, 1fr);
+      grid-template-columns: repeat(4, 1fr);
       gap: 8px;
-      max-height: 260px;
+      max-height: 280px;
       overflow-y: auto;
       padding-right: 2px;
     }
@@ -287,7 +286,7 @@
     .letter-btn {
       background: var(--bg-color);
       border: none;
-      padding: 10px 0;
+      padding: 12px 0;
       border-radius: 8px;
       font-size: 15px;
       font-weight: 600;
@@ -299,6 +298,11 @@
     .letter-btn:active, .letter-btn:hover {
       background: var(--accent-blue);
       color: #ffffff;
+    }
+
+    /* Span for centering Y and Z at the bottom */
+    .center-yz {
+      grid-column: span 2;
     }
   </style>
 </head>
@@ -322,7 +326,7 @@
         <button class="modal-close" onclick="closeModal()">✕</button>
       </div>
       <div class="letter-grid" id="letter-grid-container">
-        <!-- JS will populate A-Z -->
+        <!-- JS will populate A-Z with 4 cols & Y,Z centered -->
       </div>
     </div>
   </div>
@@ -371,7 +375,6 @@
     <!-- Custom Button (Left) -->
     <button class="btn-action btn-custom" onclick="openModal()">
       <div class="btn-content">
-        <!-- Pencil Icon -->
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#007aff" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
           <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>
         </svg>
@@ -382,7 +385,6 @@
     <!-- Random Button (Right) -->
     <button class="btn-action btn-random" id="random-btn" onclick="refreshData()">
       <div class="btn-content" id="btn-inner">
-        <!-- iOS Refresh Icon -->
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
           <path d="M21.5 2v6h-6"></path>
           <path d="M21.34 15.57a10 10 0 1 1-.57-8.38l5.65-5.65"></path>
@@ -407,11 +409,13 @@
     const copiedCheckSVG = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>`;
     let toastTimer;
 
-    // Populate A-Z in modal
+    // Populate A-Z (4 columns, Y and Z centered at bottom)
     window.addEventListener('DOMContentLoaded', () => {
       const grid = document.getElementById('letter-grid-container');
-      for (let i = 0; i < 26; i++) {
-        let char = String.fromCharCode(65 + i); // A-Z
+      
+      // A to X (24 letters)
+      for (let i = 0; i < 24; i++) {
+        let char = String.fromCharCode(65 + i);
         let btn = document.createElement('button');
         btn.className = 'letter-btn';
         btn.innerText = char;
@@ -421,6 +425,18 @@
         };
         grid.appendChild(btn);
       }
+
+      // Y and Z centered in the last row
+      ['Y', 'Z'].forEach(char => {
+        let btn = document.createElement('button');
+        btn.className = 'letter-btn center-yz';
+        btn.innerText = char;
+        btn.onclick = () => {
+          generateAccount(char);
+          closeModal();
+        };
+        grid.appendChild(btn);
+      });
     });
 
     function openModal() {
@@ -457,7 +473,7 @@
       let nums = "0123456789";
       let upperChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
-      // Username & Email generation
+      // 1. Username & Email generation
       let uLength = Math.floor(Math.random() * 3) + 8;
       let nLength = Math.floor(Math.random() * 3) + 2;
       let username = "";
@@ -474,31 +490,22 @@
 
       let email = username + "@gmail.com";
 
-      // Password generation
-      let passLength = Math.floor(Math.random() * 3) + 10;
-      let startUpper = forcedChar ? forcedChar.toUpperCase() : upperChars.charAt(Math.floor(Math.random() * upperChars.length));
-      let password = startUpper;
+      // 2. Password generation (Format: Upper, [2 letters, 1 num] x N, ending with lower)
+      let passStartUpper = forcedChar ? forcedChar.toUpperCase() : upperChars.charAt(Math.floor(Math.random() * upperChars.length));
+      let password = passStartUpper;
 
-      let numCount = Math.floor(Math.random() * 2) + 3;
-      let lowerCount = (passLength - 1) - numCount;
-
-      let remArr = [];
-      for (let i = 0; i < numCount; i++) {
-        remArr.push(nums.charAt(Math.floor(Math.random() * nums.length)));
-      }
-      for (let i = 0; i < lowerCount; i++) {
-        remArr.push(chars.charAt(Math.floor(Math.random() * chars.length)));
+      // Building middle blocks: (2 letters + 1 num) repeatedly
+      let blocksCount = Math.floor(Math.random() * 2) + 3; // 3 or 4 blocks
+      for (let b = 0; b < blocksCount; b++) {
+        password += chars.charAt(Math.floor(Math.random() * chars.length));
+        password += chars.charAt(Math.floor(Math.random() * chars.length));
+        password += nums.charAt(Math.floor(Math.random() * nums.length));
       }
 
-      for (let i = remArr.length - 1; i > 0; i--) {
-        let j = Math.floor(Math.random() * (i + 1));
-        let temp = remArr[i];
-        remArr[i] = remArr[j];
-        remArr[j] = temp;
-      }
+      // Ending with a lowercase letter
+      password += chars.charAt(Math.floor(Math.random() * chars.length));
 
-      password += remArr.join("");
-
+      // Set values to inputs
       document.getElementById('username-box').value = username;
       document.getElementById('email-box').value = email;
       document.getElementById('password-box').value = password;
