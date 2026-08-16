@@ -154,155 +154,53 @@
       color: #ffffff !important;
     }
 
-    /* Action Button Area (Dual Buttons) */
+    /* Single Random Button Area */
     .action-container {
       width: 100%;
       max-width: 420px;
       margin-top: 12px;
       display: flex;
-      gap: 10px;
     }
 
-    .btn-action {
-      flex: 1;
+    .btn-random {
+      width: 100%;
+      background: var(--accent-blue);
+      color: #ffffff;
       border: none;
-      padding: 14px 10px;
+      padding: 14px;
       border-radius: 12px;
-      font-size: 15px;
+      font-size: 16px;
       font-weight: 600;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 8px;
+      gap: 10px;
+      box-shadow: 0 4px 12px rgba(0, 122, 255, 0.25);
       transition: opacity 0.2s ease;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
     }
 
-    .btn-action:active {
+    .btn-random:active {
       opacity: 0.8;
-    }
-
-    .btn-custom {
-      background: #ffffff;
-      color: var(--accent-blue);
-      border: 1px solid rgba(0, 122, 255, 0.3);
-    }
-
-    .btn-random {
-      background: var(--accent-blue);
-      color: #ffffff;
     }
 
     .btn-content {
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 8px;
     }
 
     /* iOS Spinner Animation */
     .ios-spinner {
       display: none;
-      width: 18px;
-      height: 18px;
+      width: 20px;
+      height: 20px;
       animation: iosRotate 0.8s steps(8, end) infinite;
     }
 
     @keyframes iosRotate {
       0% { transform: rotate(0deg); }
       100% { transform: rotate(360deg); }
-    }
-
-    /* Modal for Letter Selection */
-    #letter-modal {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.4);
-      backdrop-filter: blur(5px);
-      -webkit-backdrop-filter: blur(5px);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      z-index: 10000;
-      padding: 20px;
-    }
-
-    .modal-card {
-      background: var(--card-bg);
-      width: 100%;
-      max-width: 320px;
-      border-radius: 16px;
-      padding: 20px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-      display: flex;
-      flex-direction: column;
-      gap: 15px;
-      animation: scaleUp 0.25s ease;
-    }
-
-    @keyframes scaleUp {
-      from { transform: scale(0.9); opacity: 0; }
-      to { transform: scale(1); opacity: 1; }
-    }
-
-    .modal-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .modal-title {
-      font-size: 16px;
-      font-weight: 600;
-    }
-
-    .modal-close {
-      background: #f0f0f5;
-      border: none;
-      width: 24px;
-      height: 24px;
-      border-radius: 50%;
-      font-size: 14px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--text-muted);
-    }
-
-    /* 4 columns grid layout */
-    .letter-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 8px;
-      max-height: 280px;
-      overflow-y: auto;
-      padding-right: 2px;
-    }
-
-    .letter-btn {
-      background: var(--bg-color);
-      border: none;
-      padding: 12px 0;
-      border-radius: 8px;
-      font-size: 15px;
-      font-weight: 600;
-      color: var(--text-main);
-      cursor: pointer;
-      transition: background 0.15s ease, color 0.15s ease;
-    }
-
-    .letter-btn:active, .letter-btn:hover {
-      background: var(--accent-blue);
-      color: #ffffff;
-    }
-
-    /* Span for centering Y and Z at the bottom */
-    .center-yz {
-      grid-column: span 2;
     }
   </style>
 </head>
@@ -316,19 +214,6 @@
       </svg>
     </div>
     <span>Copied Successfully!</span>
-  </div>
-
-  <!-- Letter Selection Modal -->
-  <div id="letter-modal">
-    <div class="modal-card">
-      <div class="modal-header">
-        <span class="modal-title">Select Starting Letter</span>
-        <button class="modal-close" onclick="closeModal()">✕</button>
-      </div>
-      <div class="letter-grid" id="letter-grid-container">
-        <!-- JS will populate A-Z with 4 cols & Y,Z centered -->
-      </div>
-    </div>
   </div>
 
   <h1 class="header-title">Generated Account</h1>
@@ -370,22 +255,12 @@
 
   </div>
 
-  <!-- Dual Action Buttons -->
+  <!-- Random Action Button -->
   <div class="action-container">
-    <!-- Custom Button (Left) -->
-    <button class="btn-action btn-custom" onclick="openModal()">
-      <div class="btn-content">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#007aff" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>
-        </svg>
-        <span>Custom</span>
-      </div>
-    </button>
-
-    <!-- Random Button (Right) -->
-    <button class="btn-action btn-random" id="random-btn" onclick="refreshData()">
+    <button class="btn-random" id="random-btn" onclick="refreshData()">
       <div class="btn-content" id="btn-inner">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+        <!-- Crisp High-Quality iOS Refresh SVG -->
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
           <path d="M21.5 2v6h-6"></path>
           <path d="M21.34 15.57a10 10 0 1 1-.57-8.38l5.65-5.65"></path>
         </svg>
@@ -409,44 +284,6 @@
     const copiedCheckSVG = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>`;
     let toastTimer;
 
-    // Populate A-Z (4 columns, Y and Z centered at bottom)
-    window.addEventListener('DOMContentLoaded', () => {
-      const grid = document.getElementById('letter-grid-container');
-      
-      // A to X (24 letters)
-      for (let i = 0; i < 24; i++) {
-        let char = String.fromCharCode(65 + i);
-        let btn = document.createElement('button');
-        btn.className = 'letter-btn';
-        btn.innerText = char;
-        btn.onclick = () => {
-          generateAccount(char);
-          closeModal();
-        };
-        grid.appendChild(btn);
-      }
-
-      // Y and Z centered in the last row
-      ['Y', 'Z'].forEach(char => {
-        let btn = document.createElement('button');
-        btn.className = 'letter-btn center-yz';
-        btn.innerText = char;
-        btn.onclick = () => {
-          generateAccount(char);
-          closeModal();
-        };
-        grid.appendChild(btn);
-      });
-    });
-
-    function openModal() {
-      document.getElementById('letter-modal').style.display = 'flex';
-    }
-
-    function closeModal() {
-      document.getElementById('letter-modal').style.display = 'none';
-    }
-
     function showToast() {
       const toast = document.getElementById('toast');
       toast.classList.add('show');
@@ -468,18 +305,18 @@
       });
     }
 
-    function generateAccount(forcedChar = null) {
+    function generateAccount() {
       let chars = "abcdefghijklmnopqrstuvwxyz";
       let nums = "0123456789";
-      let upperChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
       // 1. Username & Email generation
       let uLength = Math.floor(Math.random() * 3) + 8;
       let nLength = Math.floor(Math.random() * 3) + 2;
       let username = "";
 
-      let startLetter = forcedChar ? forcedChar.toLowerCase() : chars.charAt(Math.floor(Math.random() * chars.length));
-      username += startLetter;
+      // Pick a random lowercase letter to start username
+      let randomChar = chars.charAt(Math.floor(Math.random() * chars.length));
+      username += randomChar;
 
       for (let i = 0; i < uLength - 1; i++) {
         username += chars.charAt(Math.floor(Math.random() * chars.length));
@@ -490,8 +327,8 @@
 
       let email = username + "@gmail.com";
 
-      // 2. Password generation (Format: Upper, [2 letters, 1 num] x N, ending with lower)
-      let passStartUpper = forcedChar ? forcedChar.toUpperCase() : upperChars.charAt(Math.floor(Math.random() * upperChars.length));
+      // 2. Password generation matching username's starting letter (Uppercase)
+      let passStartUpper = randomChar.toUpperCase();
       let password = passStartUpper;
 
       // Building middle blocks: (2 letters + 1 num) repeatedly
