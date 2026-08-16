@@ -3,8 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Submit Email - iOS Style</title>
-  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <title>Account Setup - iOS Style</title>
   <style>
     :root {
       --bg-color: #f2f2f7;
@@ -15,7 +14,6 @@
       --text-main: #000000;
       --text-muted: #8e8e93;
       --border-color: #c6c6c8;
-      --divider-color: #e5e5ea;
       --font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Helvetica Neue", Arial, sans-serif;
     }
 
@@ -32,7 +30,7 @@
     body {
       background-color: var(--bg-color);
       color: var(--text-main);
-      padding: 16px 16px 90px;
+      padding: 20px 16px;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -50,13 +48,13 @@
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
       color: #ffffff;
-      padding: 6px 14px;
+      padding: 8px 16px;
       border-radius: 20px;
-      font-size: 12px;
-      font-weight: 600;
+      font-size: 13px;
+      font-weight: 500;
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 8px;
       box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
       transition: top 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s ease;
       opacity: 0;
@@ -78,73 +76,50 @@
       justify-content: center;
     }
 
-    /* Top Nav Header */
-    .header-nav {
-      width: 100%;
-      max-width: 480px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      position: relative;
-      margin-bottom: 16px;
-    }
-
-    .back-btn {
-      position: absolute;
-      left: 0;
-      background: transparent;
-      border: none;
-      color: var(--accent-blue);
-      font-size: 15px;
-      font-weight: 500;
-      display: none;
-      align-items: center;
-      gap: 2px;
-      cursor: pointer;
-    }
-
+    /* Top Nav / Title */
     .header-title {
-      font-size: 18px;
+      font-size: 20px;
       font-weight: 600;
-      letter-spacing: -0.3px;
+      margin-bottom: 20px;
+      letter-spacing: -0.4px;
     }
 
-    /* Main iOS Card Style */
-    .form-card {
-      background: var(--card-bg);
+    /* Main Container Card */
+    .container {
       width: 100%;
-      max-width: 480px;
-      border-radius: 12px;
-      border: 0.5px solid var(--border-color);
-      padding: 16px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+      max-width: 420px;
       display: flex;
       flex-direction: column;
+      gap: 16px;
     }
 
-    .step-section {
+    /* Step Card */
+    .step-card {
       display: none;
       flex-direction: column;
-      gap: 12px;
+      gap: 16px;
+      background: var(--card-bg);
+      padding: 20px;
+      border-radius: 14px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
     }
 
-    .step-section.active {
+    .step-card.active {
       display: flex;
     }
 
-    /* Compact Input Group Style */
-    .input-group {
+    .info-box-group {
       display: flex;
       flex-direction: column;
       gap: 6px;
     }
 
-    .input-label {
+    .box-label {
       font-size: 12px;
       font-weight: 600;
       color: var(--text-muted);
-      text-transform: uppercase;
       letter-spacing: 0.3px;
+      padding-left: 4px;
     }
 
     .input-wrapper {
@@ -154,124 +129,83 @@
       width: 100%;
     }
 
-    .custom-input {
+    /* Compact Input/Box */
+    .ios-box {
       width: 100%;
-      padding: 11px 36px 11px 12px;
-      background: #fafafc;
-      border: 1px solid var(--border-color);
-      border-radius: 8px;
-      font-size: 14px;
+      padding: 10px 44px 10px 12px;
+      background: #fafafa;
+      border-radius: 10px;
+      font-size: 14.5px;
+      font-family: monospace, var(--font-family);
       color: var(--text-main);
       outline: none;
-      transition: all 0.2s ease;
+      transition: all 0.3s ease;
       user-select: text;
       -webkit-user-select: text;
     }
 
-    .custom-input:focus {
-      background: #ffffff;
-      border-color: var(--accent-blue);
-      box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.15);
+    /* Dynamic Validation States */
+    .ios-box.valid {
+      border: 1.5px solid var(--accent-green);
+      box-shadow: 0 0 10px rgba(52, 199, 89, 0.25), 0 2px 6px rgba(52, 199, 89, 0.15);
     }
 
-    .custom-input.valid-glow {
-      border-color: var(--accent-green) !important;
-      background: #ffffff;
+    .ios-box.invalid {
+      border: 1.5px solid var(--accent-red);
+      box-shadow: 0 0 10px rgba(255, 59, 48, 0.25), 0 2px 6px rgba(255, 59, 48, 0.15);
     }
 
-    .custom-input.invalid-glow {
-      border-color: var(--accent-red) !important;
-      background: #ffffff;
-    }
-
-    .badge-icon {
+    /* Copy Button inside Box */
+    .box-copy-btn {
       position: absolute;
-      right: 12px;
-      width: 16px;
-      height: 16px;
+      right: 8px;
+      width: 26px;
+      height: 26px;
+      background: #f0f0f5;
+      color: var(--accent-blue);
+      border: none;
       border-radius: 50%;
-      display: none;
+      display: flex;
       align-items: center;
       justify-content: center;
-      pointer-events: none;
+      cursor: pointer;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+      transition: background 0.2s ease, color 0.2s ease;
     }
 
-    .badge-icon.valid {
-      background: var(--accent-green);
-      display: flex;
+    .box-copy-btn.copied {
+      background: var(--accent-green) !important;
+      color: #ffffff !important;
     }
 
-    .badge-icon.invalid {
-      background: var(--accent-red);
-      display: flex;
-    }
-
-    /* Error Message Box */
-    .error-msg-box {
-      display: none;
-      align-items: center;
-      gap: 5px;
-      color: var(--accent-red);
-      font-size: 11px;
-      font-weight: 500;
-      margin-top: 2px;
-    }
-
-    .error-msg-box.show {
-      display: flex;
-    }
-
-    /* Sticky Bottom Button Container (iOS Style) */
-    .button-container {
-      position: fixed;
-      bottom: 0;
-      left: 0;
+    /* Proceed / Action Button */
+    .btn-proceed {
       width: 100%;
-      background: rgba(242, 242, 247, 0.85);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      padding: 12px 16px 20px;
-      display: flex;
-      justify-content: center;
-      border-top: 0.5px solid rgba(0,0,0,0.1);
-      z-index: 1000;
-    }
-
-    .btn-submit {
-      width: 100%;
-      max-width: 480px;
       background: var(--accent-blue);
       color: #ffffff;
       border: none;
-      padding: 13px;
-      border-radius: 10px;
-      font-size: 15px;
+      padding: 14px;
+      border-radius: 12px;
+      font-size: 16px;
       font-weight: 600;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 6px;
+      gap: 10px;
+      box-shadow: 0 4px 12px rgba(0, 122, 255, 0.25);
       transition: opacity 0.2s ease;
-      box-shadow: 0 2px 8px rgba(0, 122, 255, 0.25);
     }
 
-    .btn-submit:disabled {
-      opacity: 0.4;
-      cursor: not-allowed;
-      box-shadow: none;
+    .btn-proceed:active {
+      opacity: 0.8;
     }
 
-    .btn-submit.save-theme {
-      background: var(--accent-green);
-      box-shadow: 0 2px 8px rgba(52, 199, 89, 0.25);
-    }
-
-    /* Spinner Animation */
+    /* iOS Spinner Animation */
     .ios-spinner {
       display: none;
-      width: 16px;
-      height: 16px;
+      width: 20px;
+      height: 20px;
       animation: iosRotate 0.8s steps(8, end) infinite;
     }
 
@@ -279,213 +213,77 @@
       0% { transform: rotate(0deg); }
       100% { transform: rotate(360deg); }
     }
-
-    /* Confirmation Details Styles */
-    .field-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 8px;
-      padding: 9px 0;
-      border-bottom: 0.5px solid var(--divider-color);
-    }
-
-    .field-item:last-child {
-      border-bottom: none;
-    }
-
-    .field-left {
-      font-size: 12px;
-      font-weight: 600;
-      color: var(--text-muted);
-    }
-
-    .label-blue {
-      color: var(--accent-blue) !important;
-    }
-
-    .field-right-group {
-      display: flex;
-      align-items: center;
-      justify-content: flex-end;
-      gap: 8px;
-      flex: 1;
-    }
-
-    .field-right {
-      font-size: 12px;
-      font-family: monospace, var(--font-family);
-      color: var(--text-main);
-      text-align: right;
-      word-break: break-all;
-    }
-
-    .totp-value {
-      font-size: 14px;
-      font-weight: 700;
-      color: var(--accent-blue) !important;
-      letter-spacing: 1.2px;
-    }
-
-    .auth-timer-wrapper {
-      position: relative;
-      width: 22px;
-      height: 22px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-    }
-
-    .auth-timer-wrapper svg {
-      transform: rotate(-90deg);
-      width: 22px;
-      height: 22px;
-    }
-
-    .auth-timer-bg { stroke: var(--divider-color); }
-    .auth-timer-progress {
-      stroke: var(--accent-blue);
-      stroke-dasharray: 56.55;
-      stroke-dashoffset: 0;
-      transition: stroke-dashoffset 1s linear;
-    }
-
-    .auth-timer-text {
-      position: absolute;
-      font-size: 8px;
-      font-weight: 700;
-      color: var(--accent-blue);
-    }
-
-    .copy-btn {
-      background: var(--divider-color);
-      color: var(--accent-blue);
-      border: none;
-      width: 24px;
-      height: 24px;
-      border-radius: 50%;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      flex-shrink: 0;
-    }
-
-    .copy-btn.copied {
-      background: var(--accent-green) !important;
-      color: #ffffff !important;
-    }
   </style>
 </head>
-<body>
+<body onload="initGenerator()">
 
   <!-- Toast Notification -->
   <div id="toast">
     <div class="toast-icon">
-      <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+      <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
         <polyline points="20 6 9 17 4 12"></polyline>
       </svg>
     </div>
     <span>Copied Successfully!</span>
   </div>
 
-  <!-- Top Navigation Header -->
-  <div class="header-nav">
-    <button class="back-btn" id="back-btn" onclick="goBackStep()">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
-      <span>Back</span>
-    </button>
-    <h1 class="header-title" id="page-title">Submit Email</h1>
-  </div>
+  <h1 class="header-title">Account Registration</h1>
 
-  <div class="form-card">
+  <div class="container">
     
-    <!-- STEP 1: Main Email -->
-    <div class="step-section active" id="step-1">
-      <div class="input-group">
-        <label class="input-label">Your Email Address</label>
+    <!-- STEP 1: Email -->
+    <div class="step-card active" id="step-1">
+      <div class="info-box-group">
+        <label class="box-label">Email Address</label>
         <div class="input-wrapper">
-          <input type="email" id="email-input" class="custom-input" placeholder="Enter email address..." oninput="validateStep1()">
-          <div class="badge-icon" id="email-badge"></div>
-        </div>
-        <div class="error-msg-box" id="email-error-msg">
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
-          <span>Email address already submitted!</span>
+          <input type="text" id="email-box" class="ios-box valid" readonly>
+          <button class="box-copy-btn" onclick="copyValue('email-box', this)" title="Copy">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+          </button>
         </div>
       </div>
+      <button class="btn-proceed" onclick="proceedStep(2)">
+        <span>Proceed</span>
+      </button>
     </div>
 
     <!-- STEP 2: Password -->
-    <div class="step-section" id="step-2">
-      <div class="input-group">
-        <label class="input-label">Your Password</label>
+    <div class="step-card" id="step-2">
+      <div class="info-box-group">
+        <label class="box-label">Password (10-12 Chars)</label>
         <div class="input-wrapper">
-          <input type="text" id="pass-input" class="custom-input" placeholder="Enter password..." oninput="validateStep2()">
-          <div class="badge-icon" id="pass-badge"></div>
+          <input type="text" id="password-box" class="ios-box valid" readonly>
+          <button class="box-copy-btn" onclick="copyValue('password-box', this)" title="Copy">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+          </button>
         </div>
       </div>
+      <button class="btn-proceed" onclick="proceedStep(3)">
+        <span>Proceed</span>
+      </button>
     </div>
 
     <!-- STEP 3: Recovery Email -->
-    <div class="step-section" id="step-3">
-      <div class="input-group">
-        <label class="input-label">Your Recovery Email Address</label>
+    <div class="step-card" id="step-3">
+      <div class="info-box-group">
+        <label class="box-label">Recovery Email</label>
         <div class="input-wrapper">
-          <input type="email" id="recovery-input" class="custom-input" placeholder="Enter recovery email address..." oninput="validateStep3()">
-          <div class="badge-icon" id="recovery-badge"></div>
-        </div>
-        <div class="error-msg-box" id="recovery-error-msg">
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
-          <span>Recovery email cannot be same as main email!</span>
+          <input type="text" id="recovery-box" class="ios-box valid" readonly>
+          <button class="box-copy-btn" onclick="copyValue('recovery-box', this)" title="Copy">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+          </button>
         </div>
       </div>
+      <button class="btn-proceed" onclick="resetAll()">
+        <span>Complete / Reset</span>
+      </button>
     </div>
 
-    <!-- STEP 4: 2FA Secret Key -->
-    <div class="step-section" id="step-4">
-      <div class="input-group">
-        <label class="input-label">Your 2FA Secret Key</label>
-        <div class="input-wrapper">
-          <input type="text" id="tfa-input" class="custom-input" placeholder="Enter 2FA secret key..." oninput="validateStep4(this)">
-          <div class="badge-icon" id="tfa-badge"></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- STEP 5: Final Confirmation Page -->
-    <div class="step-section" id="step-5">
-      <div id="confirm-details-box"></div>
-    </div>
-
-  </div>
-
-  <!-- Sticky Bottom Button Container -->
-  <div class="button-container" id="bottom-btn-container">
-    <button class="btn-submit" id="main-action-btn" disabled onclick="handleMainAction()">
-      <span class="btn-text">Proceed</span>
-      <svg class="ios-spinner" viewBox="0 0 24 24">
-        <line x1="12" y1="3" x2="12" y2="6" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="1"/>
-        <line x1="18.36" y1="5.64" x2="16.24" y2="7.76" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.875"/>
-        <line x1="21" y1="12" x2="18" y2="12" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.75"/>
-        <line x1="18.36" y1="18.36" x2="16.24" y2="16.24" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.625"/>
-        <line x1="12" y1="21" x2="12" y2="18" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.5"/>
-        <line x1="5.64" y1="18.36" x2="7.76" y2="16.24" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.375"/>
-        <line x1="3" y1="12" x2="6" y2="12" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.25"/>
-        <line x1="5.64" y1="5.64" x2="7.76" y2="7.76" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.125"/>
-      </svg>
-    </button>
   </div>
 
   <script>
-    const checkSVG = `<svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>`;
-    const crossSVG = `<svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>`;
-    const copyIconSVG = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>`;
-    const copiedCheckSVG = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>`;
-
-    let currentStep = 1;
-    let existingEmailsList = [];
-    let active2FASlots = [];
+    const copyIconSVG = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>`;
+    const copiedCheckSVG = `<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>`;
     let toastTimer;
 
     function showToast() {
@@ -495,9 +293,10 @@
       toastTimer = setTimeout(() => { toast.classList.remove('show'); }, 2000);
     }
 
-    function copyToClipboard(text, btnElement) {
-      if (!text) return;
-      navigator.clipboard.writeText(text).then(() => {
+    function copyValue(elementId, btnElement) {
+      const val = document.getElementById(elementId).value;
+      if (!val) return;
+      navigator.clipboard.writeText(val).then(() => {
         btnElement.classList.add('copied');
         btnElement.innerHTML = copiedCheckSVG;
         showToast();
@@ -508,394 +307,56 @@
       });
     }
 
-    function updateStepView() {
-      document.querySelectorAll('.step-section').forEach((sec, idx) => {
-        sec.classList.toggle('active', idx + 1 === currentStep);
-      });
+    function initGenerator() {
+      let chars = "abcdefghijklmnopqrstuvwxyz";
+      let nums = "0123456789";
 
-      const backBtn = document.getElementById('back-btn');
-      const pageTitle = document.getElementById('page-title');
-      const actionBtnText = document.querySelector('#main-action-btn .btn-text');
-      const actionBtn = document.getElementById('main-action-btn');
+      // 1. Generate Username / Email
+      let uLength = Math.floor(Math.random() * 3) + 8;
+      let nLength = Math.floor(Math.random() * 3) + 2;
+      let username = "";
+      let randomChar = chars.charAt(Math.floor(Math.random() * chars.length));
+      username += randomChar;
 
-      if (currentStep === 1) {
-        backBtn.style.display = 'none';
-        pageTitle.innerText = "Submit Email";
-      } else {
-        backBtn.style.display = 'inline-flex';
-        const titles = ["", "Submit Email", "Enter Password", "Recovery Email", "2FA Key", "Confirm Details"];
-        pageTitle.innerText = titles[currentStep];
+      for (let i = 0; i < uLength - 1; i++) {
+        username += chars.charAt(Math.floor(Math.random() * chars.length));
       }
-
-      if (currentStep === 5) {
-        actionBtnText.innerText = "Save Account";
-        actionBtn.classList.add('save-theme');
-      } else {
-        actionBtnText.innerText = "Proceed";
-        actionBtn.classList.remove('save-theme');
+      for (let j = 0; j < nLength; j++) {
+        username += nums.charAt(Math.floor(Math.random() * nums.length));
       }
+      let email = username + "@gmail.com";
 
-      if (currentStep === 1) validateStep1();
-      if (currentStep === 2) validateStep2();
-      if (currentStep === 3) validateStep3();
-      if (currentStep === 4) validateStep4(document.getElementById('tfa-input'));
-      if (currentStep === 5) actionBtn.disabled = false;
+      // 2. Generate Password (10 to 12 chars)
+      let passStartUpper = randomChar.toUpperCase();
+      let password = passStartUpper;
+      let blocksCount = Math.random() < 0.5 ? 2 : 3; 
+      for (let b = 0; b < blocksCount; b++) {
+        password += chars.charAt(Math.floor(Math.random() * chars.length));
+        password += chars.charAt(Math.floor(Math.random() * chars.length));
+        password += nums.charAt(Math.floor(Math.random() * nums.length));
+      }
+      password += chars.charAt(Math.floor(Math.random() * chars.length));
+      if (password.length < 10) password += chars.charAt(Math.floor(Math.random() * chars.length));
+      else if (password.length > 12) password = password.substring(0, 12);
+
+      // 3. Generate Recovery Email
+      let recoveryEmail = username + "sec" + Math.floor(Math.random() * 90 + 10) + "@gmail.com";
+
+      // Set values
+      document.getElementById('email-box').value = email;
+      document.getElementById('password-box').value = password;
+      document.getElementById('recovery-box').value = recoveryEmail;
     }
 
-    function goBackStep() {
-      if (currentStep > 1) {
-        currentStep--;
-        updateStepView();
-      }
+    function proceedStep(stepNumber) {
+      document.querySelectorAll('.step-card').forEach(card => card.classList.remove('active'));
+      document.getElementById('step-' + stepNumber).classList.add('active');
     }
 
-    function handleMainAction() {
-      if (currentStep < 5) {
-        triggerButtonLoading(() => {
-          if (currentStep === 4) {
-            renderConfirmationStep();
-          }
-          currentStep++;
-          updateStepView();
-        });
-      } else {
-        triggerButtonLoading(() => {
-          const payload = {
-            action: "submit_email",
-            email: document.getElementById('email-input').value.trim(),
-            password: document.getElementById('pass-input').value.trim(),
-            recovery: document.getElementById('recovery-input').value.trim(),
-            secretKey: document.getElementById('tfa-input').value.trim()
-          };
-          sendDataToTelegram(payload);
-        });
-      }
+    function resetAll() {
+      initGenerator();
+      proceedStep(1);
     }
-
-    // STEP 1 Validation
-    function validateStep1() {
-      const input = document.getElementById('email-input');
-      const badge = document.getElementById('email-badge');
-      const errorBox = document.getElementById('email-error-msg');
-      const btn = document.getElementById('main-action-btn');
-      
-      const emailVal = input.value.trim().toLowerCase();
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-      if (emailVal.length === 0) {
-        input.className = 'custom-input';
-        badge.className = 'badge-icon';
-        errorBox.classList.remove('show');
-        if (currentStep === 1) btn.disabled = true;
-        return;
-      }
-
-      const isAlreadyExists = existingEmailsList.includes(emailVal);
-      const isValidFormat = emailRegex.test(emailVal);
-
-      if (isAlreadyExists) {
-        input.className = 'custom-input invalid-glow';
-        badge.className = 'badge-icon invalid';
-        badge.innerHTML = crossSVG;
-        errorBox.classList.add('show');
-        if (currentStep === 1) btn.disabled = true;
-      } else if (!isValidFormat) {
-        input.className = 'custom-input invalid-glow';
-        badge.className = 'badge-icon invalid';
-        badge.innerHTML = crossSVG;
-        errorBox.classList.remove('show');
-        if (currentStep === 1) btn.disabled = true;
-      } else {
-        input.className = 'custom-input valid-glow';
-        badge.className = 'badge-icon valid';
-        badge.innerHTML = checkSVG;
-        errorBox.classList.remove('show');
-        if (currentStep === 1) btn.disabled = false;
-      }
-    }
-
-    // STEP 2 Validation
-    function validateStep2() {
-      const input = document.getElementById('pass-input');
-      const badge = document.getElementById('pass-badge');
-      const btn = document.getElementById('main-action-btn');
-
-      if (input.value.length === 0) {
-        input.className = 'custom-input';
-        badge.className = 'badge-icon';
-        if (currentStep === 2) btn.disabled = true;
-      } else if (input.value.length >= 6) {
-        input.className = 'custom-input valid-glow';
-        badge.className = 'badge-icon valid';
-        badge.innerHTML = checkSVG;
-        if (currentStep === 2) btn.disabled = false;
-      } else {
-        input.className = 'custom-input invalid-glow';
-        badge.className = 'badge-icon invalid';
-        badge.innerHTML = crossSVG;
-        if (currentStep === 2) btn.disabled = true;
-      }
-    }
-
-    // STEP 3 Validation
-    function validateStep3() {
-      const input = document.getElementById('recovery-input');
-      const badge = document.getElementById('recovery-badge');
-      const errorBox = document.getElementById('recovery-error-msg');
-      const btn = document.getElementById('main-action-btn');
-      
-      const mainEmail = document.getElementById('email-input').value.trim().toLowerCase();
-      const recVal = input.value.trim().toLowerCase();
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-      if (recVal.length === 0) {
-        input.className = 'custom-input';
-        badge.className = 'badge-icon';
-        errorBox.classList.remove('show');
-        if (currentStep === 3) btn.disabled = true;
-        return;
-      }
-
-      const isSameAsMain = (recVal === mainEmail);
-      const isValidFormat = emailRegex.test(recVal);
-
-      if (isSameAsMain) {
-        input.className = 'custom-input invalid-glow';
-        badge.className = 'badge-icon invalid';
-        badge.innerHTML = crossSVG;
-        errorBox.classList.add('show');
-        if (currentStep === 3) btn.disabled = true;
-      } else if (!isValidFormat) {
-        input.className = 'custom-input invalid-glow';
-        badge.className = 'badge-icon invalid';
-        badge.innerHTML = crossSVG;
-        errorBox.classList.remove('show');
-        if (currentStep === 3) btn.disabled = true;
-      } else {
-        input.className = 'custom-input valid-glow';
-        badge.className = 'badge-icon valid';
-        badge.innerHTML = checkSVG;
-        errorBox.classList.remove('show');
-        if (currentStep === 3) btn.disabled = false;
-      }
-    }
-
-    // STEP 4 Validation
-    function validateStep4(el) {
-      el.value = el.value.toUpperCase();
-      const badge = document.getElementById('tfa-badge');
-      const btn = document.getElementById('main-action-btn');
-
-      const clean2FA = el.value.replace(/\s+/g, '');
-      const isBase32Pattern = /^[A-Z2-7]{16,}$/.test(clean2FA);
-
-      if (el.value.length === 0) {
-        el.className = 'custom-input';
-        badge.className = 'badge-icon';
-        if (currentStep === 4) btn.disabled = true;
-      } else if (isBase32Pattern) {
-        el.className = 'custom-input valid-glow';
-        badge.className = 'badge-icon valid';
-        badge.innerHTML = checkSVG;
-        if (currentStep === 4) btn.disabled = false;
-      } else {
-        el.className = 'custom-input invalid-glow';
-        badge.className = 'badge-icon invalid';
-        badge.innerHTML = crossSVG;
-        if (currentStep === 4) btn.disabled = true;
-      }
-    }
-
-    function renderConfirmationStep() {
-      const emailVal = document.getElementById('email-input').value.trim();
-      const passVal = document.getElementById('pass-input').value.trim();
-      const recoveryVal = document.getElementById('recovery-input').value.trim();
-      const tfaVal = document.getElementById('tfa-input').value.trim();
-
-      const box = document.getElementById('confirm-details-box');
-      active2FASlots = [];
-
-      box.innerHTML = `
-        <div class="field-item">
-          <span class="field-left">Email</span>
-          <div class="field-right-group">
-            <span class="field-right">${escapeHtml(emailVal)}</span>
-            <button class="copy-btn" onclick="copyToClipboard('${escapeJs(emailVal)}', this)">${copyIconSVG}</button>
-          </div>
-        </div>
-
-        <div class="field-item">
-          <span class="field-left">Password</span>
-          <div class="field-right-group">
-            <span class="field-right">${escapeHtml(passVal)}</span>
-            <button class="copy-btn" onclick="copyToClipboard('${escapeJs(passVal)}', this)">${copyIconSVG}</button>
-          </div>
-        </div>
-
-        <div class="field-item">
-          <span class="field-left">Recovery Email</span>
-          <div class="field-right-group">
-            <span class="field-right">${escapeHtml(recoveryVal)}</span>
-            <button class="copy-btn" onclick="copyToClipboard('${escapeJs(recoveryVal)}', this)">${copyIconSVG}</button>
-          </div>
-        </div>
-
-        <div class="field-item">
-          <span class="field-left">2FA Secret Key</span>
-          <div class="field-right-group">
-            <span class="field-right">${escapeHtml(tfaVal)}</span>
-            <button class="copy-btn" onclick="copyToClipboard('${escapeJs(tfaVal)}', this)">${copyIconSVG}</button>
-          </div>
-        </div>
-
-        <div class="field-item">
-          <span class="field-left label-blue">2FA Verification Code</span>
-          <div class="field-right-group">
-            <div class="auth-timer-wrapper">
-              <svg viewBox="0 0 24 24">
-                <circle class="auth-timer-bg" cx="12" cy="12" r="9" fill="none" stroke-width="2.5"/>
-                <circle id="confirm-totp-ring" class="auth-timer-progress" cx="12" cy="12" r="9" fill="none" stroke-width="2.5" stroke-linecap="round"/>
-              </svg>
-              <span id="confirm-totp-timer" class="auth-timer-text">30</span>
-            </div>
-            <span id="confirm-totp-val" class="field-right totp-value">------</span>
-            <button id="confirm-totp-btn" class="copy-btn">${copyIconSVG}</button>
-          </div>
-        </div>
-      `;
-
-      setTimeout(() => {
-        active2FASlots = [{
-          secret: tfaVal,
-          valueEl: document.getElementById('confirm-totp-val'),
-          timerEl: document.getElementById('confirm-totp-timer'),
-          ringProgressEl: document.getElementById('confirm-totp-ring'),
-          btnEl: document.getElementById('confirm-totp-btn'),
-          generated: false
-        }];
-        updateAllTOTPCodes();
-      }, 50);
-    }
-
-    function triggerButtonLoading(callback) {
-      const btn = document.getElementById('main-action-btn');
-      const text = btn.querySelector('.btn-text');
-      const spinner = btn.querySelector('.ios-spinner');
-      
-      text.style.display = 'none';
-      spinner.style.display = 'inline-block';
-      btn.disabled = true;
-
-      setTimeout(() => {
-        spinner.style.display = 'none';
-        text.style.display = 'inline';
-        btn.disabled = false;
-        callback();
-      }, 300);
-    }
-
-    // TOTP Generator Engine
-    function base32ToBytes(base32) {
-      const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
-      let cleaned = base32.replace(/[\s=]/g, "").toUpperCase();
-      let bits = "";
-      for (let i = 0; i < cleaned.length; i++) {
-        let val = alphabet.indexOf(cleaned[i]);
-        if (val === -1) continue;
-        bits += val.toString(2).padStart(5, '0');
-      }
-      let bytes = new Uint8Array(Math.floor(bits.length / 8));
-      for (let i = 0; i < bytes.length; i++) {
-        bytes[i] = parseInt(bits.substr(i * 8, 8), 2);
-      }
-      return bytes;
-    }
-
-    async function generateTOTP(secretBase32) {
-      try {
-        const keyBytes = base32ToBytes(secretBase32);
-        if (keyBytes.length === 0) return "------";
-        const epoch = Math.floor(Date.now() / 1000);
-        const counter = Math.floor(epoch / 30);
-        const buffer = new ArrayBuffer(8);
-        const view = new DataView(buffer);
-        view.setUint32(4, counter, false);
-        const cryptoKey = await window.crypto.subtle.importKey(
-          "raw", keyBytes, { name: "HMAC", hash: { name: "SHA-1" } }, false, ["sign"]
-        );
-        const signature = await window.crypto.subtle.sign("HMAC", cryptoKey, buffer);
-        const sigBytes = new Uint8Array(signature);
-        const offset = sigBytes[sigBytes.length - 1] & 0x0f;
-        const binary =
-          ((sigBytes[offset] & 0x7f) << 24) |
-          ((sigBytes[offset + 1] & 0xff) << 16) |
-          ((sigBytes[offset + 2] & 0xff) << 8) |
-          (sigBytes[offset + 3] & 0xff);
-        const otp = binary % 1000000;
-        return otp.toString().padStart(6, '0');
-      } catch (e) {
-        return "------";
-      }
-    }
-
-    async function updateAllTOTPCodes() {
-      const remainingSeconds = 30 - (Math.floor(Date.now() / 1000) % 30);
-      const circumference = 56.55;
-      const offset = circumference - (remainingSeconds / 30) * circumference;
-
-      for (let slot of active2FASlots) {
-        if (slot.timerEl) slot.timerEl.innerText = `${remainingSeconds}`;
-        if (slot.ringProgressEl) slot.ringProgressEl.style.strokeDashoffset = offset;
-
-        if (remainingSeconds === 30 || !slot.generated) {
-          const code = await generateTOTP(slot.secret);
-          slot.valueEl.innerText = code;
-          slot.btnEl.setAttribute("onclick", `copyToClipboard('${code}', this)`);
-          slot.generated = true;
-        }
-      }
-    }
-
-    setInterval(() => {
-      const remainingSeconds = 30 - (Math.floor(Date.now() / 1000) % 30);
-      if (remainingSeconds === 30) {
-        active2FASlots.forEach(s => s.generated = false);
-      }
-      updateAllTOTPCodes();
-    }, 1000);
-
-    function sendDataToTelegram(payload) {
-      const jsonString = JSON.stringify(payload);
-      if (window.Telegram && window.Telegram.WebApp) {
-        window.Telegram.WebApp.sendData(jsonString);
-      } else {
-        alert("Telegram WebApp sendData:\n" + jsonString);
-      }
-    }
-
-    function initData() {
-      const urlParams = new URLSearchParams(window.location.search);
-      const rawData = urlParams.get('emails');
-      if (rawData) {
-        try {
-          existingEmailsList = JSON.parse(decodeURIComponent(rawData)).map(e => String(e).toLowerCase().trim());
-        } catch (e) {
-          existingEmailsList = [];
-        }
-      }
-    }
-
-    function escapeHtml(str) {
-      return String(str).replace(/[&<>"']/g, function(m) {
-        return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[m];
-      });
-    }
-
-    function escapeJs(str) {
-      return String(str).replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '\\"');
-    }
-
-    window.onload = initData;
   </script>
 </body>
 </html>
