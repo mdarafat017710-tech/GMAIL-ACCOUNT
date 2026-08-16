@@ -220,7 +220,7 @@
       100% { transform: rotate(360deg); }
     }
 
-    /* Confirmation Card Match */
+    /* Confirmation Card */
     .account-card {
       background: var(--card-bg);
       border-radius: 14px;
@@ -312,7 +312,7 @@
       color: var(--accent-blue);
     }
 
-    /* Copied Button Style Match */
+    /* Copy Button Style */
     .copy-btn {
       background: #f0f0f5;
       color: var(--accent-blue);
@@ -358,25 +358,25 @@
       gap: 8px;
     }
 
-    /* Top Copy Success Toast Notification Popup Match */
+    /* Exact Copied Success Toast Popup: Black Background, White Text & Icon in One Line */
     #copy-toast {
       position: fixed;
-      top: -60px;
+      top: -70px;
       left: 50%;
       transform: translateX(-50%);
-      background: rgba(0, 0, 0, 0.85);
+      background: #000000;
       color: #ffffff;
-      padding: 10px 20px;
-      border-radius: 20px;
+      padding: 10px 18px;
+      border-radius: 24px;
       font-size: 13px;
       font-weight: 600;
       z-index: 9999;
       display: flex;
       align-items: center;
+      white-space: nowrap;
       gap: 8px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-      backdrop-filter: blur(10px);
-      transition: top 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      box-shadow: 0 6px 16px rgba(0,0,0,0.25);
+      transition: top 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
       pointer-events: none;
     }
 
@@ -387,10 +387,10 @@
 </head>
 <body>
 
-  <!-- Top Toast Notification -->
+  <!-- Toast Notification Popup -->
   <div id="copy-toast">
-    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#34c759" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
-    <span>Copied successfully!</span>
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+    <span>Copied successfully</span>
   </div>
 
   <div class="top-nav">
@@ -653,9 +653,11 @@
       const indicator = document.getElementById('2fa-indicator');
       const btn = document.getElementById('btn-4');
       const val = input.value.trim().toUpperCase();
+      // Spaces এবং অক্ষরগুলো ফিল্টার করে শুধু Base32 ক্যারেক্টারগুলো যাচাই করা হচ্ছে
+      const cleanVal = val.replace(/[\s]/g, '');
       const base32Regex = /^[A-Z2-7]+$/;
 
-      if (val.length >= 16 && val.length <= 32 && base32Regex.test(val)) {
+      if (cleanVal.length >= 16 && base32Regex.test(cleanVal)) {
         input.classList.remove('invalid');
         input.classList.add('valid');
         indicator.classList.add('show');
