@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Account History - iOS Theme</title>
+  <style>
+    /* --------------------------------------------------
+       📱 iOS Dark Theme & Global Variables
+    -------------------------------------------------- */
+    :root {
+      --bg-color: #000000;
+      --card-bg: #1c1c1e;
+      --card-inner: #2c2c2e;
+      --accent-blue: #0a84ff;
+      --accent-green: #30d158;
+      --accent-orange: #ff9f0a;
+      --text-main: #ffffff;
+      --text-muted: #8e8e93;
+      --border-color: #38383a;
+      --font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Helvetica Neue", Arial, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: var(--font-family);
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      padding: 20px 16px 40px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    /* --------------------------------------------------
+       🔔 Top Toast Notification
+    -------------------------------------------------- */
+    #toast {
+      position: fixed;
+      top: -60px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(48, 209, 88, 0.2);
+      border: 1px solid rgba(48, 209, 88, 0.4);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      color: var(--accent-green);
+      padding: 10px 22px;
+      border-radius: 30px;
+      font-size: 14px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+      transition: top 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s ease;
+      opacity: 0;
+      z-index: 9999;
+    }
+
+    #toast.show {
+      top: 20px;
+      opacity: 1;
+    }
+
+    /* --------------------------------------------------
+       🏷️ Header
+    -------------------------------------------------- */
+    .header {
+      width: 100%;
+      max-width: 440px;
+      margin-bottom: 20px;
+    }
+
+    .header h1 {
+      font-size: 28px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+    }
+
+    .header p {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    /* --------------------------------------------------
+       📦 Container & Card List
+    -------------------------------------------------- */
+    #container {
+      width: 100%;
+      max-width: 440px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border-radius: 16px;
+      padding: 16px;
+      border: 1px solid var(--border-color);
+      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    }
+
+    .card-title {
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      color: var(--accent-blue);
+      letter-spacing: 0.5px;
+      margin-bottom: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .field-group {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .field-item {
+      background: var(--card-inner);
+      padding: 10px 12px;
+      border-radius: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .field-item.totp-box {
+      background: rgba(255, 159, 10, 0.1);
+      border: 1px solid rgba(255, 159, 10, 0.25);
+    }
+
+    .field-info {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      overflow: hidden;
+      margin-right: 10px;
+    }
+
+    .field-label {
+      font-size: 11px;
+      color: var(--text-muted);
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .field-value {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-main);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      font-family: monospace, var(--font-family);
+    }
+
+    .totp-value {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--accent-orange);
+      letter-spacing: 2px;
+    }
+
+    .timer-badge {
+      font-size: 10px;
+      background: rgba(255, 159, 10, 0.2);
+      color: var(--accent-orange);
+      padding: 2px 6px;
+      border-radius: 10px;
+      font-weight: 700;
+    }
+
+    /* --------------------------------------------------
+       🔘 Copy Button
+    -------------------------------------------------- */
+    .copy-btn {
+      background: rgba(10, 132, 255, 0.15);
+      color: var(--accent-blue);
+      border: none;
+      padding: 6px 12px;
+      border-radius: 18px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      transition: all 0.2s ease;
+      flex-shrink: 0;
+    }
+
+    .copy-btn:active {
+      transform: scale(0.92);
+      background: rgba(10, 132, 255, 0.3);
+    }
+
+    .copy-btn.copied {
+      background: rgba(48, 209, 88, 0.2);
+      color: var(--accent-green);
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--text-muted);
+      font-size: 15px;
+      background: var(--card-bg);
+      border-radius: 16px;
+      border: 1px solid var(--border-color);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 🔔 Top Toast Notification -->
+  <div id="toast">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+    <span>Copied Successfully!</span>
+  </div>
+
+  <!-- 🏷️ Header -->
+  <div class="header">
+    <h1>Account History</h1>
+    <p id="sub-title">Saved Credentials</p>
+  </div>
+
+  <!-- 📦 Container -->
+  <div id="container"></div>
+
+  <script>
+    // --------------------------------------------------
+    // 🔔 Toast System
+    // --------------------------------------------------
+    let toastTimer;
+    function showToast() {
+      const toast = document.getElementById('toast');
+      toast.classList.add('show');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => { toast.classList.remove('show'); }, 2000);
+    }
+
+    function copyToClipboard(text, btnElement) {
+      if (!text) return;
+      navigator.clipboard.writeText(text).then(() => {
+        const originalHTML = btnElement.innerHTML;
+        btnElement.classList.add('copied');
+        btnElement.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> Copied`;
+        showToast();
+        setTimeout(() => {
+          btnElement.classList.remove('copied');
+          btnElement.innerHTML = originalHTML;
+        }, 2000);
+      });
+    }
+
+    // --------------------------------------------------
+    // 🔐 2FA (TOTP Generator - Native Web Crypto)
+    // --------------------------------------------------
+    function base32ToBytes(base32) {
+      const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
+      let cleaned = base32.replace(/[\s=]/g, "").toUpperCase();
+      let bits = "";
+      for (let i = 0; i < cleaned.length; i++) {
+        let val = alphabet.indexOf(cleaned[i]);
+        if (val === -1) continue;
+        bits += val.toString(2).padStart(5, '0');
+      }
+      let bytes = new Uint8Array(Math.floor(bits.length / 8));
+      for (let i = 0; i < bytes.length; i++) {
+        bytes[i] = parseInt(bits.substr(i * 8, 8), 2);
+      }
+      return bytes;
+    }
+
+    async function generateTOTP(secretBase32) {
+      try {
+        const keyBytes = base32ToBytes(secretBase32);
+        if (keyBytes.length === 0) return "------";
+        
+        const epoch = Math.floor(Date.now() / 1000);
+        const counter = Math.floor(epoch / 30);
+        
+        const buffer = new ArrayBuffer(8);
+        const view = new DataView(buffer);
+        view.setUint32(4, counter, false);
+        
+        const cryptoKey = await window.crypto.subtle.importKey(
+          "raw", keyBytes, { name: "HMAC", hash: { name: "SHA-1" } }, false, ["sign"]
+        );
+        
+        const signature = await window.crypto.subtle.sign("HMAC", cryptoKey, buffer);
+        const sigBytes = new Uint8Array(signature);
+        const offset = sigBytes[sigBytes.length - 1] & 0x0f;
+        
+        const binary =
+          ((sigBytes[offset] & 0x7f) << 24) |
+          ((sigBytes[offset + 1] & 0xff) << 16) |
+          ((sigBytes[offset + 2] & 0xff) << 8) |
+          (sigBytes[offset + 3] & 0xff);
+          
+        const otp = binary % 1000000;
+        return otp.toString().padStart(6, '0');
+      } catch (e) {
+        return "------";
+      }
+    }
+
+    // --------------------------------------------------
+    // ⏱️ 30s Auto Timer & TOTP Refresh Logic
+    // --------------------------------------------------
+    let active2FASlots = [];
+
+    async function updateAllTOTPCodes() {
+      const remainingSeconds = 30 - (Math.floor(Date.now() / 1000) % 30);
+      
+      for (let slot of active2FASlots) {
+        // টাইমার আপডেট
+        if (slot.timerEl) {
+          slot.timerEl.innerText = `${remainingSeconds}s`;
+        }
+        
+        // প্রতি উইন্ডো পরিবর্তনের মুখে অথবা পেজ লোডে কোড রিফ্রেশ
+        if (remainingSeconds === 30 || !slot.generated) {
+          const code = await generateTOTP(slot.secret);
+          slot.valueEl.innerText = code;
+          slot.btnEl.setAttribute("onclick", `copyToClipboard('${code}', this)`);
+          slot.generated = true;
+        }
+      }
+    }
+
+    // ১ সেকেন্ড পর পর টাইমার ও কোড আপডেট চেক
+    setInterval(() => {
+      const remainingSeconds = 30 - (Math.floor(Date.now() / 1000) % 30);
+      if (remainingSeconds === 30) {
+        active2FASlots.forEach(s => s.generated = false);
+      }
+      updateAllTOTPCodes();
+    }, 1000);
+
+    // --------------------------------------------------
+    // 🔗 URL Data & Render
+    // --------------------------------------------------
+    function loadData() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const rawData = urlParams.get('data');
+      const container = document.getElementById('container');
+      const subTitle = document.getElementById('sub-title');
+
+      if (!rawData) {
+        container.innerHTML = `<div class="empty-state">No account data provided in URL.</div>`;
+        return;
+      }
+
+      try {
+        const accounts = JSON.parse(decodeURIComponent(rawData));
+        if (!Array.isArray(accounts) || accounts.length === 0) {
+          container.innerHTML = `<div class="empty-state">No records found.</div>`;
+          return;
+        }
+
+        subTitle.innerText = `Total Loaded: ${accounts.length} Account(s)`;
+        container.innerHTML = '';
+        active2FASlots = [];
+
+        accounts.forEach((acc, index) => {
+          const card = document.createElement('div');
+          card.className = 'card';
+
+          const emailVal = acc.email || "";
+          const passVal = acc.password || "";
+          const recoveryVal = acc.recovery || "";
+          const twoFactorSecret = acc["2fa"] || acc.twofa || "";
+
+          let totpBoxHTML = '';
+          const slotId = `totp-val-${index}`;
+          const timerId = `totp-timer-${index}`;
+          const btnId = `totp-btn-${index}`;
+
+          if (twoFactorSecret) {
+            totpBoxHTML = `
+              <div class="field-item totp-box">
+                <div class="field-info">
+                  <span class="field-label">
+                    LIVE 2FA CODE <span id="${timerId}" class="timer-badge">30s</span>
+                  </span>
+                  <span id="${slotId}" class="field-value totp-value">------</span>
+                </div>
+                <button id="${btnId}" class="copy-btn">Copy Code</button>
+              </div>
+            `;
+          }
+
+          card.innerHTML = `
+            <div class="card-title">
+              <span>Account #${index + 1}</span>
+            </div>
+            <div class="field-group">
+              ${emailVal ? `
+                <div class="field-item">
+                  <div class="field-info">
+                    <span class="field-label">EMAIL</span>
+                    <span class="field-value">${escapeHtml(emailVal)}</span>
+                  </div>
+                  <button class="copy-btn" onclick="copyToClipboard('${escapeJs(emailVal)}', this)">Copy</button>
+                </div>
+              ` : ''}
+
+              ${passVal ? `
+                <div class="field-item">
+                  <div class="field-info">
+                    <span class="field-label">PASSWORD</span>
+                    <span class="field-value">${escapeHtml(passVal)}</span>
+                  </div>
+                  <button class="copy-btn" onclick="copyToClipboard('${escapeJs(passVal)}', this)">Copy</button>
+                </div>
+              ` : ''}
+
+              ${recoveryVal ? `
+                <div class="field-item">
+                  <div class="field-info">
+                    <span class="field-label">RECOVERY EMAIL</span>
+                    <span class="field-value">${escapeHtml(recoveryVal)}</span>
+                  </div>
+                  <button class="copy-btn" onclick="copyToClipboard('${escapeJs(recoveryVal)}', this)">Copy</button>
+                </div>
+              ` : ''}
+
+              ${twoFactorSecret ? `
+                <div class="field-item">
+                  <div class="field-info">
+                    <span class="field-label">2FA SECRET KEY</span>
+                    <span class="field-value">${escapeHtml(twoFactorSecret)}</span>
+                  </div>
+                  <button class="copy-btn" onclick="copyToClipboard('${escapeJs(twoFactorSecret)}', this)">Copy Key</button>
+                </div>
+                ${totpBoxHTML}
+              ` : ''}
+            </div>
+          `;
+
+          container.appendChild(card);
+
+          // 2FA সিক্রেট থাকলে তা লাইভ আপডেটের লিস্টে যোগ করা
+          if (twoFactorSecret) {
+            setTimeout(() => {
+              active2FASlots.push({
+                secret: twoFactorSecret,
+                valueEl: document.getElementById(slotId),
+                timerEl: document.getElementById(timerId),
+                btnEl: document.getElementById(btnId),
+                generated: false
+              });
+              updateAllTOTPCodes();
+            }, 50);
+          }
+        });
+
+      } catch (e) {
+        container.innerHTML = `<div class="empty-state">Failed to parse account JSON.</div>`;
+      }
+    }
+
+    function escapeHtml(str) {
+      return String(str).replace(/[&<>"']/g, function(m) {
+        return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[m];
+      });
+    }
+
+    function escapeJs(str) {
+      return String(str).replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '\\"');
+    }
+
+    window.onload = loadData;
+  </script>
+</body>
+</html>
