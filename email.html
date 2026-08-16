@@ -40,52 +40,51 @@
       position: relative;
     }
 
-    /* Toast Notification (Success / Info / Saved) */
-    #toast {
-      position: fixed;
-      top: -70px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: rgba(0, 0, 0, 0.85);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      color: #ffffff;
-      padding: 9px 16px;
-      border-radius: 20px;
-      font-size: 13px;
-      font-weight: 500;
+    /* Top Navigation Header with Back Arrow */
+    .top-nav {
+      width: 100%;
+      max-width: 420px;
       display: flex;
       align-items: center;
-      gap: 8px;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
-      transition: top 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s ease;
-      opacity: 0;
-      z-index: 9999;
-      white-space: nowrap;
+      margin-bottom: 16px;
+      position: relative;
+      height: 36px;
     }
 
-    #toast.show {
-      top: 14px;
-      opacity: 1;
-    }
-
-    #toast .toast-icon {
-      background: var(--accent-green);
-      width: 18px;
-      height: 18px;
+    .back-btn {
+      background: #e5e5ea;
+      border: none;
+      width: 32px;
+      height: 32px;
       border-radius: 50%;
-      display: flex;
+      display: none;
       align-items: center;
       justify-content: center;
-      flex-shrink: 0;
+      cursor: pointer;
+      color: var(--text-main);
+      transition: background 0.2s;
+    }
+
+    .back-btn.show {
+      display: flex;
+    }
+
+    .back-btn:active {
+      background: #d1d1d6;
     }
 
     .header-title {
-      font-size: 20px;
+      font-size: 18px;
       font-weight: 600;
-      margin-bottom: 20px;
       letter-spacing: -0.4px;
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 70%;
       text-align: center;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     /* Step Containers */
@@ -124,10 +123,9 @@
       width: 100%;
     }
 
-    /* iOS Input Box Style */
     .ios-box {
       width: 100%;
-      padding: 12px 40px 12px 14px;
+      padding: 12px 42px 12px 14px;
       background: var(--card-bg);
       border: 1.5px solid var(--border-color);
       border-radius: 12px;
@@ -141,23 +139,25 @@
 
     .ios-box:focus {
       border-color: var(--accent-blue);
-      box-shadow: 0 0 10px rgba(0, 122, 255, 0.25), 0 2px 6px rgba(0, 122, 255, 0.15);
+      box-shadow: 0 0 10px rgba(0, 122, 255, 0.2), 0 2px 6px rgba(0, 122, 255, 0.1);
     }
 
     .ios-box.valid {
       border-color: var(--accent-green) !important;
-      box-shadow: 0 0 10px rgba(52, 199, 89, 0.25), 0 2px 6px rgba(52, 199, 89, 0.15);
     }
 
     .ios-box.invalid {
       border-color: var(--accent-red) !important;
-      box-shadow: 0 0 10px rgba(255, 59, 48, 0.25), 0 2px 6px rgba(255, 59, 48, 0.15);
     }
 
-    /* Right Side Indicator (e.g., Check Icon) inside Input */
+    /* Right Side Indicator: Green Background with White Checkmark */
     .input-indicator {
       position: absolute;
       right: 12px;
+      width: 22px;
+      height: 22px;
+      background: var(--accent-green);
+      border-radius: 50%;
       display: none;
       align-items: center;
       justify-content: center;
@@ -168,49 +168,65 @@
       display: flex;
     }
 
-    /* Action Container & Button */
+    /* Field Error / Warning Message with Exclamation SVG */
+    .field-error-msg {
+      display: none;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--accent-red);
+      padding-left: 4px;
+      margin-top: 2px;
+    }
+
+    .field-error-msg.show {
+      display: flex;
+    }
+
+    /* Action Container & Compact Proceed Button */
     .action-container {
       width: 100%;
       max-width: 420px;
-      margin-top: 12px;
+      margin-top: 8px;
       display: flex;
-      flex-direction: column;
-      gap: 10px;
+      justify-content: flex-end;
     }
 
-    .btn-random {
-      width: 100%;
+    .btn-proceed {
       background: var(--accent-blue);
       color: #ffffff;
       border: none;
-      padding: 14px;
-      border-radius: 12px;
-      font-size: 16px;
+      padding: 10px 24px;
+      border-radius: 10px;
+      font-size: 14px;
       font-weight: 600;
       cursor: pointer;
-      display: flex;
+      display: inline-flex;
       align-items: center;
       justify-content: center;
-      gap: 10px;
-      box-shadow: 0 4px 12px rgba(0, 122, 255, 0.25);
-      transition: opacity 0.2s ease;
-    }
-
-    .btn-random:active {
-      opacity: 0.8;
-    }
-
-    .btn-content {
-      display: flex;
-      align-items: center;
       gap: 8px;
+      box-shadow: 0 4px 12px rgba(0, 122, 255, 0.2);
+      transition: all 0.2s ease;
+    }
+
+    .btn-proceed:disabled {
+      background: #c6c6c8;
+      color: #8e8e93;
+      box-shadow: none;
+      cursor: not-allowed;
+      opacity: 0.7;
+    }
+
+    .btn-proceed:not(:disabled):active {
+      opacity: 0.8;
     }
 
     /* iOS Spinner Animation */
     .ios-spinner {
       display: none;
-      width: 20px;
-      height: 20px;
+      width: 18px;
+      height: 18px;
       animation: iosRotate 0.8s steps(8, end) infinite;
     }
 
@@ -219,7 +235,7 @@
       100% { transform: rotate(360deg); }
     }
 
-    /* Final Confirmation Page (History Card Style - Keeping original layout) */
+    /* Final Confirmation Page (History Card Style) */
     .account-card {
       background: var(--card-bg);
       border-radius: 14px;
@@ -228,6 +244,8 @@
       box-shadow: 0 1px 3px rgba(0,0,0,0.02);
       display: flex;
       flex-direction: column;
+      width: 100%;
+      max-width: 420px;
     }
 
     .field-item {
@@ -352,54 +370,36 @@
       justify-content: center;
       gap: 8px;
     }
-
-    .button-row {
-      display: flex;
-      gap: 10px;
-    }
-    .btn-secondary {
-      background: #e5e5ea;
-      color: var(--text-main);
-      border: none;
-      padding: 14px;
-      border-radius: 12px;
-      font-size: 16px;
-      font-weight: 600;
-      cursor: pointer;
-      flex: 1;
-    }
   </style>
 </head>
 <body>
 
-  <!-- Toast Notification -->
-  <div id="toast">
-    <div class="toast-icon" id="toast-icon-bg">
-      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
-        <polyline points="20 6 9 17 4 12"></polyline>
-      </svg>
-    </div>
-    <span id="toast-text">Copied Successfully!</span>
+  <!-- Top Navigation Header -->
+  <div class="top-nav">
+    <button class="back-btn" id="back-btn-elem" onclick="goBackStep()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+    </button>
+    <h1 class="header-title" id="main-title">Email Address</h1>
   </div>
 
-  <h1 class="header-title" id="main-title">Gmail Account Setup</h1>
-
-  <!-- Step 1: Email -->
+  <!-- Step 1: Email Address -->
   <div id="step-1" class="step-container active">
     <div class="info-box-group">
       <label class="box-label">Email Address</label>
       <div class="input-wrapper">
-        <input type="email" id="input-email" class="ios-box" placeholder="example@gmail.com" oninput="validateEmailInput()">
+        <input type="email" id="input-email" class="ios-box" placeholder="example@gmail.com" oninput="validateEmailField()">
         <div class="input-indicator" id="email-indicator">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#34c759" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
         </div>
+      </div>
+      <div class="field-error-msg" id="email-error-msg">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+        <span>Email already submitted</span>
       </div>
     </div>
     <div class="action-container">
-      <button class="btn-random" id="btn-1" onclick="nextStep(1)">
-        <div class="btn-content" id="btn-content-1">
-          <span>Proceed</span>
-        </div>
+      <button class="btn-proceed" id="btn-1" disabled onclick="nextStep(1)">
+        <span id="btn-text-1">Proceed</span>
         <svg class="ios-spinner" id="spinner-1" viewBox="0 0 24 24">
           <line x1="12" y1="3" x2="12" y2="6" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="1"/>
           <line x1="18.36" y1="5.64" x2="16.24" y2="7.76" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.875"/>
@@ -419,64 +419,54 @@
     <div class="info-box-group">
       <label class="box-label">Account Password</label>
       <div class="input-wrapper">
-        <input type="password" id="input-password" class="ios-box" placeholder="Enter password" oninput="validateField('password', 6)">
+        <input type="password" id="input-password" class="ios-box" placeholder="Enter account password" oninput="validateStandardField('password', 6, 2)">
         <div class="input-indicator" id="password-indicator">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#34c759" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
         </div>
       </div>
     </div>
     <div class="action-container">
-      <div class="button-row">
-        <button class="btn-secondary" onclick="prevStep(2)">Back</button>
-        <button class="btn-random" id="btn-2" style="flex:2;" onclick="nextStep(2)">
-          <div class="btn-content" id="btn-content-2">
-            <span>Proceed</span>
-          </div>
-          <svg class="ios-spinner" id="spinner-2" viewBox="0 0 24 24">
-            <line x1="12" y1="3" x2="12" y2="6" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="1"/>
-            <line x1="18.36" y1="5.64" x2="16.24" y2="7.76" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.875"/>
-            <line x1="21" y1="12" x2="18" y2="12" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.75"/>
-            <line x1="18.36" y1="18.36" x2="16.24" y2="16.24" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.625"/>
-            <line x1="12" y1="21" x2="12" y2="18" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.5"/>
-            <line x1="5.64" y1="18.36" x2="7.76" y2="16.24" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.375"/>
-            <line x1="3" y1="12" x2="6" y2="12" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.25"/>
-            <line x1="5.64" y1="5.64" x2="7.76" y2="7.76" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.125"/>
-          </svg>
-        </button>
-      </div>
+      <button class="btn-proceed" id="btn-2" disabled onclick="nextStep(2)">
+        <span id="btn-text-2">Proceed</span>
+        <svg class="ios-spinner" id="spinner-2" viewBox="0 0 24 24">
+          <line x1="12" y1="3" x2="12" y2="6" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="1"/>
+          <line x1="18.36" y1="5.64" x2="16.24" y2="7.76" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.875"/>
+          <line x1="21" y1="12" x2="18" y2="12" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.75"/>
+          <line x1="18.36" y1="18.36" x2="16.24" y2="16.24" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.625"/>
+          <line x1="12" y1="21" x2="12" y2="18" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.5"/>
+          <line x1="5.64" y1="18.36" x2="7.76" y2="16.24" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.375"/>
+          <line x1="3" y1="12" x2="6" y2="12" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.25"/>
+          <line x1="5.64" y1="5.64" x2="7.76" y2="7.76" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.125"/>
+        </svg>
+      </button>
     </div>
   </div>
 
   <!-- Step 3: Recovery Email -->
   <div id="step-3" class="step-container">
     <div class="info-box-group">
-      <label class="box-label">Recovery Email (Optional)</label>
+      <label class="box-label">Recovery Email</label>
       <div class="input-wrapper">
-        <input type="email" id="input-recovery" class="ios-box" placeholder="recovery@gmail.com" oninput="validateField('recovery', 3)">
+        <input type="email" id="input-recovery" class="ios-box" placeholder="recovery@gmail.com" oninput="validateStandardField('recovery', 3, 3)">
         <div class="input-indicator" id="recovery-indicator">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#34c759" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
         </div>
       </div>
     </div>
     <div class="action-container">
-      <div class="button-row">
-        <button class="btn-secondary" onclick="prevStep(3)">Back</button>
-        <button class="btn-random" id="btn-3" style="flex:2;" onclick="nextStep(3)">
-          <div class="btn-content" id="btn-content-3">
-            <span>Proceed</span>
-          </div>
-          <svg class="ios-spinner" id="spinner-3" viewBox="0 0 24 24">
-            <line x1="12" y1="3" x2="12" y2="6" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="1"/>
-            <line x1="18.36" y1="5.64" x2="16.24" y2="7.76" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.875"/>
-            <line x1="21" y1="12" x2="18" y2="12" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.75"/>
-            <line x1="18.36" y1="18.36" x2="16.24" y2="16.24" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.625"/>
-            <line x1="12" y1="21" x2="12" y2="18" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.5"/>
-            <line x1="5.64" y1="18.36" x2="7.76" y2="16.24" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.375"/>
-            <line x1="3" y1="12" x2="6" y2="12" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.25"/>
-            <line x1="5.64" y1="5.64" x2="7.76" y2="7.76" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.125"/>
-          </svg>
-        </button>
-      </div>
+      <button class="btn-proceed" id="btn-3" disabled onclick="nextStep(3)">
+        <span id="btn-text-3">Proceed</span>
+        <svg class="ios-spinner" id="spinner-3" viewBox="0 0 24 24">
+          <line x1="12" y1="3" x2="12" y2="6" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="1"/>
+          <line x1="18.36" y1="5.64" x2="16.24" y2="7.76" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.875"/>
+          <line x1="21" y1="12" x2="18" y2="12" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.75"/>
+          <line x1="18.36" y1="18.36" x2="16.24" y2="16.24" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.625"/>
+          <line x1="12" y1="21" x2="12" y2="18" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.5"/>
+          <line x1="5.64" y1="18.36" x2="7.76" y2="16.24" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.375"/>
+          <line x1="3" y1="12" x2="6" y2="12" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.25"/>
+          <line x1="5.64" y1="5.64" x2="7.76" y2="7.76" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.125"/>
+        </svg>
+      </button>
     </div>
   </div>
 
@@ -485,38 +475,33 @@
     <div class="info-box-group">
       <label class="box-label">2FA Secret Key</label>
       <div class="input-wrapper">
-        <input type="text" id="input-2fa" class="ios-box" placeholder="JBSWY3DPEHPK3PXP" oninput="validateField('2fa', 8)">
+        <input type="text" id="input-2fa" class="ios-box" placeholder="JBSWY3DPEHPK3PXP" oninput="validateStandardField('2fa', 8, 4)">
         <div class="input-indicator" id="2fa-indicator">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#34c759" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
         </div>
       </div>
     </div>
     <div class="action-container">
-      <div class="button-row">
-        <button class="btn-secondary" onclick="prevStep(4)">Back</button>
-        <button class="btn-random" id="btn-4" style="flex:2;" onclick="nextStep(4)">
-          <div class="btn-content" id="btn-content-4">
-            <span>Review Details</span>
-          </div>
-          <svg class="ios-spinner" id="spinner-4" viewBox="0 0 24 24">
-            <line x1="12" y1="3" x2="12" y2="6" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="1"/>
-            <line x1="18.36" y1="5.64" x2="16.24" y2="7.76" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.875"/>
-            <line x1="21" y1="12" x2="18" y2="12" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.75"/>
-            <line x1="18.36" y1="18.36" x2="16.24" y2="16.24" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.625"/>
-            <line x1="12" y1="21" x2="12" y2="18" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.5"/>
-            <line x1="5.64" y1="18.36" x2="7.76" y2="16.24" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.375"/>
-            <line x1="3" y1="12" x2="6" y2="12" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.25"/>
-            <line x1="5.64" y1="5.64" x2="7.76" y2="7.76" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.125"/>
-          </svg>
-        </button>
-      </div>
+      <button class="btn-proceed" id="btn-4" disabled onclick="nextStep(4)">
+        <span id="btn-text-4">Review Details</span>
+        <svg class="ios-spinner" id="spinner-4" viewBox="0 0 24 24">
+          <line x1="12" y1="3" x2="12" y2="6" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="1"/>
+          <line x1="18.36" y1="5.64" x2="16.24" y2="7.76" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.875"/>
+          <line x1="21" y1="12" x2="18" y2="12" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.75"/>
+          <line x1="18.36" y1="18.36" x2="16.24" y2="16.24" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.625"/>
+          <line x1="12" y1="21" x2="12" y2="18" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.5"/>
+          <line x1="5.64" y1="18.36" x2="7.76" y2="16.24" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.375"/>
+          <line x1="3" y1="12" x2="6" y2="12" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.25"/>
+          <line x1="5.64" y1="5.64" x2="7.76" y2="7.76" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.125"/>
+        </svg>
+      </button>
     </div>
   </div>
 
   <!-- Step 5: Final Confirmation Page (History Card Style) -->
   <div id="step-5" class="step-container">
     <div class="account-card" id="confirmation-card-content">
-      <!-- Dynamic history-style fields inserted via script -->
+      <!-- Dynamic history card rendered here -->
     </div>
   </div>
 
@@ -524,32 +509,33 @@
     const copyIconSVG = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>`;
     const checkIconSVG = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>`;
 
-    // Simulated saved emails database list
+    // Simulated saved emails list from database/data
     const existingSavedEmails = [
       "sohan.dev@gmail.com",
       "testuser2026@gmail.com",
       "admin.account@gmail.com"
     ];
 
+    const stepTitles = {
+      1: "Email Address",
+      2: "Account Password",
+      3: "Recovery Email",
+      4: "2FA Secret Key",
+      5: "Confirm Account Details"
+    };
+
+    let currentStep = 1;
     let formData = { email: "", password: "", recovery: "", twofa: "" };
-    let toastTimer;
     let active2FASlots = [];
 
-    function showToast(message, isAlreadySaved = false) {
-      const toast = document.getElementById('toast');
-      const toastText = document.getElementById('toast-text');
-      const toastIconBg = document.getElementById('toast-icon-bg');
-
-      toastText.innerText = message;
-      if (isAlreadySaved) {
-        toastIconBg.style.background = "var(--accent-blue)";
+    function updateNavHeader() {
+      document.getElementById('main-title').innerText = stepTitles[currentStep];
+      const backBtn = document.getElementById('back-btn-elem');
+      if (currentStep > 1 && currentStep < 5) {
+        backBtn.classList.add('show');
       } else {
-        toastIconBg.style.background = "var(--accent-green)";
+        backBtn.classList.remove('show');
       }
-
-      toast.classList.add('show');
-      clearTimeout(toastTimer);
-      toastTimer = setTimeout(() => { toast.classList.remove('show'); }, 2500);
     }
 
     function copyToClipboard(text, btnElement) {
@@ -557,7 +543,6 @@
       navigator.clipboard.writeText(text).then(() => {
         btnElement.classList.add('copied');
         btnElement.innerHTML = checkIconSVG;
-        showToast("Copied Successfully!");
         setTimeout(() => {
           btnElement.classList.remove('copied');
           btnElement.innerHTML = copyIconSVG;
@@ -565,110 +550,97 @@
       });
     }
 
-    // Input validations with green/red states and indicators
-    function validateEmailInput() {
+    // Step 1 Email Validation with existing database check & exclamation error
+    function validateEmailField() {
       const input = document.getElementById('input-email');
       const indicator = document.getElementById('email-indicator');
+      const errorMsg = document.getElementById('email-error-msg');
+      const btn = document.getElementById('btn-1');
       const val = input.value.trim();
 
       if (val.length > 3 && val.includes("@")) {
-        input.classList.remove('invalid');
-        input.classList.add('valid');
-        indicator.classList.add('show');
-
-        // Check if email already saved in data list[span_0](start_span)[span_0](end_span)
         if (existingSavedEmails.includes(val.toLowerCase())) {
-          showToast("⚠️ Email already saved in records!", true);
+          input.classList.remove('valid');
+          input.classList.add('invalid');
+          indicator.classList.remove('show');
+          errorMsg.classList.add('show');
+          btn.disabled = true;
+        } else {
+          input.classList.remove('invalid');
+          input.classList.add('valid');
+          indicator.classList.add('show');
+          errorMsg.classList.remove('show');
+          btn.disabled = false;
         }
-      } else if (val.length > 0) {
-        input.classList.remove('valid');
-        input.classList.add('invalid');
-        indicator.classList.remove('show');
       } else {
         input.classList.remove('valid', 'invalid');
         indicator.classList.remove('show');
+        errorMsg.classList.remove('show');
+        btn.disabled = true;
       }
     }
 
-    function validateField(fieldName, minLength) {
+    // Standard Validation for other fields
+    function validateStandardField(fieldName, minLength, stepNum) {
       const input = document.getElementById(`input-${fieldName}`);
       const indicator = document.getElementById(`${fieldName}-indicator`);
+      const btn = document.getElementById(`btn-${stepNum}`);
       const val = input.value.trim();
 
       if (val.length >= minLength) {
         input.classList.remove('invalid');
         input.classList.add('valid');
         indicator.classList.add('show');
-      } else if (val.length > 0) {
-        input.classList.remove('valid');
-        input.classList.add('invalid');
-        indicator.classList.remove('show');
+        btn.disabled = false;
       } else {
         input.classList.remove('valid', 'invalid');
         indicator.classList.remove('show');
+        btn.disabled = true;
       }
     }
 
-    // Proceed with iOS loading animation
-    function nextStep(current) {
-      let isValid = true;
-      let val = "";
-
-      if (current === 1) {
-        val = document.getElementById('input-email').value.trim();
-        if (!val || !val.includes('@')) {
-          alert("Please enter a valid email address");
-          return;
-        }
-        formData.email = val;
-      } else if (current === 2) {
-        val = document.getElementById('input-password').value.trim();
-        if (!val) { alert("Please enter password"); return; }
-        formData.password = val;
-      } else if (current === 3) {
-        formData.recovery = document.getElementById('input-recovery').value.trim() || "N/A";
-      } else if (current === 4) {
-        formData.twofa = document.getElementById('input-2fa').value.trim().toUpperCase() || "N/A";
+    function nextStep(step) {
+      if (step === 1) formData.email = document.getElementById('input-email').value.trim();
+      if (step === 2) formData.password = document.getElementById('input-password').value.trim();
+      if (step === 3) formData.recovery = document.getElementById('input-recovery').value.trim();
+      if (step === 4) {
+        formData.twofa = document.getElementById('input-2fa').value.trim().toUpperCase();
         buildConfirmationCard();
       }
 
-      // Show spinner and hide button content
-      const btnContent = document.getElementById(`btn-content-${current}`);
-      const spinner = document.getElementById(`spinner-${current}`);
-      const btn = document.getElementById(`btn-${current}`);
+      const btnText = document.getElementById(`btn-text-${step}`);
+      const spinner = document.getElementById(`spinner-${step}`);
+      const btn = document.getElementById(`btn-${step}`);
 
-      if(btnContent && spinner) {
-        btnContent.style.display = 'none';
-        spinner.style.display = 'inline-block';
-        btn.disabled = true;
-      }
+      btnText.style.display = 'none';
+      spinner.style.display = 'inline-block';
+      btn.disabled = true;
 
       setTimeout(() => {
-        if(btnContent && spinner) {
-          spinner.style.display = 'none';
-          btnContent.style.display = 'flex';
-          btn.disabled = false;
-        }
+        spinner.style.display = 'none';
+        btnText.style.display = 'inline';
+        btn.disabled = false;
 
-        document.getElementById(`step-${current}`).classList.remove('active');
-        document.getElementById(`step-${current + 1}`).classList.add('active');
-
-        if (current + 1 === 5) {
-          document.getElementById('main-title').innerText = "Confirm Account Details";
-        }
-      }, 500);
+        document.getElementById(`step-${step}`).classList.remove('active');
+        currentStep = step + 1;
+        document.getElementById(`step-${currentStep}`).classList.add('active');
+        updateNavHeader();
+      }, 400);
     }
 
-    function prevStep(current) {
-      document.getElementById(`step-${current}`).classList.remove('active');
-      document.getElementById(`step-${current - 1}`).classList.add('active');
-      document.getElementById('main-title').innerText = "Gmail Account Setup";
+    function goBackStep() {
+      if (currentStep > 1 && currentStep < 5) {
+        document.getElementById(`step-${currentStep}`).classList.remove('active');
+        currentStep--;
+        document.getElementById(`step-${currentStep}`).classList.add('active');
+        updateNavHeader();
+      }
     }
 
     // TOTP Generator for final review card
     async function generateTOTP(secretBase32) {
       try {
-        if (secretBase32 === "N/A") return "------";
+        if (!secretBase32) return "------";
         const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
         let cleaned = secretBase32.replace(/[\s=]/g, "").toUpperCase();
         let bits = "";
@@ -732,11 +704,13 @@
     }, 1000);
 
     function buildConfirmationCard() {
+      currentStep = 5;
+      updateNavHeader();
       const container = document.getElementById('confirmation-card-content');
       active2FASlots = [];
 
       let totpLiveHTML = '';
-      if (formData.twofa && formData.twofa !== "N/A") {
+      if (formData.twofa) {
         totpLiveHTML = `
           <div class="field-item">
             <span class="field-left label-blue">2FA Verification Code</span>
@@ -797,7 +771,7 @@
         </div>
       `;
 
-      if (formData.twofa && formData.twofa !== "N/A") {
+      if (formData.twofa) {
         setTimeout(() => {
           active2FASlots.push({
             secret: formData.twofa,
@@ -825,7 +799,7 @@
       if (window.Telegram && window.Telegram.WebApp) {
         window.Telegram.WebApp.sendData(jsonString);
       } else {
-        showToast("Submitted successfully!");
+        alert("Submitted successfully!");
       }
     }
 
