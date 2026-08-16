@@ -3,21 +3,22 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Account History - iOS Theme</title>
+  <title>Gmail Account - iOS White Theme</title>
   <style>
     /* --------------------------------------------------
-       📱 iOS Dark Theme & Global Variables
+       📱 iOS Official Light (White) Theme & Variables
     -------------------------------------------------- */
     :root {
-      --bg-color: #000000;
-      --card-bg: #1c1c1e;
-      --card-inner: #2c2c2e;
-      --accent-blue: #0a84ff;
-      --accent-green: #30d158;
-      --accent-orange: #ff9f0a;
-      --text-main: #ffffff;
+      --bg-color: #f2f2f7;
+      --card-bg: #ffffff;
+      --card-inner: #f8f8fa;
+      --search-bg: #e3e3e8;
+      --accent-blue: #007aff;
+      --accent-green: #34c759;
+      --accent-orange: #ff9500;
+      --text-main: #000000;
       --text-muted: #8e8e93;
-      --border-color: #38383a;
+      --border-color: #e5e5ea;
       --font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Helvetica Neue", Arial, sans-serif;
     }
 
@@ -40,29 +41,28 @@
     }
 
     /* --------------------------------------------------
-       🔔 Top Toast Notification
+       🔔 Single Line Toast Notification
     -------------------------------------------------- */
     #toast {
       position: fixed;
       top: -60px;
       left: 50%;
       transform: translateX(-50%);
-      background: rgba(48, 209, 88, 0.2);
-      border: 1px solid rgba(48, 209, 88, 0.4);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      color: var(--accent-green);
-      padding: 10px 22px;
+      background: #ffffff;
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      padding: 10px 20px;
       border-radius: 30px;
       font-size: 14px;
       font-weight: 600;
       display: flex;
       align-items: center;
       gap: 8px;
-      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
       transition: top 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s ease;
       opacity: 0;
       z-index: 9999;
+      white-space: nowrap;
     }
 
     #toast.show {
@@ -71,61 +71,110 @@
     }
 
     /* --------------------------------------------------
-       🏷️ Header
+       🏷️ Header (Centered)
     -------------------------------------------------- */
     .header {
       width: 100%;
       max-width: 440px;
-      margin-bottom: 20px;
+      text-align: center;
+      margin-bottom: 16px;
     }
 
     .header h1 {
-      font-size: 28px;
+      font-size: 24px;
       font-weight: 700;
-      letter-spacing: -0.5px;
-    }
-
-    .header p {
-      font-size: 13px;
-      color: var(--text-muted);
-      margin-top: 4px;
+      letter-spacing: -0.4px;
+      color: var(--text-main);
     }
 
     /* --------------------------------------------------
-       📦 Container & Card List
+       🔍 iOS Search Box Area
+    -------------------------------------------------- */
+    .search-container {
+      width: 100%;
+      max-width: 440px;
+      display: flex;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .search-box {
+      position: relative;
+      flex: 1;
+      display: flex;
+      align-items: center;
+    }
+
+    .search-box svg {
+      position: absolute;
+      left: 12px;
+      color: var(--text-muted);
+      pointer-events: none;
+    }
+
+    .search-box input {
+      width: 100%;
+      padding: 10px 12px 10px 36px;
+      background: var(--search-bg);
+      border: none;
+      border-radius: 12px;
+      font-size: 15px;
+      color: var(--text-main);
+      outline: none;
+    }
+
+    .search-box input::placeholder {
+      color: var(--text-muted);
+    }
+
+    .search-btn {
+      background: var(--accent-blue);
+      color: #ffffff;
+      border: none;
+      padding: 0 16px;
+      border-radius: 12px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity 0.2s ease;
+    }
+
+    .search-btn:active {
+      opacity: 0.8;
+    }
+
+    /* --------------------------------------------------
+       📦 Container & Cards
     -------------------------------------------------- */
     #container {
       width: 100%;
       max-width: 440px;
       display: flex;
       flex-direction: column;
-      gap: 16px;
+      gap: 14px;
     }
 
     .card {
       background: var(--card-bg);
       border-radius: 16px;
-      padding: 16px;
+      padding: 14px;
       border: 1px solid var(--border-color);
-      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+      box-shadow: 0 2px 10px rgba(0,0,0,0.03);
     }
 
     .card-title {
       font-size: 12px;
-      font-weight: 600;
+      font-weight: 700;
       text-transform: uppercase;
       color: var(--accent-blue);
       letter-spacing: 0.5px;
-      margin-bottom: 12px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+      margin-bottom: 10px;
     }
 
     .field-group {
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 8px;
     }
 
     .field-item {
@@ -135,90 +184,84 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
+      gap: 10px;
     }
 
     .field-item.totp-box {
-      background: rgba(255, 159, 10, 0.1);
-      border: 1px solid rgba(255, 159, 10, 0.25);
+      background: rgba(255, 149, 0, 0.08);
+      border: 1px solid rgba(255, 149, 0, 0.2);
     }
 
-    .field-info {
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-      overflow: hidden;
-      margin-right: 10px;
-    }
-
-    .field-label {
-      font-size: 11px;
-      color: var(--text-muted);
-      font-weight: 600;
+    .field-left {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-main);
+      white-space: nowrap;
       display: flex;
       align-items: center;
       gap: 6px;
     }
 
-    .field-value {
-      font-size: 14px;
-      font-weight: 500;
-      color: var(--text-main);
+    .field-right {
+      font-size: 13px;
+      font-family: monospace, var(--font-family);
+      color: #3a3a3c;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      font-family: monospace, var(--font-family);
+      text-align: right;
+      flex: 1;
     }
 
     .totp-value {
-      font-size: 18px;
+      font-size: 16px;
       font-weight: 700;
       color: var(--accent-orange);
-      letter-spacing: 2px;
+      letter-spacing: 1px;
     }
 
     .timer-badge {
       font-size: 10px;
-      background: rgba(255, 159, 10, 0.2);
+      background: rgba(255, 149, 0, 0.2);
       color: var(--accent-orange);
       padding: 2px 6px;
-      border-radius: 10px;
+      border-radius: 8px;
       font-weight: 700;
     }
 
     /* --------------------------------------------------
-       🔘 Copy Button
+       🔘 Copy Button (Icon Only)
     -------------------------------------------------- */
     .copy-btn {
-      background: rgba(10, 132, 255, 0.15);
+      background: #e5e5ea;
       color: var(--accent-blue);
       border: none;
-      padding: 6px 12px;
-      border-radius: 18px;
-      font-size: 12px;
-      font-weight: 600;
-      cursor: pointer;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
       display: inline-flex;
       align-items: center;
-      gap: 4px;
+      justify-content: center;
+      cursor: pointer;
       transition: all 0.2s ease;
       flex-shrink: 0;
     }
 
     .copy-btn:active {
-      transform: scale(0.92);
-      background: rgba(10, 132, 255, 0.3);
+      transform: scale(0.9);
+      background: #d1d1d6;
     }
 
     .copy-btn.copied {
-      background: rgba(48, 209, 88, 0.2);
+      background: rgba(52, 199, 89, 0.15);
       color: var(--accent-green);
     }
 
     .empty-state {
       text-align: center;
-      padding: 40px 20px;
+      padding: 30px 20px;
       color: var(--text-muted);
-      font-size: 15px;
+      font-size: 14px;
       background: var(--card-bg);
       border-radius: 16px;
       border: 1px solid var(--border-color);
@@ -227,22 +270,39 @@
 </head>
 <body>
 
-  <!-- 🔔 Top Toast Notification -->
+  <!-- 🔔 Single Line Toast Notification -->
   <div id="toast">
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
-    <span>Copied Successfully!</span>
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+      <circle cx="12" cy="12" r="10" fill="#34c759"/>
+      <path d="M8 12l3 3 5-5" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    <span>Copied Successfully</span>
   </div>
 
   <!-- 🏷️ Header -->
   <div class="header">
-    <h1>Account History</h1>
-    <p id="sub-title">Saved Credentials</p>
+    <h1>Gmail Account</h1>
+  </div>
+
+  <!-- 🔍 iOS Search Box Area -->
+  <div class="search-container">
+    <div class="search-box">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+      <input type="text" id="search-input" placeholder="Search accounts..." onkeyup="filterAccounts()">
+    </div>
+    <button class="search-btn" onclick="filterAccounts()">Search</button>
   </div>
 
   <!-- 📦 Container -->
   <div id="container"></div>
 
   <script>
+    // --------------------------------------------------
+    // 🎨 SVG Icons
+    // --------------------------------------------------
+    const copyIconSVG = `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>`;
+    const checkIconSVG = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#34c759" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>`;
+
     // --------------------------------------------------
     // 🔔 Toast System
     // --------------------------------------------------
@@ -257,19 +317,18 @@
     function copyToClipboard(text, btnElement) {
       if (!text) return;
       navigator.clipboard.writeText(text).then(() => {
-        const originalHTML = btnElement.innerHTML;
         btnElement.classList.add('copied');
-        btnElement.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> Copied`;
+        btnElement.innerHTML = checkIconSVG;
         showToast();
         setTimeout(() => {
           btnElement.classList.remove('copied');
-          btnElement.innerHTML = originalHTML;
+          btnElement.innerHTML = copyIconSVG;
         }, 2000);
       });
     }
 
     // --------------------------------------------------
-    // 🔐 2FA (TOTP Generator - Native Web Crypto)
+    // 🔐 2FA (TOTP Generator)
     // --------------------------------------------------
     function base32ToBytes(base32) {
       const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
@@ -321,20 +380,15 @@
     }
 
     // --------------------------------------------------
-    // ⏱️ 30s Auto Timer & TOTP Refresh Logic
+    // ⏱️ Auto Refresh 2FA Logic
     // --------------------------------------------------
     let active2FASlots = [];
+    let loadedAccountsData = [];
 
     async function updateAllTOTPCodes() {
       const remainingSeconds = 30 - (Math.floor(Date.now() / 1000) % 30);
-      
       for (let slot of active2FASlots) {
-        // টাইমার আপডেট
-        if (slot.timerEl) {
-          slot.timerEl.innerText = `${remainingSeconds}s`;
-        }
-        
-        // প্রতি উইন্ডো পরিবর্তনের মুখে অথবা পেজ লোডে কোড রিফ্রেশ
+        if (slot.timerEl) slot.timerEl.innerText = `${remainingSeconds}s`;
         if (remainingSeconds === 30 || !slot.generated) {
           const code = await generateTOTP(slot.secret);
           slot.valueEl.innerText = code;
@@ -344,7 +398,6 @@
       }
     }
 
-    // ১ সেকেন্ড পর পর টাইমার ও কোড আপডেট চেক
     setInterval(() => {
       const remainingSeconds = 30 - (Math.floor(Date.now() / 1000) % 30);
       if (remainingSeconds === 30) {
@@ -354,13 +407,117 @@
     }, 1000);
 
     // --------------------------------------------------
-    // 🔗 URL Data & Render
+    // 🔗 Render & Search Filter
     // --------------------------------------------------
+    function renderAccounts(accounts) {
+      const container = document.getElementById('container');
+      container.innerHTML = '';
+      active2FASlots = [];
+
+      if (!accounts || accounts.length === 0) {
+        container.innerHTML = `<div class="empty-state">No accounts found.</div>`;
+        return;
+      }
+
+      accounts.forEach((acc, index) => {
+        const card = document.createElement('div');
+        card.className = 'card';
+
+        const emailVal = acc.email || "";
+        const passVal = acc.password || "";
+        const recoveryVal = acc.recovery || "";
+        const twoFactorSecret = acc["2fa"] || acc.twofa || "";
+
+        const slotId = `totp-val-${index}`;
+        const timerId = `totp-timer-${index}`;
+        const btnId = `totp-btn-${index}`;
+
+        let totpBoxHTML = '';
+        if (twoFactorSecret) {
+          totpBoxHTML = `
+            <div class="field-item totp-box">
+              <span class="field-left">
+                2FA Code <span id="${timerId}" class="timer-badge">30s</span>
+              </span>
+              <span id="${slotId}" class="field-right totp-value">------</span>
+              <button id="${btnId}" class="copy-btn">${copyIconSVG}</button>
+            </div>
+          `;
+        }
+
+        card.innerHTML = `
+          <div class="card-title">Account #${index + 1}</div>
+          <div class="field-group">
+            ${emailVal ? `
+              <div class="field-item">
+                <span class="field-left">Email</span>
+                <span class="field-right">${escapeHtml(emailVal)}</span>
+                <button class="copy-btn" onclick="copyToClipboard('${escapeJs(emailVal)}', this)">${copyIconSVG}</button>
+              </div>
+            ` : ''}
+
+            ${passVal ? `
+              <div class="field-item">
+                <span class="field-left">Password</span>
+                <span class="field-right">${escapeHtml(passVal)}</span>
+                <button class="copy-btn" onclick="copyToClipboard('${escapeJs(passVal)}', this)">${copyIconSVG}</button>
+              </div>
+            ` : ''}
+
+            ${recoveryVal ? `
+              <div class="field-item">
+                <span class="field-left">Recovery Email</span>
+                <span class="field-right">${escapeHtml(recoveryVal)}</span>
+                <button class="copy-btn" onclick="copyToClipboard('${escapeJs(recoveryVal)}', this)">${copyIconSVG}</button>
+              </div>
+            ` : ''}
+
+            ${twoFactorSecret ? `
+              <div class="field-item">
+                <span class="field-left">2FA Key</span>
+                <span class="field-right">${escapeHtml(twoFactorSecret)}</span>
+                <button class="copy-btn" onclick="copyToClipboard('${escapeJs(twoFactorSecret)}', this)">${copyIconSVG}</button>
+              </div>
+              ${totpBoxHTML}
+            ` : ''}
+          </div>
+        `;
+
+        container.appendChild(card);
+
+        if (twoFactorSecret) {
+          setTimeout(() => {
+            active2FASlots.push({
+              secret: twoFactorSecret,
+              valueEl: document.getElementById(slotId),
+              timerEl: document.getElementById(timerId),
+              btnEl: document.getElementById(btnId),
+              generated: false
+            });
+            updateAllTOTPCodes();
+          }, 50);
+        }
+      });
+    }
+
+    function filterAccounts() {
+      const query = document.getElementById('search-input').value.toLowerCase().trim();
+      if (!query) {
+        renderAccounts(loadedAccountsData);
+        return;
+      }
+      const filtered = loadedAccountsData.filter(acc => {
+        return (acc.email && acc.email.toLowerCase().includes(query)) ||
+               (acc.password && acc.password.toLowerCase().includes(query)) ||
+               (acc.recovery && acc.recovery.toLowerCase().includes(query));
+      });
+      renderAccounts(filtered);
+    }
+
     function loadData() {
       const urlParams = new URLSearchParams(window.location.search);
       const rawData = urlParams.get('data');
       const container = document.getElementById('container');
-      const subTitle = document.getElementById('sub-title');
 
       if (!rawData) {
         container.innerHTML = `<div class="empty-state">No account data provided in URL.</div>`;
@@ -368,109 +525,9 @@
       }
 
       try {
-        const accounts = JSON.parse(decodeURIComponent(rawData));
-        if (!Array.isArray(accounts) || accounts.length === 0) {
-          container.innerHTML = `<div class="empty-state">No records found.</div>`;
-          return;
-        }
-
-        subTitle.innerText = `Total Loaded: ${accounts.length} Account(s)`;
-        container.innerHTML = '';
-        active2FASlots = [];
-
-        accounts.forEach((acc, index) => {
-          const card = document.createElement('div');
-          card.className = 'card';
-
-          const emailVal = acc.email || "";
-          const passVal = acc.password || "";
-          const recoveryVal = acc.recovery || "";
-          const twoFactorSecret = acc["2fa"] || acc.twofa || "";
-
-          let totpBoxHTML = '';
-          const slotId = `totp-val-${index}`;
-          const timerId = `totp-timer-${index}`;
-          const btnId = `totp-btn-${index}`;
-
-          if (twoFactorSecret) {
-            totpBoxHTML = `
-              <div class="field-item totp-box">
-                <div class="field-info">
-                  <span class="field-label">
-                    LIVE 2FA CODE <span id="${timerId}" class="timer-badge">30s</span>
-                  </span>
-                  <span id="${slotId}" class="field-value totp-value">------</span>
-                </div>
-                <button id="${btnId}" class="copy-btn">Copy Code</button>
-              </div>
-            `;
-          }
-
-          card.innerHTML = `
-            <div class="card-title">
-              <span>Account #${index + 1}</span>
-            </div>
-            <div class="field-group">
-              ${emailVal ? `
-                <div class="field-item">
-                  <div class="field-info">
-                    <span class="field-label">EMAIL</span>
-                    <span class="field-value">${escapeHtml(emailVal)}</span>
-                  </div>
-                  <button class="copy-btn" onclick="copyToClipboard('${escapeJs(emailVal)}', this)">Copy</button>
-                </div>
-              ` : ''}
-
-              ${passVal ? `
-                <div class="field-item">
-                  <div class="field-info">
-                    <span class="field-label">PASSWORD</span>
-                    <span class="field-value">${escapeHtml(passVal)}</span>
-                  </div>
-                  <button class="copy-btn" onclick="copyToClipboard('${escapeJs(passVal)}', this)">Copy</button>
-                </div>
-              ` : ''}
-
-              ${recoveryVal ? `
-                <div class="field-item">
-                  <div class="field-info">
-                    <span class="field-label">RECOVERY EMAIL</span>
-                    <span class="field-value">${escapeHtml(recoveryVal)}</span>
-                  </div>
-                  <button class="copy-btn" onclick="copyToClipboard('${escapeJs(recoveryVal)}', this)">Copy</button>
-                </div>
-              ` : ''}
-
-              ${twoFactorSecret ? `
-                <div class="field-item">
-                  <div class="field-info">
-                    <span class="field-label">2FA SECRET KEY</span>
-                    <span class="field-value">${escapeHtml(twoFactorSecret)}</span>
-                  </div>
-                  <button class="copy-btn" onclick="copyToClipboard('${escapeJs(twoFactorSecret)}', this)">Copy Key</button>
-                </div>
-                ${totpBoxHTML}
-              ` : ''}
-            </div>
-          `;
-
-          container.appendChild(card);
-
-          // 2FA সিক্রেট থাকলে তা লাইভ আপডেটের লিস্টে যোগ করা
-          if (twoFactorSecret) {
-            setTimeout(() => {
-              active2FASlots.push({
-                secret: twoFactorSecret,
-                valueEl: document.getElementById(slotId),
-                timerEl: document.getElementById(timerId),
-                btnEl: document.getElementById(btnId),
-                generated: false
-              });
-              updateAllTOTPCodes();
-            }, 50);
-          }
-        });
-
+        loadedAccountsData = JSON.parse(decodeURIComponent(rawData));
+        if (!Array.isArray(loadedAccountsData)) loadedAccountsData = [];
+        renderAccounts(loadedAccountsData);
       } catch (e) {
         container.innerHTML = `<div class="empty-state">Failed to parse account JSON.</div>`;
       }
