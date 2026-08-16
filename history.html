@@ -162,21 +162,32 @@
     }
 
     /* --------------------------------------------------
-       🔹 Total Accounts Bar (Left Aligned & Blue Color)
+       🔹 Total Accounts Bar (Left Aligned & Styled Badge)
     -------------------------------------------------- */
     .total-bar {
       width: 100%;
       max-width: 440px;
-      text-align: left;
+      display: flex;
+      align-items: center;
+      gap: 6px;
       margin-bottom: 12px;
       padding-left: 2px;
     }
 
-    #total-count {
+    .total-title {
       color: var(--accent-blue);
-      font-size: 12px;
+      font-size: 13px;
       font-weight: 600;
-      letter-spacing: -0.1px;
+    }
+
+    .total-badge {
+      background: rgba(0, 122, 255, 0.12);
+      color: var(--accent-blue);
+      padding: 2px 8px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
     }
 
     /* --------------------------------------------------
@@ -223,7 +234,6 @@
       gap: 6px;
     }
 
-    /* Custom Label Colors */
     .label-blue {
       color: var(--accent-blue) !important;
     }
@@ -239,46 +249,49 @@
       line-height: 1.35;
     }
 
+    /* 2FA Code Style (Blue Color) */
     .totp-value {
       font-size: 14px;
       font-weight: 700;
+      color: var(--accent-blue) !important;
       letter-spacing: 1px;
-      transition: color 0.3s ease;
     }
 
     /* --------------------------------------------------
-       ⏳ Dynamic Circular Timer Ring
+       ⏱️ Google Authenticator Ring Spinner
     -------------------------------------------------- */
-    .timer-ring-wrapper {
+    .auth-timer-wrapper {
       position: relative;
-      width: 24px;
-      height: 24px;
+      width: 22px;
+      height: 22px;
       display: inline-flex;
       align-items: center;
       justify-content: center;
+      flex-shrink: 0;
     }
 
-    .timer-ring-wrapper svg {
+    .auth-timer-wrapper svg {
       transform: rotate(-90deg);
-      width: 24px;
-      height: 24px;
+      width: 22px;
+      height: 22px;
     }
 
-    .timer-ring-bg {
+    .auth-timer-bg {
       stroke: #e5e5ea;
     }
 
-    .timer-ring-progress {
-      stroke-dasharray: 63; /* 2 * PI * 10 */
+    .auth-timer-progress {
+      stroke: var(--accent-blue);
+      stroke-dasharray: 56.5; /* 2 * PI * 9 */
       stroke-dashoffset: 0;
-      transition: stroke-dashoffset 1s linear, stroke 0.3s ease;
+      transition: stroke-dashoffset 1s linear;
     }
 
-    .timer-text {
+    .auth-timer-text {
       position: absolute;
       font-size: 8px;
-      font-weight: 800;
-      transition: color 0.3s ease;
+      font-weight: 700;
+      color: var(--accent-blue);
     }
 
     /* --------------------------------------------------
@@ -314,6 +327,7 @@
       padding: 24px 16px;
       color: var(--text-muted);
       font-size: 13px;
+      font-weight: 600;
       background: var(--card-bg);
       border-radius: 14px;
       border: 1px solid var(--border-color);
@@ -322,7 +336,7 @@
 </head>
 <body>
 
-  <!-- 🔔 Toast Notification (Black Background) -->
+  <!-- 🔔 Toast Notification -->
   <div id="toast">
     <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
       <circle cx="12" cy="12" r="10" fill="#34c759"/>
@@ -340,11 +354,10 @@
   <div class="search-container">
     <div class="search-box">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-      <input type="text" id="search-input" placeholder="Search exact match...">
+      <input type="text" id="search-input" placeholder="Search email exact match...">
     </div>
     <button class="search-btn" id="search-btn" onclick="handleSearch()">
       <span id="btn-text">Search</span>
-      <!-- iOS Radial Activity Indicator -->
       <svg id="btn-spinner" class="ios-spinner" viewBox="0 0 24 24">
         <line x1="12" y1="3" x2="12" y2="6" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="1"/>
         <line x1="18.36" y1="5.64" x2="16.24" y2="7.76" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.875"/>
@@ -358,9 +371,10 @@
     </button>
   </div>
 
-  <!-- 🔹 Total Accounts Subheader (Blue Color, Left Aligned) -->
+  <!-- 🔹 Total Accounts (Left Aligned & Stylish Badge) -->
   <div class="total-bar">
-    <span id="total-count">Total Accounts: 0</span>
+    <span class="total-title">Total Accounts:</span>
+    <span id="total-badge-count" class="total-badge">0</span>
   </div>
 
   <!-- 📦 Container -->
@@ -450,7 +464,7 @@
     }
 
     // --------------------------------------------------
-    // ⏱️ Auto Refresh 2FA & Dynamic Color Ring Logic
+    // ⏱️ Google Authenticator Ring Timer Engine
     // --------------------------------------------------
     let active2FASlots = [];
     let loadedAccountsData = [];
@@ -458,31 +472,16 @@
     async function updateAllTOTPCodes() {
       const remainingSeconds = 30 - (Math.floor(Date.now() / 1000) % 30);
       
-      // Calculate smooth ring progress (0 to 63 circumference)
-      const circumference = 63;
+      // Calculate smooth ring progress (Circumference ~ 56.5)
+      const circumference = 56.5;
       const offset = circumference - (remainingSeconds / 30) * circumference;
-
-      // Color transition logic: Green -> Yellow -> Blue -> Red
-      let themeColor = '#34c759'; // Green (30s - 23s)
-      if (remainingSeconds < 23 && remainingSeconds >= 15) {
-        themeColor = '#ffcc00'; // Yellow (22s - 15s)
-      } else if (remainingSeconds < 15 && remainingSeconds >= 7) {
-        themeColor = '#007aff'; // Blue (14s - 7s)
-      } else if (remainingSeconds < 7) {
-        themeColor = '#ff3b30'; // Red (6s - 0s)
-      }
 
       for (let slot of active2FASlots) {
         if (slot.timerEl) {
           slot.timerEl.innerText = `${remainingSeconds}`;
-          slot.timerEl.style.color = themeColor;
         }
         if (slot.ringProgressEl) {
           slot.ringProgressEl.style.strokeDashoffset = offset;
-          slot.ringProgressEl.style.stroke = themeColor;
-        }
-        if (slot.valueEl) {
-          slot.valueEl.style.color = themeColor;
         }
 
         if (remainingSeconds === 30 || !slot.generated) {
@@ -507,15 +506,15 @@
     // --------------------------------------------------
     function renderAccounts(accounts) {
       const container = document.getElementById('container');
-      const totalCountEl = document.getElementById('total-count');
+      const totalBadge = document.getElementById('total-badge-count');
       
       container.innerHTML = '';
       active2FASlots = [];
 
-      totalCountEl.innerText = `Total Accounts: ${accounts.length}`;
+      totalBadge.innerText = accounts.length;
 
       if (!accounts || accounts.length === 0) {
-        container.innerHTML = `<div class="empty-state">No accounts found.</div>`;
+        container.innerHTML = `<div class="empty-state">No accounts found!</div>`;
         return;
       }
 
@@ -538,12 +537,13 @@
           totpBoxHTML = `
             <div class="field-item">
               <span class="field-left label-blue">
-                <div class="timer-ring-wrapper">
+                <!-- Google Authenticator Ring Timer (Positioned Left) -->
+                <div class="auth-timer-wrapper">
                   <svg viewBox="0 0 24 24">
-                    <circle class="timer-ring-bg" cx="12" cy="12" r="10" fill="none" stroke-width="2.5"/>
-                    <circle id="${ringProgressId}" class="timer-ring-progress" cx="12" cy="12" r="10" fill="none" stroke-width="2.5" stroke-linecap="round"/>
+                    <circle class="auth-timer-bg" cx="12" cy="12" r="9" fill="none" stroke-width="2.5"/>
+                    <circle id="${ringProgressId}" class="auth-timer-progress" cx="12" cy="12" r="9" fill="none" stroke-width="2.5" stroke-linecap="round"/>
                   </svg>
-                  <span id="${timerId}" class="timer-text">30</span>
+                  <span id="${timerId}" class="auth-timer-text">30</span>
                 </div>
                 2FA Verification Code
               </span>
@@ -606,7 +606,7 @@
       });
     }
 
-    // iOS Spinner & Exact Match Search
+    // Search Logic (ONLY Main Email Exact Match)
     function handleSearch() {
       const btnText = document.getElementById('btn-text');
       const btnSpinner = document.getElementById('btn-spinner');
@@ -620,12 +620,9 @@
         if (!query) {
           renderAccounts(loadedAccountsData);
         } else {
-          // Exact Match Search
+          // Strictly match email address only (Exact Match)
           const filtered = loadedAccountsData.filter(acc => {
-            return (acc.email && acc.email.toLowerCase().trim() === query) ||
-                   (acc.password && acc.password.toLowerCase().trim() === query) ||
-                   (acc.recovery && acc.recovery.toLowerCase().trim() === query) ||
-                   (acc["2fa"] && acc["2fa"].toLowerCase().trim() === query);
+            return acc.email && acc.email.toLowerCase().trim() === query;
           });
           renderAccounts(filtered);
         }
@@ -641,7 +638,7 @@
       const container = document.getElementById('container');
 
       if (!rawData) {
-        container.innerHTML = `<div class="empty-state">No account data provided in URL.</div>`;
+        container.innerHTML = `<div class="empty-state">No accounts found!</div>`;
         return;
       }
 
@@ -650,7 +647,7 @@
         if (!Array.isArray(loadedAccountsData)) loadedAccountsData = [];
         renderAccounts(loadedAccountsData);
       } catch (e) {
-        container.innerHTML = `<div class="empty-state">Failed to parse account JSON.</div>`;
+        container.innerHTML = `<div class="empty-state">No accounts found!</div>`;
       }
     }
 
