@@ -342,7 +342,7 @@
   </div>
 
   <div class="top-nav">
-    <h1 class="header-title" id="main-title">টু এফ এ কোড জেনারেট</h1>
+    <h1 class="header-title" id="main-title">2FA Code Generator</h1>
   </div>
 
   <!-- Step 1: Input 2FA Secret Key -->
@@ -398,11 +398,14 @@
       navigator.clipboard.writeText(text).then(() => {
         btnElement.classList.add('copied');
         const iconCircle = btnElement.querySelector('.copy-icon-circle');
+        const textSpan = btnElement.querySelector('.copy-btn-text');
         if (iconCircle) iconCircle.innerHTML = checkWhiteSVG;
+        if (textSpan) textSpan.innerText = "Copied";
         showToast();
         setTimeout(() => {
           btnElement.classList.remove('copied');
           if (iconCircle) iconCircle.innerHTML = copyOutlineSVG;
+          if (textSpan) textSpan.innerText = "Copy";
         }, 2000);
       });
     }
@@ -520,7 +523,7 @@
     }, 1000);
 
     function buildResultCard() {
-      document.getElementById('main-title').innerText = "টু এফ এ কোড জেনারেট";
+      document.getElementById('main-title').innerText = "2FA Code Generator";
       document.getElementById('step-1').classList.remove('active');
       document.getElementById('step-2').classList.add('active');
 
@@ -537,7 +540,7 @@
           <span id="res-totp-val" class="totp-massive-value">------</span>
         </div>
         <button id="res-copy-btn" class="btn-copy-action">
-          <span class="copy-icon-circle">${copyOutlineSVG}</span> কপি
+          <span class="copy-icon-circle">${copyOutlineSVG}</span> <span class="copy-btn-text">Copy</span>
         </button>
       `;
 
