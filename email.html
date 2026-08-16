@@ -342,8 +342,9 @@
       border-top: 0.5px solid var(--divider-color);
     }
 
+    /* Account Saved Button: Blue Background */
     .action-btn-confirm {
-      background: var(--accent-green);
+      background: var(--accent-blue);
       color: #ffffff;
       width: 100%;
       border: none;
@@ -356,9 +357,22 @@
       align-items: center;
       justify-content: center;
       gap: 8px;
+      box-shadow: 0 4px 12px rgba(0, 122, 255, 0.2);
     }
 
-    /* Toast Popup: Black Background, One Line, Green Circle Background with White Checkmark */
+    /* Rounded Green Background for Checkmark Icon inside the button */
+    .check-icon-circle {
+      width: 20px;
+      height: 20px;
+      background: var(--accent-green);
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    /* Toast Popup */
     #copy-toast {
       position: fixed;
       top: -70px;
@@ -543,7 +557,7 @@
 
   <script>
     const copyIconSVG = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>`;
-    const checkIconSVG = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>`;
+    const checkIconSVG = `<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>`;
 
     let existingSavedEmails = [];
     try {
@@ -564,7 +578,6 @@
     let active2FASlots = [];
 
     function updateNavHeader() {
-      // সবার উপরের হেডলাইন সব সময় "Submit Account" ফিক্সড থাকবে
       document.getElementById('main-title').innerText = "Submit Account";
       const backBtn = document.getElementById('back-btn-elem');
       if (currentStep > 1 && currentStep <= 5) {
@@ -586,7 +599,7 @@
       if (!text) return;
       navigator.clipboard.writeText(text).then(() => {
         btnElement.classList.add('copied');
-        btnElement.innerHTML = checkIconSVG;
+        btnElement.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>`;
         showToast();
         setTimeout(() => {
           btnElement.classList.remove('copied');
@@ -849,7 +862,7 @@
 
         <div class="card-actions">
           <button class="action-btn-confirm" onclick="submitFinalData()">
-            ${checkIconSVG} Account Saved
+            <span class="check-icon-circle">${checkIconSVG}</span> Account Saved
           </button>
         </div>
       `;
