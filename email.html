@@ -144,7 +144,6 @@
       box-shadow: 0 0 10px rgba(255, 59, 48, 0.25), 0 2px 6px rgba(255, 59, 48, 0.1) !important;
     }
 
-    /* Smaller Input Indicator Size */
     .input-indicator {
       position: absolute;
       right: 12px;
@@ -399,12 +398,12 @@
 </head>
 <body>
 
-  <!-- Toast Notification Popup -->
+  <!-- Toast Notification Popup with Exclamation Mark -->
   <div id="copy-toast">
     <div class="toast-icon-wrapper">
       <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
     </div>
-    <span>Copied successfully</span>
+    <span>Copied successfully!</span>
   </div>
 
   <div class="top-nav">
@@ -414,7 +413,7 @@
         <polyline points="12 19 5 12 12 5"></polyline>
       </svg>
     </button>
-    <h1 class="header-title" id="main-title">Your Email Address</h1>
+    <h1 class="header-title" id="main-title">Submit Account</h1>
   </div>
 
   <!-- Step 1: Email Address -->
@@ -560,20 +559,13 @@
       console.error("Error parsing URL data:", e);
     }
 
-    const stepTitles = {
-      1: "Your Email Address",
-      2: "Your Account Password",
-      3: "Your Recovery Email",
-      4: "Your 2FA Secret Key",
-      5: "Confirm Account Details"
-    };
-
     let currentStep = 1;
     let formData = { email: "", password: "", recovery: "", twofa: "" };
     let active2FASlots = [];
 
     function updateNavHeader() {
-      document.getElementById('main-title').innerText = stepTitles[currentStep];
+      // সবার উপরের হেডলাইন সব সময় "Submit Account" ফিক্সড থাকবে
+      document.getElementById('main-title').innerText = "Submit Account";
       const backBtn = document.getElementById('back-btn-elem');
       if (currentStep > 1 && currentStep <= 5) {
         backBtn.classList.add('show');
@@ -866,6 +858,7 @@
         setTimeout(() => {
           active2FASlots.push({
             secret: formData.twofa,
+            value_el: document.getElementById('conf-totp-val'),
             valueEl: document.getElementById('conf-totp-val'),
             timerEl: document.getElementById('conf-timer'),
             ringProgressEl: document.getElementById('conf-ring'),
