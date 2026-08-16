@@ -97,7 +97,6 @@
       gap: 14px;
     }
 
-    /* Field Item (History.html Style) */
     .field-item {
       display: flex;
       justify-content: space-between;
@@ -132,22 +131,43 @@
       flex: 1;
     }
 
+    /* Small Compact Box with Green Border */
+    .field-right-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+      background: #fafafc;
+      border: 1.5px solid var(--accent-green);
+      border-radius: 8px;
+      padding: 6px 30px 6px 10px;
+      box-shadow: 0 1px 4px rgba(52, 199, 89, 0.08);
+    }
+
     .field-right {
       font-size: 13px;
       font-family: monospace, var(--font-family);
       color: var(--text-main);
-      text-align: right;
       word-break: break-all;
-      background: #fafafc;
-      padding: 6px 10px;
-      border: 1.5px solid var(--accent-green);
-      border-radius: 6px;
-      box-shadow: 0 1px 4px rgba(52, 199, 89, 0.08);
+      outline: none;
       user-select: text;
       -webkit-user-select: text;
     }
 
-    /* Copy Button (History.html Style) */
+    /* Small Green Tick Badge inside Box (Right side) */
+    .small-badge-icon {
+      position: absolute;
+      right: 8px;
+      width: 14px;
+      height: 14px;
+      background: var(--accent-green);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;
+    }
+
+    /* Copy Button */
     .copy-btn {
       background: var(--divider-color);
       color: var(--accent-blue);
@@ -225,7 +245,12 @@
     <div class="field-item">
       <span class="field-left">Username</span>
       <div class="field-right-group">
-        <span class="field-right" id="val-username">---</span>
+        <div class="field-right-wrapper">
+          <span class="field-right" id="val-username">---</span>
+          <div class="small-badge-icon">
+            <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+          </div>
+        </div>
         <button class="copy-btn" id="btn-copy-username" onclick="copyValue('val-username', this)">
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
         </button>
@@ -236,7 +261,12 @@
     <div class="field-item">
       <span class="field-left">Email</span>
       <div class="field-right-group">
-        <span class="field-right" id="val-email">---</span>
+        <div class="field-right-wrapper">
+          <span class="field-right" id="val-email">---</span>
+          <div class="small-badge-icon">
+            <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+          </div>
+        </div>
         <button class="copy-btn" id="btn-copy-email" onclick="copyValue('val-email', this)">
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
         </button>
@@ -247,7 +277,12 @@
     <div class="field-item">
       <span class="field-left">Password</span>
       <div class="field-right-group">
-        <span class="field-right" id="val-password">---</span>
+        <div class="field-right-wrapper">
+          <span class="field-right" id="val-password">---</span>
+          <div class="small-badge-icon">
+            <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+          </div>
+        </div>
         <button class="copy-btn" id="btn-copy-password" onclick="copyValue('val-password', this)">
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
         </button>
