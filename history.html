@@ -573,7 +573,7 @@
     </div>
   </div>
 
-  <!-- Edit Modal (Password, 2FA, Confirm Password) -->
+  <!-- Edit Modal (Password, Recovery Email, 2FA, Confirm Password) -->
   <div class="modal-overlay" id="edit-modal">
     <div class="modal-box">
       <div class="modal-title">
@@ -592,7 +592,18 @@
         </div>
       </div>
 
-      <!-- 2nd Field: Your 2FA Secret Key -->
+      <!-- 2nd Field: Recovery Email -->
+      <div class="modal-input-group">
+        <label class="modal-label">Recovery Email</label>
+        <div class="input-wrapper">
+          <input type="email" id="edit-recovery-input" class="modal-input blue-glow" placeholder="Recovery email..." oninput="validateEditForm()">
+          <div class="valid-check-badge" id="edit-recovery-check">
+            <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3rd Field: Your 2FA Secret Key -->
       <div class="modal-input-group">
         <label class="modal-label">Your 2FA Secret Key</label>
         <div class="input-wrapper">
@@ -603,7 +614,7 @@
         </div>
       </div>
 
-      <!-- 3rd Field: Confirm Password (Srsohan99) -->
+      <!-- 4th Field: Confirm Password (Srsohan99) -->
       <div class="modal-input-group">
         <label class="modal-label">Confirm Password</label>
         <div class="input-wrapper">
@@ -816,7 +827,7 @@
           ` : ''}
 
           <div class="card-actions">
-            <button class="action-btn action-btn-edit" onclick="openEditModal('${escapeJs(emailVal)}', '${escapeJs(passVal)}', '${escapeJs(twoFactorSecret)}')">
+            <button class="action-btn action-btn-edit" onclick="openEditModal('${escapeJs(emailVal)}', '${escapeJs(passVal)}', '${escapeJs(recoveryVal)}', '${escapeJs(twoFactorSecret)}')">
               ${editIconSVG} Edit
             </button>
             <button class="action-btn action-btn-delete" onclick="openDeleteModal('${escapeJs(emailVal)}')">
@@ -919,15 +930,17 @@
       closeDeleteModal();
     }
 
-    function openEditModal(email, currentPass, current2FA) {
+    function openEditModal(email, currentPass, currentRecovery, current2FA) {
       activeTargetEmail = email;
       const modal = document.getElementById('edit-modal');
       const newPassInput = document.getElementById('edit-new-pass');
+      const recoveryInput = document.getElementById('edit-recovery-input');
       const tfaInput = document.getElementById('edit-2fa-input');
       const passInput = document.getElementById('edit-pass-input');
 
       newPassInput.value = currentPass;
-      tfaInput.value = current2FA.toUpperCase();
+      recoveryInput.value = (currentRecovery && currentRecovery !== "N/A") ? currentRecovery : "";
+      tfaInput.value = (current2FA && current2FA !== "N/A") ? current2FA.toUpperCase() : "";
       passInput.value = '';
 
       validateEditForm();
@@ -945,16 +958,18 @@
 
     function validateEditForm() {
       const newPassInput = document.getElementById('edit-new-pass');
+      const recoveryInput = document.getElementById('edit-recovery-input');
       const tfaInput = document.getElementById('edit-2fa-input');
       const passInput = document.getElementById('edit-pass-input');
 
       const newPassCheck = document.getElementById('edit-new-pass-check');
+      const recoveryCheck = document.getElementById('edit-recovery-check');
       const tfaCheck = document.getElementById('edit-2fa-check');
       const passCheck = document.getElementById('edit-pass-check');
 
       const confirmBtn = document.getElementById('confirm-edit-btn');
 
-      // 1. New Password Validation (Minimum 8 chars)
+      // 1. Password Validation (Min 8 chars)
       let isNewPassValid = false;
       const newPassVal = newPassInput.value;
       if (newPassVal.length === 0) {
@@ -969,7 +984,25 @@
         newPassCheck.classList.remove('show');
       }
 
-      // 2. 2FA Base-32 Checker (Strict A-Z and 2-7, min 16 chars)
+      // 2. Recovery Email Validation (Optional or Valid Email Format)
+      let isRecoveryValid = false;
+      const recoveryVal = recoveryInput.value.trim();
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (recoveryVal.length === 0) {
+        recoveryInput.className = 'modal-input blue-glow';
+        recoveryCheck.classList.remove('show');
+        isRecoveryValid = true; 
+      } else if (emailRegex.test(recoveryVal)) {
+        recoveryInput.className = 'modal-input valid-glow';
+        recoveryCheck.classList.add('show');
+        isRecoveryValid = true;
+      } else {
+        recoveryInput.className = 'modal-input invalid-glow';
+        recoveryCheck.classList.remove('show');
+        isRecoveryValid = false;
+      }
+
+      // 3. 2FA Base-32 Validation (Strict A-Z & 2-7, min 16 chars)
       let isTfaValid = false;
       const clean2FA = tfaInput.value.replace(/\s+/g, '');
       const isBase32Pattern = /^[A-Z2-7]{16,}$/.test(clean2FA);
@@ -986,7 +1019,7 @@
         tfaCheck.classList.remove('show');
       }
 
-      // 3. Confirm Auth Password Check (>= 8 chars & matches Srsohan99)
+      // 4. Confirm Password Check (Must match Srsohan99)
       let isPassValid = false;
       const passVal = passInput.value;
       if (passVal.length === 0) {
@@ -1001,19 +1034,23 @@
         passCheck.classList.remove('show');
       }
 
-      confirmBtn.disabled = !(isNewPassValid && isTfaValid && isPassValid);
+      confirmBtn.disabled = !(isNewPassValid && isRecoveryValid && isTfaValid && isPassValid);
     }
 
     function executeEdit() {
       const newPassVal = document.getElementById('edit-new-pass').value.trim();
+      const recoveryVal = document.getElementById('edit-recovery-input').value.trim();
       const tfaVal = document.getElementById('edit-2fa-input').value.trim();
+
       const payload = {
         action: "edit_account",
         email: activeTargetEmail,
         password: newPassVal,
+        recovery: recoveryVal,
         secretKey: tfaVal,
         tfa: tfaVal
       };
+
       sendDataToTelegram(payload);
       closeEditModal();
     }
