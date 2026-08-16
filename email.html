@@ -184,7 +184,7 @@
       display: flex;
     }
 
-    /* Action Container & Compact Proceed Button (Full width, lower height) */
+    /* Action Container & Compact Proceed Button */
     .action-container {
       width: 100%;
       max-width: 420px;
@@ -373,7 +373,7 @@
 </head>
 <body>
 
-  <!-- Top Navigation Header with iOS Back Arrow (Long line with arrow head) -->
+  <!-- Top Navigation Header with iOS Back Arrow -->
   <div class="top-nav">
     <button class="back-btn" id="back-btn-elem" onclick="goBackStep()">
       <svg width="24" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
@@ -384,19 +384,19 @@
     <h1 class="header-title" id="main-title">Your Email Address</h1>
   </div>
 
-  <!-- Step 1: Email Address -->
+  <!-- Step 1: Email Address (Must end with @gmail.com) -->
   <div id="step-1" class="step-container active">
     <div class="info-box-group">
       <label class="box-label">Your Email Address</label>
       <div class="input-wrapper">
-        <input type="email" id="input-email" class="ios-box" placeholder="Enter email address" oninput="validateEmailField()">
+        <input type="email" id="input-email" class="ios-box" placeholder="Enter email address" oninput="validateGmailField('email', 1)">
         <div class="input-indicator" id="email-indicator">
           <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
         </div>
       </div>
       <div class="field-error-msg" id="email-error-msg">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
-        <span>Email already submitted</span>
+        <span id="email-error-text">Email already submitted</span>
       </div>
     </div>
     <div class="action-container">
@@ -416,12 +416,12 @@
     </div>
   </div>
 
-  <!-- Step 2: Password (Min 8 chars) -->
+  <!-- Step 2: Password (Min 8 chars, visible) -->
   <div id="step-2" class="step-container">
     <div class="info-box-group">
       <label class="box-label">Your Account Password</label>
       <div class="input-wrapper">
-        <input type="password" id="input-password" class="ios-box" placeholder="Enter account password" oninput="validateStandardField('password', 8, 2)">
+        <input type="text" id="input-password" class="ios-box" placeholder="Enter account password" oninput="validateStandardField('password', 8, 2)">
         <div class="input-indicator" id="password-indicator">
           <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
         </div>
@@ -444,15 +444,19 @@
     </div>
   </div>
 
-  <!-- Step 3: Recovery Email -->
+  <!-- Step 3: Recovery Email (Must end with @gmail.com) -->
   <div id="step-3" class="step-container">
     <div class="info-box-group">
       <label class="box-label">Your Recovery Email</label>
       <div class="input-wrapper">
-        <input type="email" id="input-recovery" class="ios-box" placeholder="Enter recovery email" oninput="validateStandardField('recovery', 3, 3)">
+        <input type="email" id="input-recovery" class="ios-box" placeholder="Enter recovery email" oninput="validateGmailField('recovery', 3)">
         <div class="input-indicator" id="recovery-indicator">
           <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
         </div>
+      </div>
+      <div class="field-error-msg" id="recovery-error-msg">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+        <span>Must end with @gmail.com</span>
       </div>
     </div>
     <div class="action-container">
@@ -511,7 +515,7 @@
     const copyIconSVG = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>`;
     const checkIconSVG = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>`;
 
-    // URL থেকে ডাটা গেট করা
+    // URL থেকে ইমেইল লিস্ট ফেচ করা
     let existingSavedEmails = [];
     try {
       const urlParams = new URLSearchParams(window.location.search);
@@ -560,19 +564,21 @@
       });
     }
 
-    // Step 1 Email Validation
-    function validateEmailField() {
-      const input = document.getElementById('input-email');
-      const indicator = document.getElementById('email-indicator');
-      const errorMsg = document.getElementById('email-error-msg');
-      const btn = document.getElementById('btn-1');
-      const val = input.value.trim();
+    // Gmail validation (Must end with @gmail.com) for Step 1 & Step 3
+    function validateGmailField(fieldName, stepNum) {
+      const input = document.getElementById(`input-${fieldName}`);
+      const indicator = document.getElementById(`${fieldName}-indicator`);
+      const errorMsg = document.getElementById(`${fieldName}-error-msg`);
+      const errorText = fieldName === 'email' ? document.getElementById('email-error-text') : null;
+      const btn = document.getElementById(`btn-${stepNum}`);
+      const val = input.value.trim().toLowerCase();
 
-      if (val.length > 3 && val.includes("@")) {
-        if (existingSavedEmails.includes(val.toLowerCase())) {
+      if (val.endsWith("@gmail.com") && val.length > 10) {
+        if (fieldName === 'email' && existingSavedEmails.includes(val)) {
           input.classList.remove('valid');
           input.classList.add('invalid');
           indicator.classList.remove('show');
+          if (errorText) errorText.innerText = "Email already submitted";
           errorMsg.classList.add('show');
           btn.disabled = true;
         } else {
@@ -586,16 +592,18 @@
         if (val.length > 0) {
           input.classList.remove('valid');
           input.classList.add('invalid');
+          if (fieldName === 'email' && errorText) errorText.innerText = "Must end with @gmail.com";
+          errorMsg.classList.add('show');
         } else {
           input.classList.remove('valid', 'invalid');
+          errorMsg.classList.remove('show');
         }
         indicator.classList.remove('show');
-        errorMsg.classList.remove('show');
         btn.disabled = true;
       }
     }
 
-    // Standard Validation (Password requires min 8 chars)
+    // Standard Validation for Password & 2FA
     function validateStandardField(fieldName, minLength, stepNum) {
       const input = document.getElementById(`input-${fieldName}`);
       const indicator = document.getElementById(`${fieldName}-indicator`);
@@ -626,28 +634,27 @@
       if (step === 4) {
         formData.twofa = document.getElementById('input-2fa').value.trim().toUpperCase();
         buildConfirmationCard();
+        return;
       }
 
       const btnText = document.getElementById(`btn-text-${step}`);
       const spinner = document.getElementById(`spinner-${step}`);
       const btn = document.getElementById(`btn-${step}`);
 
-      if (step < 4) {
-        btnText.style.display = 'none';
-        spinner.style.display = 'inline-block';
-        btn.disabled = true;
+      btnText.style.display = 'none';
+      spinner.style.display = 'inline-block';
+      btn.disabled = true;
 
-        setTimeout(() => {
-          spinner.style.display = 'none';
-          btnText.style.display = 'inline';
-          btn.disabled = false;
+      setTimeout(() => {
+        spinner.style.display = 'none';
+        btnText.style.display = 'inline';
+        btn.disabled = false;
 
-          document.getElementById(`step-${step}`).classList.remove('active');
-          currentStep = step + 1;
-          document.getElementById(`step-${currentStep}`).classList.add('active');
-          updateNavHeader();
-        }, 300);
-      }
+        document.getElementById(`step-${step}`).classList.remove('active');
+        currentStep = step + 1;
+        document.getElementById(`step-${currentStep}`).classList.add('active');
+        updateNavHeader();
+      }, 300);
     }
 
     function goBackStep() {
@@ -659,7 +666,7 @@
       }
     }
 
-    // TOTP Generator for final review card
+    // TOTP Generator for confirmation card
     async function generateTOTP(secretBase32) {
       try {
         if (!secretBase32) return "------";
@@ -728,6 +735,9 @@
     function buildConfirmationCard() {
       currentStep = 5;
       updateNavHeader();
+      document.getElementById('step-4').classList.remove('active');
+      document.getElementById('step-5').classList.add('active');
+
       const container = document.getElementById('confirmation-card-content');
       active2FASlots = [];
 
