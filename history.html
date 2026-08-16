@@ -100,7 +100,7 @@
     }
 
     /* --------------------------------------------------
-       🔍 Search Box & iOS Clear Button
+       🔍 Search Box
     -------------------------------------------------- */
     .search-container {
       width: 100%;
@@ -156,10 +156,6 @@
       transition: opacity 0.2s ease;
     }
 
-    .clear-btn:active {
-      opacity: 0.7;
-    }
-
     .search-btn {
       background: var(--accent-blue);
       color: #ffffff;
@@ -174,13 +170,8 @@
       justify-content: center;
       gap: 4px;
       flex-shrink: 0;
-      transition: opacity 0.2s ease;
       min-width: 60px;
       height: 33px;
-    }
-
-    .search-btn:active {
-      opacity: 0.8;
     }
 
     .ios-spinner {
@@ -294,9 +285,7 @@
       letter-spacing: 1.5px;
     }
 
-    /* --------------------------------------------------
-       ⏱️ Google Authenticator Ring Timer
-    -------------------------------------------------- */
+    /* ⏱️ Ring Timer */
     .auth-timer-wrapper {
       position: relative;
       width: 24px;
@@ -313,10 +302,7 @@
       height: 24px;
     }
 
-    .auth-timer-bg {
-      stroke: #e5e5ea;
-    }
-
+    .auth-timer-bg { stroke: #e5e5ea; }
     .auth-timer-progress {
       stroke: var(--accent-blue);
       stroke-dasharray: 56.55;
@@ -331,9 +317,7 @@
       color: var(--accent-blue);
     }
 
-    /* --------------------------------------------------
-       🔘 Micro Buttons & Card Actions
-    -------------------------------------------------- */
+    /* 🔘 Buttons */
     .copy-btn {
       background: #e5e5ea;
       color: var(--accent-blue);
@@ -347,11 +331,6 @@
       cursor: pointer;
       transition: all 0.2s ease;
       flex-shrink: 0;
-    }
-
-    .copy-btn:active {
-      transform: scale(0.88);
-      background: #d1d1d6;
     }
 
     .copy-btn.copied {
@@ -379,22 +358,10 @@
       display: inline-flex;
       align-items: center;
       gap: 4px;
-      transition: opacity 0.2s;
     }
 
-    .action-btn:active {
-      opacity: 0.7;
-    }
-
-    .action-btn-edit {
-      background: rgba(0, 122, 255, 0.1);
-      color: var(--accent-blue);
-    }
-
-    .action-btn-delete {
-      background: rgba(255, 59, 48, 0.1);
-      color: var(--accent-red);
-    }
+    .action-btn-edit { background: rgba(0, 122, 255, 0.1); color: var(--accent-blue); }
+    .action-btn-delete { background: rgba(255, 59, 48, 0.1); color: var(--accent-red); }
 
     .empty-state {
       text-align: center;
@@ -408,7 +375,7 @@
     }
 
     /* --------------------------------------------------
-       🪟 iOS Modals & Validation Badges
+       🪟 Modals & Glowing Inputs
     -------------------------------------------------- */
     .modal-overlay {
       position: fixed;
@@ -423,9 +390,7 @@
       padding: 16px;
     }
 
-    .modal-overlay.active {
-      display: flex;
-    }
+    .modal-overlay.active { display: flex; }
 
     .modal-box {
       background: var(--card-bg);
@@ -456,20 +421,18 @@
       gap: 6px;
     }
 
-    .modal-title.text-red {
-      color: var(--accent-red);
-    }
+    .modal-title.text-red { color: var(--accent-red); }
 
     .modal-input-group {
       display: flex;
       flex-direction: column;
-      gap: 4px;
+      gap: 5px;
     }
 
     .modal-label {
-      font-size: 11px;
-      font-weight: 700;
-      color: var(--text-muted);
+      font-size: 12px;
+      font-weight: 600;
+      color: #3a3a3c;
     }
 
     .input-wrapper {
@@ -479,11 +442,13 @@
       width: 100%;
     }
 
+    /* 🌟 Dynamic Glows (Default Blue Glow) */
     .modal-input {
       width: 100%;
-      padding: 9px 56px 9px 10px;
-      background: var(--search-bg);
-      border: 1.5px solid transparent;
+      padding: 9px 34px 9px 10px;
+      background: #ffffff;
+      border: 1.5px solid var(--accent-blue);
+      box-shadow: 0 0 6px rgba(0, 122, 255, 0.3);
       border-radius: 10px;
       font-size: 13px;
       color: var(--text-main);
@@ -491,24 +456,28 @@
       transition: all 0.25s ease;
     }
 
-    /* Glowing Effects */
+    .modal-input.blue-glow {
+      border-color: var(--accent-blue) !important;
+      box-shadow: 0 0 8px rgba(0, 122, 255, 0.35) !important;
+    }
+
     .modal-input.valid-glow {
       border-color: var(--accent-green) !important;
-      box-shadow: 0 0 8px rgba(52, 199, 89, 0.45);
+      box-shadow: 0 0 8px rgba(52, 199, 89, 0.45) !important;
     }
 
     .modal-input.invalid-glow {
       border-color: var(--accent-red) !important;
-      box-shadow: 0 0 8px rgba(255, 59, 48, 0.45);
+      box-shadow: 0 0 8px rgba(255, 59, 48, 0.45) !important;
     }
 
-    /* 🟢 Green Circle + White SVG Checkmark Badge */
+    /* 🟢 Premium Compact Green SVG Checkmark Badge */
     .valid-check-badge {
       position: absolute;
       right: 10px;
       background: var(--accent-green);
-      width: 18px;
-      height: 18px;
+      width: 15px;
+      height: 15px;
       border-radius: 50%;
       display: none;
       align-items: center;
@@ -519,21 +488,6 @@
 
     .valid-check-badge.show {
       display: flex;
-    }
-
-    .modal-clear-btn {
-      position: absolute;
-      right: 32px;
-      background: #8e8e93;
-      color: #ffffff;
-      border: none;
-      width: 16px;
-      height: 16px;
-      border-radius: 50%;
-      display: none;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
     }
 
     .modal-buttons {
@@ -571,9 +525,7 @@
       transition: opacity 0.2s;
     }
 
-    .modal-submit-btn.delete-theme {
-      background: var(--accent-red);
-    }
+    .modal-submit-btn.delete-theme { background: var(--accent-red); }
 
     .modal-submit-btn:disabled {
       opacity: 0.4;
@@ -583,10 +535,10 @@
 </head>
 <body>
 
-  <!-- 🔔 iOS Toast Notification -->
+  <!-- 🔔 Toast -->
   <div id="toast">
     <div class="toast-icon">
-      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
         <polyline points="20 6 9 17 4 12"></polyline>
       </svg>
     </div>
@@ -603,7 +555,7 @@
     <div class="search-box">
       <svg class="search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
       <input type="text" id="search-input" placeholder="Search by email address..." oninput="handleInputText()">
-      <button class="clear-btn" id="clear-btn" onclick="clearSearchInput()" aria-label="Clear">
+      <button class="clear-btn" id="clear-btn" onclick="clearSearchInput()">
         <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
       </button>
     </div>
@@ -622,16 +574,16 @@
     </button>
   </div>
 
-  <!-- 🔹 Total Accounts Bar -->
+  <!-- 🔹 Total Accounts -->
   <div class="total-bar">
     <span class="total-title">Total Accounts:</span>
     <span id="total-badge-count" class="total-badge">0</span>
   </div>
 
-  <!-- 📦 Container -->
+  <!-- 📦 Cards Container -->
   <div id="container"></div>
 
-  <!-- 🗑️ Delete Confirmation Modal -->
+  <!-- 🗑️ Delete Account Modal -->
   <div class="modal-overlay" id="delete-modal">
     <div class="modal-box">
       <div class="modal-title text-red">
@@ -639,11 +591,11 @@
         <span>Delete Account</span>
       </div>
       <div class="modal-input-group">
-        <label class="modal-label">CONFIRM PASSWORD</label>
+        <label class="modal-label">Confirm Password</label>
         <div class="input-wrapper">
-          <input type="password" id="delete-pass-input" class="modal-input" placeholder="Enter password..." oninput="validateDeleteForm()">
+          <input type="password" id="delete-pass-input" class="modal-input blue-glow" placeholder="Enter password..." oninput="validateDeleteForm()">
           <div class="valid-check-badge" id="delete-check-badge">
-            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
           </div>
         </div>
       </div>
@@ -657,7 +609,7 @@
     </div>
   </div>
 
-  <!-- ✏️ Edit Account Modal -->
+  <!-- ✏️ Edit Account Modal (Without Recovery Email) -->
   <div class="modal-overlay" id="edit-modal">
     <div class="modal-box">
       <div class="modal-title">
@@ -665,41 +617,24 @@
         <span>Edit Account</span>
       </div>
       
-      <!-- Recovery Email Field -->
-      <div class="modal-input-group">
-        <label class="modal-label">RECOVERY EMAIL</label>
-        <div class="input-wrapper">
-          <input type="text" id="edit-recovery-input" class="modal-input" placeholder="Recovery email..." oninput="validateEditForm()">
-          <button class="modal-clear-btn" id="edit-rec-clear" onclick="clearModalInput('edit-recovery-input', 'edit-rec-clear')">
-            <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-          </button>
-          <div class="valid-check-badge" id="edit-rec-check">
-            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
-          </div>
-        </div>
-      </div>
-
       <!-- 2FA Secret Key Field -->
       <div class="modal-input-group">
-        <label class="modal-label">2FA SECRET KEY</label>
+        <label class="modal-label">Your 2FA Secret Key</label>
         <div class="input-wrapper">
-          <input type="text" id="edit-2fa-input" class="modal-input" placeholder="2FA key..." oninput="validateEditForm()">
-          <button class="modal-clear-btn" id="edit-2fa-clear" onclick="clearModalInput('edit-2fa-input', 'edit-2fa-clear')">
-            <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-          </button>
+          <input type="text" id="edit-2fa-input" class="modal-input blue-glow" placeholder="Enter 2FA secret key..." oninput="handle2FAInput(this)">
           <div class="valid-check-badge" id="edit-2fa-check">
-            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
           </div>
         </div>
       </div>
 
-      <!-- Password Field -->
+      <!-- Confirm Password Field -->
       <div class="modal-input-group">
-        <label class="modal-label">CONFIRM PASSWORD</label>
+        <label class="modal-label">Confirm Password</label>
         <div class="input-wrapper">
-          <input type="password" id="edit-pass-input" class="modal-input" placeholder="Enter password..." oninput="validateEditForm()">
+          <input type="password" id="edit-pass-input" class="modal-input blue-glow" placeholder="Enter password..." oninput="validateEditForm()">
           <div class="valid-check-badge" id="edit-pass-check">
-            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
           </div>
         </div>
       </div>
@@ -818,7 +753,7 @@
       updateAllTOTPCodes();
     }, 1000);
 
-    // 🔗 Render Accounts
+    // 🔗 Render Cards
     function renderAccounts(accounts) {
       const container = document.getElementById('container');
       const totalBadge = document.getElementById('total-badge-count');
@@ -909,7 +844,7 @@
           ` : ''}
 
           <div class="card-actions">
-            <button class="action-btn action-btn-edit" onclick="openEditModal('${escapeJs(emailVal)}', '${escapeJs(recoveryVal)}', '${escapeJs(twoFactorSecret)}')">
+            <button class="action-btn action-btn-edit" onclick="openEditModal('${escapeJs(emailVal)}', '${escapeJs(twoFactorSecret)}')">
               ${editIconSVG} Edit
             </button>
             <button class="action-btn action-btn-delete" onclick="openDeleteModal('${escapeJs(emailVal)}')">
@@ -936,7 +871,6 @@
       });
     }
 
-    // ❌ Clear Search Input
     function handleInputText() {
       const input = document.getElementById('search-input');
       const clearBtn = document.getElementById('clear-btn');
@@ -971,7 +905,7 @@
     }
 
     // --------------------------------------------------
-    // 🗑️ Delete Modal Logic & Validation
+    // 🗑️ Delete Modal Logic
     // --------------------------------------------------
     function openDeleteModal(email) {
       activeTargetEmail = email;
@@ -992,17 +926,16 @@
       const deleteBtn = document.getElementById('confirm-delete-btn');
       const val = input.value;
 
-      // Min 8 chars & password must match Srsohan99
-      if (val.length >= 8 && val === SECRET_AUTH_PASS) {
+      if (val.length === 0) {
+        input.className = 'modal-input blue-glow';
+        checkBadge.classList.remove('show');
+        deleteBtn.disabled = true;
+      } else if (val.length >= 8 && val === SECRET_AUTH_PASS) {
         input.className = 'modal-input valid-glow';
         checkBadge.classList.add('show');
         deleteBtn.disabled = false;
-      } else if (val.length > 0) {
-        input.className = 'modal-input invalid-glow';
-        checkBadge.classList.remove('show');
-        deleteBtn.disabled = true;
       } else {
-        input.className = 'modal-input';
+        input.className = 'modal-input invalid-glow';
         checkBadge.classList.remove('show');
         deleteBtn.disabled = true;
       }
@@ -1018,17 +951,15 @@
     }
 
     // --------------------------------------------------
-    // ✏️ Edit Modal Logic & Realtime Validation
+    // ✏️ Edit Modal & Realtime 2FA Checker
     // --------------------------------------------------
-    function openEditModal(email, currentRecovery, current2FA) {
+    function openEditModal(email, current2FA) {
       activeTargetEmail = email;
       const modal = document.getElementById('edit-modal');
-      const recInput = document.getElementById('edit-recovery-input');
       const tfaInput = document.getElementById('edit-2fa-input');
       const passInput = document.getElementById('edit-pass-input');
 
-      recInput.value = currentRecovery;
-      tfaInput.value = current2FA;
+      tfaInput.value = current2FA.toUpperCase();
       passInput.value = '';
 
       validateEditForm();
@@ -1039,83 +970,61 @@
       document.getElementById('edit-modal').classList.remove('active');
     }
 
-    function clearModalInput(inputId, clearBtnId) {
-      document.getElementById(inputId).value = '';
+    // 🔠 Auto-Uppercase Live Event
+    function handle2FAInput(el) {
+      el.value = el.value.toUpperCase();
       validateEditForm();
     }
 
     function validateEditForm() {
-      const recInput = document.getElementById('edit-recovery-input');
       const tfaInput = document.getElementById('edit-2fa-input');
       const passInput = document.getElementById('edit-pass-input');
 
-      const recClear = document.getElementById('edit-rec-clear');
-      const tfaClear = document.getElementById('edit-2fa-clear');
-
-      const recCheck = document.getElementById('edit-rec-check');
       const tfaCheck = document.getElementById('edit-2fa-check');
       const passCheck = document.getElementById('edit-pass-check');
 
       const confirmBtn = document.getElementById('confirm-edit-btn');
 
-      // Toggle Clear Cross Buttons
-      recClear.style.display = recInput.value.trim().length > 0 ? 'flex' : 'none';
-      tfaClear.style.display = tfaInput.value.trim().length > 0 ? 'flex' : 'none';
-
-      // 1. Recovery Email Check (Must contain '@')
-      let isRecValid = false;
-      if (recInput.value.trim().includes('@')) {
-        recInput.className = 'modal-input valid-glow';
-        recCheck.classList.add('show');
-        isRecValid = true;
-      } else if (recInput.value.trim().length > 0) {
-        recInput.className = 'modal-input invalid-glow';
-        recCheck.classList.remove('show');
-      } else {
-        recInput.className = 'modal-input';
-        recCheck.classList.remove('show');
-      }
-
-      // 2. 2FA Secret Key Check (Minimum 16 characters)
+      // 1. 2FA Base-32 Checker (A-Z, 2-7, length >= 16)
       let isTfaValid = false;
-      if (tfaInput.value.replace(/\s+/g, '').length >= 16) {
+      const clean2FA = tfaInput.value.replace(/\s+/g, '');
+      const isBase32Pattern = /^[A-Z2-7]{16,}$/.test(clean2FA);
+
+      if (tfaInput.value.length === 0) {
+        tfaInput.className = 'modal-input blue-glow';
+        tfaCheck.classList.remove('show');
+      } else if (isBase32Pattern) {
         tfaInput.className = 'modal-input valid-glow';
         tfaCheck.classList.add('show');
         isTfaValid = true;
-      } else if (tfaInput.value.trim().length > 0) {
-        tfaInput.className = 'modal-input invalid-glow';
-        tfaCheck.classList.remove('show');
       } else {
-        tfaInput.className = 'modal-input';
+        tfaInput.className = 'modal-input invalid-glow';
         tfaCheck.classList.remove('show');
       }
 
-      // 3. Confirm Password Check (Min 8 chars & matches Srsohan99)
+      // 2. Password Check (>= 8 chars & matches Srsohan99)
       let isPassValid = false;
       const passVal = passInput.value;
-      if (passVal.length >= 8 && passVal === SECRET_AUTH_PASS) {
+      if (passVal.length === 0) {
+        passInput.className = 'modal-input blue-glow';
+        passCheck.classList.remove('show');
+      } else if (passVal.length >= 8 && passVal === SECRET_AUTH_PASS) {
         passInput.className = 'modal-input valid-glow';
         passCheck.classList.add('show');
         isPassValid = true;
-      } else if (passVal.length > 0) {
-        passInput.className = 'modal-input invalid-glow';
-        passCheck.classList.remove('show');
       } else {
-        passInput.className = 'modal-input';
+        passInput.className = 'modal-input invalid-glow';
         passCheck.classList.remove('show');
       }
 
-      // All 3 validations must pass to enable Save button
-      confirmBtn.disabled = !(isRecValid && isTfaValid && isPassValid);
+      confirmBtn.disabled = !(isTfaValid && isPassValid);
     }
 
     function executeEdit() {
-      const recVal = document.getElementById('edit-recovery-input').value.trim();
       const tfaVal = document.getElementById('edit-2fa-input').value.trim();
       const payload = {
         action: "edit_account",
         email: activeTargetEmail,
-        recovery: recVal,
         secretKey: tfaVal,
         tfa: tfaVal
       };
@@ -1123,7 +1032,7 @@
       closeEditModal();
     }
 
-    // 📤 Send Payload to Telegram Bot Business
+    // 📤 Telegram WebApp Dispatcher
     function sendDataToTelegram(payload) {
       const jsonString = JSON.stringify(payload);
       if (window.Telegram && window.Telegram.WebApp) {
