@@ -51,13 +51,17 @@
     }
 
     .header-title {
-      font-size: 22px;
-      font-weight: 700;
-      letter-spacing: -0.5px;
+      font-size: 18px;
+      font-weight: 600;
+      letter-spacing: -0.4px;
       position: absolute;
-      left: 0;
-      width: 100%;
-      text-align: left;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 70%;
+      text-align: center;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
       color: var(--text-main);
     }
 
@@ -201,14 +205,6 @@
       gap: 20px;
     }
 
-    .card-header-label {
-      font-size: 13px;
-      font-weight: 600;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-
     .totp-display-box {
       display: flex;
       align-items: center;
@@ -346,7 +342,7 @@
   </div>
 
   <div class="top-nav">
-    <h1 class="header-title" id="main-title">2FA Code Generator</h1>
+    <h1 class="header-title" id="main-title">টু এফ এ কোড জেনারেট</h1>
   </div>
 
   <!-- Step 1: Input 2FA Secret Key -->
@@ -524,13 +520,12 @@
     }, 1000);
 
     function buildResultCard() {
-      document.getElementById('main-title').innerText = "Your 2FA Code";
+      document.getElementById('main-title').innerText = "টু এফ এ কোড জেনারেট";
       document.getElementById('step-1').classList.remove('active');
       document.getElementById('step-2').classList.add('active');
 
       const container = document.getElementById('result-card-content');
       container.innerHTML = `
-        <div class="card-header-label">Verification Code</div>
         <div class="totp-display-box">
           <div class="auth-timer-wrapper">
             <svg viewBox="0 0 32 32">
@@ -542,7 +537,7 @@
           <span id="res-totp-val" class="totp-massive-value">------</span>
         </div>
         <button id="res-copy-btn" class="btn-copy-action">
-          <span class="copy-icon-circle">${copyOutlineSVG}</span> Copy
+          <span class="copy-icon-circle">${copyOutlineSVG}</span> কপি
         </button>
       `;
 
