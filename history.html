@@ -6,7 +6,7 @@
   <title>Gmail Account - iOS White Minimal</title>
   <style>
     /* --------------------------------------------------
-       📱 iOS Light Grouped Theme & Variables
+       📱 iOS Premium Light Theme & Variables
     -------------------------------------------------- */
     :root {
       --bg-color: #f2f2f7;
@@ -14,11 +14,10 @@
       --search-bg: #e3e3e8;
       --accent-blue: #007aff;
       --accent-green: #34c759;
-      --accent-orange: #ff9500;
       --text-main: #000000;
       --text-muted: #8e8e93;
       --border-color: #e5e5ea;
-      --divider-color: #e5e5ea;
+      --divider-color: #f0f0f3;
       --font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Helvetica Neue", Arial, sans-serif;
     }
 
@@ -41,7 +40,7 @@
     }
 
     /* --------------------------------------------------
-       🔔 Single Line Toast (Black Background)
+       🔔 Toast Notification (Black Background)
     -------------------------------------------------- */
     #toast {
       position: fixed;
@@ -70,13 +69,13 @@
     }
 
     /* --------------------------------------------------
-       🏷️ Header (Centered)
+       🏷️ Header Section
     -------------------------------------------------- */
     .header {
       width: 100%;
       max-width: 440px;
       text-align: center;
-      margin-bottom: 16px;
+      margin-bottom: 14px;
     }
 
     .header h1 {
@@ -85,15 +84,8 @@
       letter-spacing: -0.4px;
     }
 
-    .header p {
-      font-size: 12px;
-      font-weight: 600;
-      color: var(--text-muted);
-      margin-top: 3px;
-    }
-
     /* --------------------------------------------------
-       🔍 iOS Search Box & Small Button
+       🔍 Search Box & Small Button
     -------------------------------------------------- */
     .search-container {
       width: 100%;
@@ -101,7 +93,7 @@
       display: flex;
       align-items: center;
       gap: 6px;
-      margin-bottom: 16px;
+      margin-bottom: 8px;
     }
 
     .search-box {
@@ -156,7 +148,7 @@
       opacity: 0.8;
     }
 
-    /* Authentic iOS Blade Spinner */
+    /* Authentic iOS Activity Spinner */
     .ios-spinner {
       display: none;
       width: 14px;
@@ -170,7 +162,25 @@
     }
 
     /* --------------------------------------------------
-       📦 Container & iOS Grouped Account Card
+       🔹 Total Accounts Bar (Left Aligned & Blue Color)
+    -------------------------------------------------- */
+    .total-bar {
+      width: 100%;
+      max-width: 440px;
+      text-align: left;
+      margin-bottom: 12px;
+      padding-left: 2px;
+    }
+
+    #total-count {
+      color: var(--accent-blue);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: -0.1px;
+    }
+
+    /* --------------------------------------------------
+       📦 Container & iOS Grouped Cards
     -------------------------------------------------- */
     #container {
       width: 100%;
@@ -210,7 +220,12 @@
       white-space: nowrap;
       display: flex;
       align-items: center;
-      gap: 4px;
+      gap: 6px;
+    }
+
+    /* Custom Label Colors */
+    .label-blue {
+      color: var(--accent-blue) !important;
     }
 
     .field-right {
@@ -227,17 +242,43 @@
     .totp-value {
       font-size: 14px;
       font-weight: 700;
-      color: var(--accent-orange);
       letter-spacing: 1px;
+      transition: color 0.3s ease;
     }
 
-    .timer-badge {
-      font-size: 9px;
-      background: rgba(255, 149, 0, 0.15);
-      color: var(--accent-orange);
-      padding: 1px 5px;
-      border-radius: 6px;
-      font-weight: 700;
+    /* --------------------------------------------------
+       ⏳ Dynamic Circular Timer Ring
+    -------------------------------------------------- */
+    .timer-ring-wrapper {
+      position: relative;
+      width: 24px;
+      height: 24px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .timer-ring-wrapper svg {
+      transform: rotate(-90deg);
+      width: 24px;
+      height: 24px;
+    }
+
+    .timer-ring-bg {
+      stroke: #e5e5ea;
+    }
+
+    .timer-ring-progress {
+      stroke-dasharray: 63; /* 2 * PI * 10 */
+      stroke-dashoffset: 0;
+      transition: stroke-dashoffset 1s linear, stroke 0.3s ease;
+    }
+
+    .timer-text {
+      position: absolute;
+      font-size: 8px;
+      font-weight: 800;
+      transition: color 0.3s ease;
     }
 
     /* --------------------------------------------------
@@ -281,19 +322,18 @@
 </head>
 <body>
 
-  <!-- 🔔 Single Line Toast (Black Background) -->
+  <!-- 🔔 Toast Notification (Black Background) -->
   <div id="toast">
     <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
       <circle cx="12" cy="12" r="10" fill="#34c759"/>
       <path d="M8 12l3 3 5-5" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
     </svg>
-    <span>Copied Successfully</span>
+    <span>Copied Successfully!</span>
   </div>
 
   <!-- 🏷️ Header -->
   <div class="header">
     <h1>Gmail Account</h1>
-    <p id="total-count">Total Accounts: 0</p>
   </div>
 
   <!-- 🔍 Search Box -->
@@ -316,6 +356,11 @@
         <line x1="5.64" y1="5.64" x2="7.76" y2="7.76" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.125"/>
       </svg>
     </button>
+  </div>
+
+  <!-- 🔹 Total Accounts Subheader (Blue Color, Left Aligned) -->
+  <div class="total-bar">
+    <span id="total-count">Total Accounts: 0</span>
   </div>
 
   <!-- 📦 Container -->
@@ -405,15 +450,41 @@
     }
 
     // --------------------------------------------------
-    // ⏱️ Auto Refresh 2FA Logic
+    // ⏱️ Auto Refresh 2FA & Dynamic Color Ring Logic
     // --------------------------------------------------
     let active2FASlots = [];
     let loadedAccountsData = [];
 
     async function updateAllTOTPCodes() {
       const remainingSeconds = 30 - (Math.floor(Date.now() / 1000) % 30);
+      
+      // Calculate smooth ring progress (0 to 63 circumference)
+      const circumference = 63;
+      const offset = circumference - (remainingSeconds / 30) * circumference;
+
+      // Color transition logic: Green -> Yellow -> Blue -> Red
+      let themeColor = '#34c759'; // Green (30s - 23s)
+      if (remainingSeconds < 23 && remainingSeconds >= 15) {
+        themeColor = '#ffcc00'; // Yellow (22s - 15s)
+      } else if (remainingSeconds < 15 && remainingSeconds >= 7) {
+        themeColor = '#007aff'; // Blue (14s - 7s)
+      } else if (remainingSeconds < 7) {
+        themeColor = '#ff3b30'; // Red (6s - 0s)
+      }
+
       for (let slot of active2FASlots) {
-        if (slot.timerEl) slot.timerEl.innerText = `${remainingSeconds}s`;
+        if (slot.timerEl) {
+          slot.timerEl.innerText = `${remainingSeconds}`;
+          slot.timerEl.style.color = themeColor;
+        }
+        if (slot.ringProgressEl) {
+          slot.ringProgressEl.style.strokeDashoffset = offset;
+          slot.ringProgressEl.style.stroke = themeColor;
+        }
+        if (slot.valueEl) {
+          slot.valueEl.style.color = themeColor;
+        }
+
         if (remainingSeconds === 30 || !slot.generated) {
           const code = await generateTOTP(slot.secret);
           slot.valueEl.innerText = code;
@@ -459,14 +530,22 @@
 
         const slotId = `totp-val-${index}`;
         const timerId = `totp-timer-${index}`;
+        const ringProgressId = `totp-ring-${index}`;
         const btnId = `totp-btn-${index}`;
 
         let totpBoxHTML = '';
         if (twoFactorSecret) {
           totpBoxHTML = `
             <div class="field-item">
-              <span class="field-left">
-                2FA Code <span id="${timerId}" class="timer-badge">30s</span>
+              <span class="field-left label-blue">
+                <div class="timer-ring-wrapper">
+                  <svg viewBox="0 0 24 24">
+                    <circle class="timer-ring-bg" cx="12" cy="12" r="10" fill="none" stroke-width="2.5"/>
+                    <circle id="${ringProgressId}" class="timer-ring-progress" cx="12" cy="12" r="10" fill="none" stroke-width="2.5" stroke-linecap="round"/>
+                  </svg>
+                  <span id="${timerId}" class="timer-text">30</span>
+                </div>
+                2FA Verification Code
               </span>
               <span id="${slotId}" class="field-right totp-value">------</span>
               <button id="${btnId}" class="copy-btn">${copyIconSVG}</button>
@@ -501,7 +580,7 @@
 
           ${twoFactorSecret ? `
             <div class="field-item">
-              <span class="field-left">2FA Key</span>
+              <span class="field-left">2FA Secret Key</span>
               <span class="field-right">${escapeHtml(twoFactorSecret)}</span>
               <button class="copy-btn" onclick="copyToClipboard('${escapeJs(twoFactorSecret)}', this)">${copyIconSVG}</button>
             </div>
@@ -517,6 +596,7 @@
               secret: twoFactorSecret,
               valueEl: document.getElementById(slotId),
               timerEl: document.getElementById(timerId),
+              ringProgressEl: document.getElementById(ringProgressId),
               btnEl: document.getElementById(btnId),
               generated: false
             });
