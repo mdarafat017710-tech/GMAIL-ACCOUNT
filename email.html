@@ -144,11 +144,12 @@
       box-shadow: 0 0 10px rgba(255, 59, 48, 0.25), 0 2px 6px rgba(255, 59, 48, 0.1) !important;
     }
 
+    /* Smaller Input Indicator Size */
     .input-indicator {
       position: absolute;
       right: 12px;
-      width: 18px;
-      height: 18px;
+      width: 16px;
+      height: 16px;
       background: var(--accent-green);
       border-radius: 50%;
       display: none;
@@ -358,7 +359,7 @@
       gap: 8px;
     }
 
-    /* Exact Copied Success Toast Popup: Black Background, White Text & Icon in One Line */
+    /* Toast Popup: Black Background, One Line, Green Circle Background with White Checkmark */
     #copy-toast {
       position: fixed;
       top: -70px;
@@ -383,13 +384,26 @@
     #copy-toast.show {
       top: 16px;
     }
+
+    .toast-icon-wrapper {
+      width: 16px;
+      height: 16px;
+      background: var(--accent-green);
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
   </style>
 </head>
 <body>
 
   <!-- Toast Notification Popup -->
   <div id="copy-toast">
-    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+    <div class="toast-icon-wrapper">
+      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+    </div>
     <span>Copied successfully</span>
   </div>
 
@@ -653,7 +667,6 @@
       const indicator = document.getElementById('2fa-indicator');
       const btn = document.getElementById('btn-4');
       const val = input.value.trim().toUpperCase();
-      // Spaces এবং অক্ষরগুলো ফিল্টার করে শুধু Base32 ক্যারেক্টারগুলো যাচাই করা হচ্ছে
       const cleanVal = val.replace(/[\s]/g, '');
       const base32Regex = /^[A-Z2-7]+$/;
 
