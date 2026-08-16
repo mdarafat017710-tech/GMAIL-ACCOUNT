@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Account Generator - iOS Style</title>
+  <style>
+    :root {
+      --bg-color: #f2f2f7;
+      --card-bg: #ffffff;
+      --accent-blue: #007aff;
+      --accent-green: #34c759;
+      --text-main: #000000;
+      --text-muted: #8e8e93;
+      --border-color: #c6c6c8;
+      --font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Helvetica Neue", Arial, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: var(--font-family);
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      padding: 20px 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    /* Top Nav / Title */
+    .header-title {
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 20px;
+      letter-spacing: -0.4px;
+    }
+
+    /* Main Container Card */
+    .container {
+      width: 100%;
+      max-width: 420px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    /* Box Item Style */
+    .info-box-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .box-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+      padding-left: 4px;
+    }
+
+    .input-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+      width: 100%;
+    }
+
+    /* Small Compact Input/Box */
+    .ios-box {
+      width: 100%;
+      padding: 12px 40px 12px 14px;
+      background: var(--card-bg);
+      border: 1.5px solid var(--accent-green);
+      border-radius: 10px;
+      font-size: 15px;
+      font-family: monospace, var(--font-family);
+      color: var(--text-main);
+      outline: none;
+      box-shadow: 0 2px 8px rgba(52, 199, 89, 0.08);
+      transition: all 0.3s ease;
+      user-select: text;
+      -webkit-user-select: text;
+    }
+
+    /* Green Tick Badge Icon inside Box */
+    .badge-icon {
+      position: absolute;
+      right: 14px;
+      width: 20px;
+      height: 20px;
+      background: var(--accent-green);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;
+      box-shadow: 0 2px 4px rgba(52, 199, 89, 0.2);
+    }
+
+    /* Button Area */
+    .action-container {
+      width: 100%;
+      max-width: 420px;
+      margin-top: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .btn-change {
+      width: 100%;
+      background: var(--accent-blue);
+      color: #ffffff;
+      border: none;
+      padding: 14px;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      box-shadow: 0 4px 12px rgba(0, 122, 255, 0.25);
+      transition: opacity 0.2s ease;
+    }
+
+    .btn-change:active {
+      opacity: 0.8;
+    }
+
+    /* iOS Spinner Animation */
+    .ios-spinner {
+      display: none;
+      width: 18px;
+      height: 18px;
+      animation: iosRotate 0.8s steps(8, end) infinite;
+    }
+
+    @keyframes iosRotate {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body onload="generateAccount()">
+
+  <h1 class="header-title">Generated Account</h1>
+
+  <div class="container">
+    
+    <!-- Username Box -->
+    <div class="info-box-group">
+      <label class="box-label">Username</label>
+      <div class="input-wrapper">
+        <input type="text" id="username-box" class="ios-box" readonly>
+        <div class="badge-icon">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- Email Box -->
+    <div class="info-box-group">
+      <label class="box-label">Email Address</label>
+      <div class="input-wrapper">
+        <input type="text" id="email-box" class="ios-box" readonly>
+        <div class="badge-icon">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- Password Box -->
+    <div class="info-box-group">
+      <label class="box-label">Password</label>
+      <div class="input-wrapper">
+        <input type="text" id="password-box" class="ios-box" readonly>
+        <div class="badge-icon">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Action Button -->
+  <div class="action-container">
+    <button class="btn-change" id="change-btn" onclick="refreshData()">
+      <span class="btn-text">⟳ Change</span>
+      <svg class="ios-spinner" viewBox="0 0 24 24">
+        <line x1="12" y1="3" x2="12" y2="6" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="1"/>
+        <line x1="18.36" y1="5.64" x2="16.24" y2="7.76" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.875"/>
+        <line x1="21" y1="12" x2="18" y2="12" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.75"/>
+        <line x1="18.36" y1="18.36" x2="16.24" y2="16.24" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.625"/>
+        <line x1="12" y1="21" x2="12" y2="18" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.5"/>
+        <line x1="5.64" y1="18.36" x2="7.76" y2="16.24" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.375"/>
+        <line x1="3" y1="12" x2="6" y2="12" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.25"/>
+        <line x1="5.64" y1="5.64" x2="7.76" y2="7.76" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.125"/>
+      </svg>
+    </button>
+  </div>
+
+  <script>
+    function generateAccount() {
+      let chars = "abcdefghijklmnopqrstuvwxyz";
+      let nums = "0123456789";
+      let upperChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+      // ১. ইউজারনেম জেনারেট (৮-১০ লেটার + ২-৪ ডিজিট)
+      let uLength = Math.floor(Math.random() * 3) + 8;
+      let nLength = Math.floor(Math.random() * 3) + 2;
+      let username = "";
+
+      for (let i = 0; i < uLength; i++) {
+        username += chars.charAt(Math.floor(Math.random() * chars.length));
+      }
+      for (let j = 0; j < nLength; j++) {
+        username += nums.charAt(Math.floor(Math.random() * nums.length));
+      }
+
+      let email = username + "@gmail.com";
+
+      // ২. পাসওয়ার্ড জেনারেট
+      let passLength = Math.floor(Math.random() * 3) + 10;
+      let password = upperChars.charAt(Math.floor(Math.random() * upperChars.length));
+      let numCount = Math.floor(Math.random() * 2) + 3;
+      let lowerCount = (passLength - 1) - numCount;
+
+      let remArr = [];
+      for (let i = 0; i < numCount; i++) {
+        remArr.push(nums.charAt(Math.floor(Math.random() * nums.length)));
+      }
+      for (let i = 0; i < lowerCount; i++) {
+        remArr.push(chars.charAt(Math.floor(Math.random() * chars.length)));
+      }
+
+      // সাফল করা
+      for (let i = remArr.length - 1; i > 0; i--) {
+        let j = Math.floor(Math.random() * (i + 1));
+        let temp = remArr[i];
+        remArr[i] = remArr[j];
+        remArr[j] = temp;
+      }
+
+      password += remArr.join("");
+
+      // বক্সে ডেটা বসানো
+      document.getElementById('username-box').value = username;
+      document.getElementById('email-box').value = email;
+      document.getElementById('password-box').value = password;
+    }
+
+    function refreshData() {
+      const btn = document.getElementById('change-btn');
+      const text = btn.querySelector('.btn-text');
+      const spinner = btn.querySelector('.ios-spinner');
+
+      text.style.display = 'none';
+      spinner.style.display = 'inline-block';
+      btn.disabled = true;
+
+      setTimeout(() => {
+        generateAccount();
+        spinner.style.display = 'none';
+        text.style.display = 'inline';
+        btn.disabled = false;
+      }, 350);
+    }
+  </script>
+</body>
+</html>
