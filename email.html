@@ -98,6 +98,7 @@
       gap: 14px;
     }
 
+    /* মূল আইওএস স্টাইল বক্স */
     .step-card {
       display: none;
       flex-direction: column;
@@ -175,7 +176,6 @@
       display: flex;
     }
 
-    /* SVG Exclamation Red Warning */
     .error-text {
       font-size: 12px;
       color: var(--accent-red);
@@ -385,7 +385,6 @@
           </div>
         </div>
         
-        <!-- SVG Exclamation Warning Message -->
         <span class="error-text" id="email-error">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
             <circle cx="12" cy="12" r="10"></circle>
@@ -586,7 +585,6 @@
       });
     }
 
-    // URL parameter থেকে আসা সকল ইমেইল ডাটা রিসিভ করা
     function initApp() {
       const urlParams = new URLSearchParams(window.location.search);
       const rawData = urlParams.get('data');
@@ -605,7 +603,6 @@
       }
     }
 
-    // ইমেইল ইনপুটের সাথে সাথে লাইভ চেকার
     function validateEmail() {
       const input = document.getElementById('email-input');
       const badge = document.getElementById('email-check');
@@ -620,13 +617,11 @@
         badge.classList.remove('show');
         btn.disabled = true;
       } else if (existingAccounts.includes(val)) {
-        // ইমেইল আগের থেকে থাকলে লাল বক্স + লাল SVG Exclamation মেসেজ
         input.className = 'modal-input invalid-glow';
         badge.classList.remove('show');
         errorText.classList.add('show');
         btn.disabled = true;
       } else if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val)) {
-        // নতুন ও সঠিক ফরম্যাটের ইমেইল হলে সবুজ চেক ব্যাজ
         input.className = 'modal-input valid-glow';
         badge.classList.add('show');
         btn.disabled = false;
