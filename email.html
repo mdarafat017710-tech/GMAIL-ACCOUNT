@@ -220,17 +220,17 @@
       100% { transform: rotate(360deg); }
     }
 
-    /* History/List style matched card layout */
+    /* Confirmation Card Match */
     .account-card {
       background: var(--card-bg);
-      border-radius: 12px;
-      border: 1.5px solid var(--border-color);
-      overflow: hidden;
+      border-radius: 14px;
+      border: 1px solid var(--border-color);
+      padding: 4px 12px 12px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.02);
       display: flex;
       flex-direction: column;
       width: 100%;
       max-width: 420px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
     }
 
     .field-item {
@@ -238,9 +238,8 @@
       justify-content: space-between;
       align-items: center;
       gap: 8px;
-      padding: 12px 14px;
-      border-bottom: 1px solid var(--divider-color);
-      background: var(--card-bg);
+      padding: 12px 0;
+      border-bottom: 0.5px solid var(--divider-color);
     }
 
     .field-item:last-child {
@@ -249,7 +248,7 @@
 
     .field-left {
       font-size: 13px;
-      font-weight: 600;
+      font-weight: 700;
       color: var(--text-main);
       white-space: nowrap;
     }
@@ -276,16 +275,16 @@
     }
 
     .totp-value {
-      font-size: 14px;
+      font-size: 15px;
       font-weight: 700;
       color: var(--accent-blue) !important;
-      letter-spacing: 1.2px;
+      letter-spacing: 1.5px;
     }
 
     .auth-timer-wrapper {
       position: relative;
-      width: 22px;
-      height: 22px;
+      width: 24px;
+      height: 24px;
       display: inline-flex;
       align-items: center;
       justify-content: center;
@@ -294,8 +293,8 @@
 
     .auth-timer-wrapper svg {
       transform: rotate(-90deg);
-      width: 22px;
-      height: 22px;
+      width: 24px;
+      height: 24px;
     }
 
     .auth-timer-bg { stroke: #c6c6c8; }
@@ -308,24 +307,25 @@
 
     .auth-timer-text {
       position: absolute;
-      font-size: 8px;
+      font-size: 9px;
       font-weight: 700;
       color: var(--accent-blue);
     }
 
+    /* Copied Button Style Match */
     .copy-btn {
-      background: #f2f2f7;
+      background: #f0f0f5;
       color: var(--accent-blue);
       border: none;
       width: 28px;
       height: 28px;
-      border-radius: 8px;
+      border-radius: 50%;
       display: inline-flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
       flex-shrink: 0;
-      transition: background 0.2s;
+      transition: all 0.2s ease;
     }
 
     .copy-btn.copied {
@@ -334,9 +334,12 @@
     }
 
     .card-actions {
-      padding: 12px 14px;
-      background: #fafafc;
-      border-top: 1px solid var(--border-color);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      padding-top: 14px;
+      margin-top: 4px;
+      border-top: 0.5px solid var(--divider-color);
     }
 
     .action-btn-confirm {
@@ -345,19 +348,50 @@
       width: 100%;
       border: none;
       padding: 12px;
-      border-radius: 10px;
+      border-radius: 12px;
       font-size: 15px;
-      font-weight: 600;
+      font-weight: 700;
       cursor: pointer;
       display: inline-flex;
       align-items: center;
       justify-content: center;
       gap: 8px;
-      box-shadow: 0 2px 8px rgba(52, 199, 89, 0.25);
+    }
+
+    /* Top Copy Success Toast Notification Popup Match */
+    #copy-toast {
+      position: fixed;
+      top: -60px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0, 0, 0, 0.85);
+      color: #ffffff;
+      padding: 10px 20px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 600;
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      backdrop-filter: blur(10px);
+      transition: top 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      pointer-events: none;
+    }
+
+    #copy-toast.show {
+      top: 16px;
     }
   </style>
 </head>
 <body>
+
+  <!-- Top Toast Notification -->
+  <div id="copy-toast">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#34c759" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+    <span>Copied successfully!</span>
+  </div>
 
   <div class="top-nav">
     <button class="back-btn" id="back-btn-elem" onclick="goBackStep()">
@@ -534,11 +568,20 @@
       }
     }
 
+    function showToast() {
+      const toast = document.getElementById('copy-toast');
+      toast.classList.add('show');
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 2000);
+    }
+
     function copyToClipboard(text, btnElement) {
       if (!text) return;
       navigator.clipboard.writeText(text).then(() => {
         btnElement.classList.add('copied');
         btnElement.innerHTML = checkIconSVG;
+        showToast();
         setTimeout(() => {
           btnElement.classList.remove('copied');
           btnElement.innerHTML = copyIconSVG;
