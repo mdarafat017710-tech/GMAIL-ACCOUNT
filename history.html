@@ -40,23 +40,25 @@
     }
 
     /* --------------------------------------------------
-       🔔 Toast Notification (Black Background)
+       🔔 iOS Premium Toast Notification (Clear & Bold)
     -------------------------------------------------- */
     #toast {
       position: fixed;
-      top: -60px;
+      top: -70px;
       left: 50%;
       transform: translateX(-50%);
-      background: #000000;
+      background: rgba(0, 0, 0, 0.88);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
       color: #ffffff;
-      padding: 8px 16px;
-      border-radius: 25px;
-      font-size: 13px;
+      padding: 10px 20px;
+      border-radius: 30px;
+      font-size: 14px;
       font-weight: 600;
       display: flex;
       align-items: center;
-      gap: 6px;
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+      gap: 10px;
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.25);
       transition: top 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s ease;
       opacity: 0;
       z-index: 9999;
@@ -64,8 +66,18 @@
     }
 
     #toast.show {
-      top: 16px;
+      top: 20px;
       opacity: 1;
+    }
+
+    #toast .toast-icon {
+      background: var(--accent-green);
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     /* --------------------------------------------------
@@ -85,7 +97,7 @@
     }
 
     /* --------------------------------------------------
-       🔍 Search Box & Small Button
+       🔍 Search Box & Button
     -------------------------------------------------- */
     .search-container {
       width: 100%;
@@ -148,7 +160,6 @@
       opacity: 0.8;
     }
 
-    /* Authentic iOS Activity Spinner */
     .ios-spinner {
       display: none;
       width: 14px;
@@ -162,7 +173,7 @@
     }
 
     /* --------------------------------------------------
-       🔹 Total Accounts Bar (Left Aligned & Styled Badge)
+       🔹 Total Accounts Bar
     -------------------------------------------------- */
     .total-bar {
       width: 100%;
@@ -191,7 +202,7 @@
     }
 
     /* --------------------------------------------------
-       📦 Container & iOS Grouped Cards
+       📦 Container & Cards
     -------------------------------------------------- */
     #container {
       width: 100%;
@@ -229,13 +240,18 @@
       font-weight: 700;
       color: var(--text-main);
       white-space: nowrap;
-      display: flex;
-      align-items: center;
-      gap: 6px;
     }
 
     .label-blue {
       color: var(--accent-blue) !important;
+    }
+
+    .field-right-group {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 10px;
+      flex: 1;
     }
 
     .field-right {
@@ -243,7 +259,6 @@
       font-family: monospace, var(--font-family);
       color: #3a3a3c;
       text-align: right;
-      flex: 1;
       word-break: break-all;
       white-space: normal;
       line-height: 1.35;
@@ -251,19 +266,19 @@
 
     /* 2FA Code Style (Blue Color) */
     .totp-value {
-      font-size: 14px;
+      font-size: 15px;
       font-weight: 700;
       color: var(--accent-blue) !important;
-      letter-spacing: 1px;
+      letter-spacing: 1.5px;
     }
 
     /* --------------------------------------------------
-       ⏱️ Google Authenticator Ring Spinner
+       ⏱️ Google Authenticator Ring Timer (Placed Left of Code)
     -------------------------------------------------- */
     .auth-timer-wrapper {
       position: relative;
-      width: 22px;
-      height: 22px;
+      width: 24px;
+      height: 24px;
       display: inline-flex;
       align-items: center;
       justify-content: center;
@@ -272,8 +287,8 @@
 
     .auth-timer-wrapper svg {
       transform: rotate(-90deg);
-      width: 22px;
-      height: 22px;
+      width: 24px;
+      height: 24px;
     }
 
     .auth-timer-bg {
@@ -282,20 +297,20 @@
 
     .auth-timer-progress {
       stroke: var(--accent-blue);
-      stroke-dasharray: 56.5; /* 2 * PI * 9 */
+      stroke-dasharray: 56.55; /* 2 * PI * 9 */
       stroke-dashoffset: 0;
       transition: stroke-dashoffset 1s linear;
     }
 
     .auth-timer-text {
       position: absolute;
-      font-size: 8px;
+      font-size: 9px;
       font-weight: 700;
       color: var(--accent-blue);
     }
 
     /* --------------------------------------------------
-       🔘 Micro Copy Button (Green BG + White Check)
+       🔘 Copy Button
     -------------------------------------------------- */
     .copy-btn {
       background: #e5e5ea;
@@ -336,12 +351,13 @@
 </head>
 <body>
 
-  <!-- 🔔 Toast Notification -->
+  <!-- 🔔 iOS Premium Toast Notification -->
   <div id="toast">
-    <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
-      <circle cx="12" cy="12" r="10" fill="#34c759"/>
-      <path d="M8 12l3 3 5-5" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-    </svg>
+    <div class="toast-icon">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="20 6 9 17 4 12"></polyline>
+      </svg>
+    </div>
     <span>Copied Successfully!</span>
   </div>
 
@@ -371,7 +387,7 @@
     </button>
   </div>
 
-  <!-- 🔹 Total Accounts (Left Aligned & Stylish Badge) -->
+  <!-- 🔹 Total Accounts Bar -->
   <div class="total-bar">
     <span class="total-title">Total Accounts:</span>
     <span id="total-badge-count" class="total-badge">0</span>
@@ -381,15 +397,10 @@
   <div id="container"></div>
 
   <script>
-    // --------------------------------------------------
-    // 🎨 Micro SVG Icons
-    // --------------------------------------------------
     const copyIconSVG = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>`;
     const checkIconSVG = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>`;
 
-    // --------------------------------------------------
     // 🔔 Toast System
-    // --------------------------------------------------
     let toastTimer;
     function showToast() {
       const toast = document.getElementById('toast');
@@ -411,9 +422,7 @@
       });
     }
 
-    // --------------------------------------------------
-    // 🔐 2FA (TOTP Generator)
-    // --------------------------------------------------
+    // 🔐 TOTP Generator
     function base32ToBytes(base32) {
       const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
       let cleaned = base32.replace(/[\s=]/g, "").toUpperCase();
@@ -463,17 +472,13 @@
       }
     }
 
-    // --------------------------------------------------
-    // ⏱️ Google Authenticator Ring Timer Engine
-    // --------------------------------------------------
+    // ⏱️ Ring Timer Engine
     let active2FASlots = [];
     let loadedAccountsData = [];
 
     async function updateAllTOTPCodes() {
       const remainingSeconds = 30 - (Math.floor(Date.now() / 1000) % 30);
-      
-      // Calculate smooth ring progress (Circumference ~ 56.5)
-      const circumference = 56.5;
+      const circumference = 56.55;
       const offset = circumference - (remainingSeconds / 30) * circumference;
 
       for (let slot of active2FASlots) {
@@ -501,9 +506,7 @@
       updateAllTOTPCodes();
     }, 1000);
 
-    // --------------------------------------------------
-    // 🔗 Render & Search Logic
-    // --------------------------------------------------
+    // 🔗 Render Accounts
     function renderAccounts(accounts) {
       const container = document.getElementById('container');
       const totalBadge = document.getElementById('total-badge-count');
@@ -536,8 +539,9 @@
         if (twoFactorSecret) {
           totpBoxHTML = `
             <div class="field-item">
-              <span class="field-left label-blue">
-                <!-- Google Authenticator Ring Timer (Positioned Left) -->
+              <span class="field-left label-blue">2FA Verification Code</span>
+              <div class="field-right-group">
+                <!-- ⏱️ Authenticator Ring Timer positioned LEFT of 6-digit code -->
                 <div class="auth-timer-wrapper">
                   <svg viewBox="0 0 24 24">
                     <circle class="auth-timer-bg" cx="12" cy="12" r="9" fill="none" stroke-width="2.5"/>
@@ -545,10 +549,9 @@
                   </svg>
                   <span id="${timerId}" class="auth-timer-text">30</span>
                 </div>
-                2FA Verification Code
-              </span>
-              <span id="${slotId}" class="field-right totp-value">------</span>
-              <button id="${btnId}" class="copy-btn">${copyIconSVG}</button>
+                <span id="${slotId}" class="field-right totp-value">------</span>
+                <button id="${btnId}" class="copy-btn">${copyIconSVG}</button>
+              </div>
             </div>
           `;
         }
@@ -557,32 +560,40 @@
           ${emailVal ? `
             <div class="field-item">
               <span class="field-left">Email</span>
-              <span class="field-right">${escapeHtml(emailVal)}</span>
-              <button class="copy-btn" onclick="copyToClipboard('${escapeJs(emailVal)}', this)">${copyIconSVG}</button>
+              <div class="field-right-group">
+                <span class="field-right">${escapeHtml(emailVal)}</span>
+                <button class="copy-btn" onclick="copyToClipboard('${escapeJs(emailVal)}', this)">${copyIconSVG}</button>
+              </div>
             </div>
           ` : ''}
 
           ${passVal ? `
             <div class="field-item">
               <span class="field-left">Password</span>
-              <span class="field-right">${escapeHtml(passVal)}</span>
-              <button class="copy-btn" onclick="copyToClipboard('${escapeJs(passVal)}', this)">${copyIconSVG}</button>
+              <div class="field-right-group">
+                <span class="field-right">${escapeHtml(passVal)}</span>
+                <button class="copy-btn" onclick="copyToClipboard('${escapeJs(passVal)}', this)">${copyIconSVG}</button>
+              </div>
             </div>
           ` : ''}
 
           ${recoveryVal ? `
             <div class="field-item">
               <span class="field-left">Recovery Email</span>
-              <span class="field-right">${escapeHtml(recoveryVal)}</span>
-              <button class="copy-btn" onclick="copyToClipboard('${escapeJs(recoveryVal)}', this)">${copyIconSVG}</button>
+              <div class="field-right-group">
+                <span class="field-right">${escapeHtml(recoveryVal)}</span>
+                <button class="copy-btn" onclick="copyToClipboard('${escapeJs(recoveryVal)}', this)">${copyIconSVG}</button>
+              </div>
             </div>
           ` : ''}
 
           ${twoFactorSecret ? `
             <div class="field-item">
               <span class="field-left">2FA Secret Key</span>
-              <span class="field-right">${escapeHtml(twoFactorSecret)}</span>
-              <button class="copy-btn" onclick="copyToClipboard('${escapeJs(twoFactorSecret)}', this)">${copyIconSVG}</button>
+              <div class="field-right-group">
+                <span class="field-right">${escapeHtml(twoFactorSecret)}</span>
+                <button class="copy-btn" onclick="copyToClipboard('${escapeJs(twoFactorSecret)}', this)">${copyIconSVG}</button>
+              </div>
             </div>
             ${totpBoxHTML}
           ` : ''}
@@ -606,7 +617,7 @@
       });
     }
 
-    // Search Logic (ONLY Main Email Exact Match)
+    // Search Logic (Exact Match)
     function handleSearch() {
       const btnText = document.getElementById('btn-text');
       const btnSpinner = document.getElementById('btn-spinner');
@@ -620,7 +631,6 @@
         if (!query) {
           renderAccounts(loadedAccountsData);
         } else {
-          // Strictly match email address only (Exact Match)
           const filtered = loadedAccountsData.filter(acc => {
             return acc.email && acc.email.toLowerCase().trim() === query;
           });
