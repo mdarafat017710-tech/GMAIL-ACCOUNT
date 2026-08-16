@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Submit Email - iOS Minimal</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <style>
+    :root {
+      --bg-color: #f2f2f7;
+      --card-bg: #ffffff;
+      --accent-blue: #007aff;
+      --accent-green: #34c759;
+      --accent-red: #ff3b30;
+      --text-main: #000000;
+      --text-muted: #8e8e93;
+      --border-color: #e5e5ea;
+      --divider-color: #f0f0f3;
+      --font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Helvetica Neue", Arial, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: var(--font-family);
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      padding: 20px 14px 40px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    /* Toast Notification */
+    #toast {
+      position: fixed;
+      top: -60px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      color: #ffffff;
+      padding: 7px 14px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
+      transition: top 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s ease;
+      opacity: 0;
+      z-index: 9999;
+      white-space: nowrap;
+    }
+
+    #toast.show {
+      top: 18px;
+      opacity: 1;
+    }
+
+    #toast .toast-icon {
+      background: var(--accent-green);
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Header Nav */
+    .header-nav {
+      width: 100%;
+      max-width: 440px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      margin-bottom: 20px;
+    }
+
+    .back-btn {
+      position: absolute;
+      left: 0;
+      background: transparent;
+      border: none;
+      color: var(--accent-blue);
+      font-size: 14px;
+      font-weight: 600;
+      display: none;
+      align-items: center;
+      gap: 4px;
+      cursor: pointer;
+    }
+
+    .header-title {
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: -0.4px;
+    }
+
+    /* Card Container */
+    .form-card {
+      background: var(--card-bg);
+      width: 100%;
+      max-width: 440px;
+      border-radius: 16px;
+      border: 1px solid var(--border-color);
+      padding: 20px 16px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .step-section {
+      display: none;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .step-section.active {
+      display: flex;
+    }
+
+    /* Input Groups */
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .input-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: #3a3a3c;
+    }
+
+    .input-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+      width: 100%;
+    }
+
+    .custom-input {
+      width: 100%;
+      padding: 11px 34px 11px 12px;
+      background: #ffffff;
+      border: 1.5px solid var(--accent-blue);
+      box-shadow: 0 0 6px rgba(0, 122, 255, 0.3);
+      border-radius: 10px;
+      font-size: 13px;
+      color: var(--text-main);
+      outline: none;
+      transition: all 0.25s ease;
+      user-select: text;
+      -webkit-user-select: text;
+    }
+
+    .custom-input.blue-glow {
+      border-color: var(--accent-blue) !important;
+      box-shadow: 0 0 8px rgba(0, 122, 255, 0.35) !important;
+    }
+
+    .custom-input.valid-glow {
+      border-color: var(--accent-green) !important;
+      box-shadow: 0 0 8px rgba(52, 199, 89, 0.45) !important;
+    }
+
+    .custom-input.invalid-glow {
+      border-color: var(--accent-red) !important;
+      box-shadow: 0 0 8px rgba(255, 59, 48, 0.45) !important;
+    }
+
+    .badge-icon {
+      position: absolute;
+      right: 10px;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;
+    }
+
+    .badge-icon.valid {
+      background: var(--accent-green);
+      display: flex;
+    }
+
+    .badge-icon.invalid {
+      background: var(--accent-red);
+      display: flex;
+    }
+
+    .error-msg-box {
+      display: none;
+      align-items: center;
+      gap: 5px;
+      color: var(--accent-red);
+      font-size: 11px;
+      font-weight: 600;
+      margin-top: 2px;
+    }
+
+    .error-msg-box.show {
+      display: flex;
+    }
+
+    /* Buttons */
+    .btn-submit {
+      width: 100%;
+      background: var(--accent-blue);
+      color: #ffffff;
+      border: none;
+      padding: 11px;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      margin-top: 6px;
+    }
+
+    .btn-submit:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+
+    .btn-submit.save-theme {
+      background: var(--accent-green);
+    }
+
+    /* iOS Spinner */
+    .ios-spinner {
+      display: none;
+      width: 16px;
+      height: 16px;
+      animation: iosRotate 0.8s steps(8, end) infinite;
+    }
+
+    @keyframes iosRotate {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* Field Items in Confirmation */
+    .field-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 0;
+      border-bottom: 0.5px solid var(--divider-color);
+    }
+
+    .field-item:last-child {
+      border-bottom: none;
+    }
+
+    .field-left {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-main);
+      white-space: nowrap;
+    }
+
+    .label-blue {
+      color: var(--accent-blue) !important;
+    }
+
+    .field-right-group {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 10px;
+      flex: 1;
+    }
+
+    .field-right {
+      font-size: 12px;
+      font-family: monospace, var(--font-family);
+      color: #3a3a3c;
+      text-align: right;
+      word-break: break-all;
+      line-height: 1.35;
+    }
+
+    .totp-value {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--accent-blue) !important;
+      letter-spacing: 1.5px;
+    }
+
+    .auth-timer-wrapper {
+      position: relative;
+      width: 24px;
+      height: 24px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .auth-timer-wrapper svg {
+      transform: rotate(-90deg);
+      width: 24px;
+      height: 24px;
+    }
+
+    .auth-timer-bg { stroke: #e5e5ea; }
+    .auth-timer-progress {
+      stroke: var(--accent-blue);
+      stroke-dasharray: 56.55;
+      stroke-dashoffset: 0;
+      transition: stroke-dashoffset 1s linear;
+    }
+
+    .auth-timer-text {
+      position: absolute;
+      font-size: 9px;
+      font-weight: 700;
+      color: var(--accent-blue);
+    }
+
+    .copy-btn {
+      background: #e5e5ea;
+      color: var(--accent-blue);
+      border: none;
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
+    .copy-btn.copied {
+      background: var(--accent-green) !important;
+      color: #ffffff !important;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Toast Notification -->
+  <div id="toast">
+    <div class="toast-icon">
+      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="20 6 9 17 4 12"></polyline>
+      </svg>
+    </div>
+    <span>Copied Successfully!</span>
+  </div>
+
+  <!-- Top Navigation Header -->
+  <div class="header-nav">
+    <button class="back-btn" id="back-btn" onclick="goBackStep()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+      <span>Back</span>
+    </button>
+    <h1 class="header-title" id="page-title">Submit Email</h1>
+  </div>
+
+  <div class="form-card">
+    <!-- STEP 1: Email Address -->
+    <div class="step-section active" id="step-1">
+      <div class="input-group">
+        <label class="input-label">Enter Email Address</label>
+        <div class="input-wrapper">
+          <input type="email" id="email-input" class="custom-input blue-glow" placeholder="example@gmail.com" oninput="validateStep1()">
+          <div class="badge-icon" id="email-badge"></div>
+        </div>
+        <div class="error-msg-box" id="email-error-msg">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+          <span id="email-error-text">Email address already submitted!</span>
+        </div>
+      </div>
+      <button class="btn-submit" id="btn-proceed-1" disabled onclick="handleProceedStep1()">
+        <span class="btn-text">Proceed</span>
+        <svg class="ios-spinner" viewBox="0 0 24 24">
+          <line x1="12" y1="3" x2="12" y2="6" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="1"/>
+          <line x1="18.36" y1="5.64" x2="16.24" y2="7.76" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.875"/>
+          <line x1="21" y1="12" x2="18" y2="12" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.75"/>
+          <line x1="18.36" y1="18.36" x2="16.24" y2="16.24" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.625"/>
+          <line x1="12" y1="21" x2="12" y2="18" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.5"/>
+          <line x1="5.64" y1="18.36" x2="7.76" y2="16.24" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.375"/>
+          <line x1="3" y1="12" x2="6" y2="12" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.25"/>
+          <line x1="5.64" y1="5.64" x2="7.76" y2="7.76" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.125"/>
+        </svg>
+      </button>
+    </div>
+
+    <!-- STEP 2: Password, Recovery & 2FA -->
+    <div class="step-section" id="step-2">
+      <div class="input-group">
+        <label class="input-label">Your Password</label>
+        <div class="input-wrapper">
+          <input type="text" id="pass-input" class="custom-input blue-glow" placeholder="Enter password..." oninput="validateStep2()">
+          <div class="badge-icon" id="pass-badge"></div>
+        </div>
+      </div>
+
+      <div class="input-group">
+        <label class="input-label">Your Recovery Email</label>
+        <div class="input-wrapper">
+          <input type="email" id="recovery-input" class="custom-input blue-glow" placeholder="Enter recovery email..." oninput="validateStep2()">
+          <div class="badge-icon" id="recovery-badge"></div>
+        </div>
+      </div>
+
+      <div class="input-group">
+        <label class="input-label">2FA Secret Key</label>
+        <div class="input-wrapper">
+          <input type="text" id="tfa-input" class="custom-input blue-glow" placeholder="Enter 2FA secret key..." oninput="handle2FAInput(this)">
+          <div class="badge-icon" id="tfa-badge"></div>
+        </div>
+      </div>
+
+      <button class="btn-submit" id="btn-proceed-2" disabled onclick="handleProceedStep2()">
+        <span class="btn-text">Proceed</span>
+        <svg class="ios-spinner" viewBox="0 0 24 24">
+          <line x1="12" y1="3" x2="12" y2="6" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="1"/>
+          <line x1="18.36" y1="5.64" x2="16.24" y2="7.76" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.875"/>
+          <line x1="21" y1="12" x2="18" y2="12" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.75"/>
+          <line x1="18.36" y1="18.36" x2="16.24" y2="16.24" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.625"/>
+          <line x1="12" y1="21" x2="12" y2="18" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.5"/>
+          <line x1="5.64" y1="18.36" x2="7.76" y2="16.24" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.375"/>
+          <line x1="3" y1="12" x2="6" y2="12" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.25"/>
+          <line x1="5.64" y1="5.64" x2="7.76" y2="7.76" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.125"/>
+        </svg>
+      </button>
+    </div>
+
+    <!-- STEP 3: Account Confirmation Page -->
+    <div class="step-section" id="step-3">
+      <div id="confirm-details-box"></div>
+      <button class="btn-submit save-theme" id="btn-save-account" onclick="executeSaveAccount()">
+        <span class="btn-text">Save Account</span>
+        <svg class="ios-spinner" viewBox="0 0 24 24">
+          <line x1="12" y1="3" x2="12" y2="6" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="1"/>
+          <line x1="18.36" y1="5.64" x2="16.24" y2="7.76" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.875"/>
+          <line x1="21" y1="12" x2="18" y2="12" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.75"/>
+          <line x1="18.36" y1="18.36" x2="16.24" y2="16.24" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.625"/>
+          <line x1="12" y1="21" x2="12" y2="18" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.5"/>
+          <line x1="5.64" y1="18.36" x2="7.76" y2="16.24" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.375"/>
+          <line x1="3" y1="12" x2="6" y2="12" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.25"/>
+          <line x1="5.64" y1="5.64" x2="7.76" y2="7.76" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.125"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <script>
+    const checkSVG = `<svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>`;
+    const crossSVG = `<svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>`;
+    const copyIconSVG = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>`;
+    const copiedCheckSVG = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>`;
+
+    let currentStep = 1;
+    let existingEmailsList = [];
+    let active2FASlots = [];
+    let toastTimer;
+
+    function showToast() {
+      const toast = document.getElementById('toast');
+      toast.classList.add('show');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => { toast.classList.remove('show'); }, 2000);
+    }
+
+    function copyToClipboard(text, btnElement) {
+      if (!text) return;
+      navigator.clipboard.writeText(text).then(() => {
+        btnElement.classList.add('copied');
+        btnElement.innerHTML = copiedCheckSVG;
+        showToast();
+        setTimeout(() => {
+          btnElement.classList.remove('copied');
+          btnElement.innerHTML = copyIconSVG;
+        }, 2000);
+      });
+    }
+
+    // Step Switcher
+    function updateStepView() {
+      document.querySelectorAll('.step-section').forEach((sec, idx) => {
+        sec.classList.toggle('active', idx + 1 === currentStep);
+      });
+
+      const backBtn = document.getElementById('back-btn');
+      const pageTitle = document.getElementById('page-title');
+
+      if (currentStep === 1) {
+        backBtn.style.display = 'none';
+        pageTitle.innerText = "Submit Email";
+      } else {
+        backBtn.style.display = 'inline-flex';
+        pageTitle.innerText = currentStep === 2 ? "Account Details" : "Confirm Account";
+      }
+    }
+
+    function goBackStep() {
+      if (currentStep > 1) {
+        currentStep--;
+        updateStepView();
+      }
+    }
+
+    // Validate Step 1 (Email)
+    function validateStep1() {
+      const input = document.getElementById('email-input');
+      const badge = document.getElementById('email-badge');
+      const errorBox = document.getElementById('email-error-msg');
+      const errorText = document.getElementById('email-error-text');
+      const btn = document.getElementById('btn-proceed-1');
+      
+      const emailVal = input.value.trim().toLowerCase();
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+      if (emailVal.length === 0) {
+        input.className = 'custom-input blue-glow';
+        badge.className = 'badge-icon';
+        badge.innerHTML = '';
+        errorBox.classList.remove('show');
+        btn.disabled = true;
+        return;
+      }
+
+      const isAlreadyExists = existingEmailsList.includes(emailVal);
+      const isValidEmail = emailRegex.test(emailVal);
+
+      if (isAlreadyExists) {
+        input.className = 'custom-input invalid-glow';
+        badge.className = 'badge-icon invalid';
+        badge.innerHTML = crossSVG;
+        errorText.innerText = "Email address already submitted!";
+        errorBox.classList.add('show');
+        btn.disabled = true;
+      } else if (!isValidEmail) {
+        input.className = 'custom-input invalid-glow';
+        badge.className = 'badge-icon invalid';
+        badge.innerHTML = crossSVG;
+        errorText.innerText = "Invalid email format!";
+        errorBox.classList.add('show');
+        btn.disabled = true;
+      } else {
+        input.className = 'custom-input valid-glow';
+        badge.className = 'badge-icon valid';
+        badge.innerHTML = checkSVG;
+        errorBox.classList.remove('show');
+        btn.disabled = false;
+      }
+    }
+
+    function handleProceedStep1() {
+      triggerButtonLoading('btn-proceed-1', () => {
+        currentStep = 2;
+        updateStepView();
+      });
+    }
+
+    // Step 2 Validation
+    function handle2FAInput(el) {
+      el.value = el.value.toUpperCase();
+      validateStep2();
+    }
+
+    function validateStep2() {
+      const passInput = document.getElementById('pass-input');
+      const recoveryInput = document.getElementById('recovery-input');
+      const tfaInput = document.getElementById('tfa-input');
+
+      const passBadge = document.getElementById('pass-badge');
+      const recoveryBadge = document.getElementById('recovery-badge');
+      const tfaBadge = document.getElementById('tfa-badge');
+      const btn = document.getElementById('btn-proceed-2');
+
+      // 1. Password (Min 8 Chars)
+      let isPassValid = false;
+      if (passInput.value.length === 0) {
+        passInput.className = 'custom-input blue-glow';
+        passBadge.className = 'badge-icon';
+      } else if (passInput.value.length >= 8) {
+        passInput.className = 'custom-input valid-glow';
+        passBadge.className = 'badge-icon valid';
+        passBadge.innerHTML = checkSVG;
+        isPassValid = true;
+      } else {
+        passInput.className = 'custom-input invalid-glow';
+        passBadge.className = 'badge-icon invalid';
+        passBadge.innerHTML = crossSVG;
+      }
+
+      // 2. Recovery Email (Optional or Valid Format)
+      let isRecoveryValid = false;
+      const recVal = recoveryInput.value.trim();
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (recVal.length === 0) {
+        recoveryInput.className = 'custom-input blue-glow';
+        recoveryBadge.className = 'badge-icon';
+        isRecoveryValid = true;
+      } else if (emailRegex.test(recVal)) {
+        recoveryInput.className = 'custom-input valid-glow';
+        recoveryBadge.className = 'badge-icon valid';
+        recoveryBadge.innerHTML = checkSVG;
+        isRecoveryValid = true;
+      } else {
+        recoveryInput.className = 'custom-input invalid-glow';
+        recoveryBadge.className = 'badge-icon invalid';
+        recoveryBadge.innerHTML = crossSVG;
+      }
+
+      // 3. 2FA Secret Key (Base32 format, min 16 chars)
+      let isTfaValid = false;
+      const clean2FA = tfaInput.value.replace(/\s+/g, '');
+      const isBase32Pattern = /^[A-Z2-7]{16,}$/.test(clean2FA);
+
+      if (tfaInput.value.length === 0) {
+        tfaInput.className = 'custom-input blue-glow';
+        tfaBadge.className = 'badge-icon';
+      } else if (isBase32Pattern) {
+        tfaInput.className = 'custom-input valid-glow';
+        tfaBadge.className = 'badge-icon valid';
+        tfaBadge.innerHTML = checkSVG;
+        isTfaValid = true;
+      } else {
+        tfaInput.className = 'custom-input invalid-glow';
+        tfaBadge.className = 'badge-icon invalid';
+        tfaBadge.innerHTML = crossSVG;
+      }
+
+      btn.disabled = !(isPassValid && isRecoveryValid && isTfaValid);
+    }
+
+    function handleProceedStep2() {
+      triggerButtonLoading('btn-proceed-2', () => {
+        renderConfirmationStep();
+        currentStep = 3;
+        updateStepView();
+      });
+    }
+
+    // Step 3 (Confirmation Render & TOTP Live Generator)
+    function renderConfirmationStep() {
+      const emailVal = document.getElementById('email-input').value.trim();
+      const passVal = document.getElementById('pass-input').value.trim();
+      const recoveryVal = document.getElementById('recovery-input').value.trim();
+      const tfaVal = document.getElementById('tfa-input').value.trim();
+
+      const box = document.getElementById('confirm-details-box');
+      active2FASlots = [];
+
+      let totpHTML = '';
+      if (tfaVal) {
+        totpHTML = `
+          <div class="field-item">
+            <span class="field-left label-blue">2FA Verification Code</span>
+            <div class="field-right-group">
+              <div class="auth-timer-wrapper">
+                <svg viewBox="0 0 24 24">
+                  <circle class="auth-timer-bg" cx="12" cy="12" r="9" fill="none" stroke-width="2.5"/>
+                  <circle id="confirm-totp-ring" class="auth-timer-progress" cx="12" cy="12" r="9" fill="none" stroke-width="2.5" stroke-linecap="round"/>
+                </svg>
+                <span id="confirm-totp-timer" class="auth-timer-text">30</span>
+              </div>
+              <span id="confirm-totp-val" class="field-right totp-value">------</span>
+              <button id="confirm-totp-btn" class="copy-btn">${copyIconSVG}</button>
+            </div>
+          </div>
+        `;
+      }
+
+      box.innerHTML = `
+        <div class="field-item">
+          <span class="field-left">Email</span>
+          <div class="field-right-group">
+            <span class="field-right">${escapeHtml(emailVal)}</span>
+            <button class="copy-btn" onclick="copyToClipboard('${escapeJs(emailVal)}', this)">${copyIconSVG}</button>
+          </div>
+        </div>
+
+        <div class="field-item">
+          <span class="field-left">Password</span>
+          <div class="field-right-group">
+            <span class="field-right">${escapeHtml(passVal)}</span>
+            <button class="copy-btn" onclick="copyToClipboard('${escapeJs(passVal)}', this)">${copyIconSVG}</button>
+          </div>
+        </div>
+
+        ${recoveryVal ? `
+          <div class="field-item">
+            <span class="field-left">Recovery Email</span>
+            <div class="field-right-group">
+              <span class="field-right">${escapeHtml(recoveryVal)}</span>
+              <button class="copy-btn" onclick="copyToClipboard('${escapeJs(recoveryVal)}', this)">${copyIconSVG}</button>
+            </div>
+          </div>
+        ` : ''}
+
+        ${tfaVal ? `
+          <div class="field-item">
+            <span class="field-left">2FA Secret Key</span>
+            <div class="field-right-group">
+              <span class="field-right">${escapeHtml(tfaVal)}</span>
+              <button class="copy-btn" onclick="copyToClipboard('${escapeJs(tfaVal)}', this)">${copyIconSVG}</button>
+            </div>
+          </div>
+          ${totpHTML}
+        ` : ''}
+      `;
+
+      if (tfaVal) {
+        setTimeout(() => {
+          active2FASlots = [{
+            secret: tfaVal,
+            valueEl: document.getElementById('confirm-totp-val'),
+            timerEl: document.getElementById('confirm-totp-timer'),
+            ringProgressEl: document.getElementById('confirm-totp-ring'),
+            btnEl: document.getElementById('confirm-totp-btn'),
+            generated: false
+          }];
+          updateAllTOTPCodes();
+        }, 50);
+      }
+    }
+
+    function executeSaveAccount() {
+      triggerButtonLoading('btn-save-account', () => {
+        const payload = {
+          action: "submit_email",
+          email: document.getElementById('email-input').value.trim(),
+          password: document.getElementById('pass-input').value.trim(),
+          recovery: document.getElementById('recovery-input').value.trim(),
+          secretKey: document.getElementById('tfa-input').value.trim()
+        };
+        sendDataToTelegram(payload);
+      });
+    }
+
+    function triggerButtonLoading(btnId, callback) {
+      const btn = document.getElementById(btnId);
+      const text = btn.querySelector('.btn-text');
+      const spinner = btn.querySelector('.ios-spinner');
+      
+      text.style.display = 'none';
+      spinner.style.display = 'inline-block';
+      btn.disabled = true;
+
+      setTimeout(() => {
+        spinner.style.display = 'none';
+        text.style.display = 'inline';
+        btn.disabled = false;
+        callback();
+      }, 400);
+    }
+
+    /* 2FA Engine */
+    function base32ToBytes(base32) {
+      const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
+      let cleaned = base32.replace(/[\s=]/g, "").toUpperCase();
+      let bits = "";
+      for (let i = 0; i < cleaned.length; i++) {
+        let val = alphabet.indexOf(cleaned[i]);
+        if (val === -1) continue;
+        bits += val.toString(2).padStart(5, '0');
+      }
+      let bytes = new Uint8Array(Math.floor(bits.length / 8));
+      for (let i = 0; i < bytes.length; i++) {
+        bytes[i] = parseInt(bits.substr(i * 8, 8), 2);
+      }
+      return bytes;
+    }
+
+    async function generateTOTP(secretBase32) {
+      try {
+        const keyBytes = base32ToBytes(secretBase32);
+        if (keyBytes.length === 0) return "------";
+        const epoch = Math.floor(Date.now() / 1000);
+        const counter = Math.floor(epoch / 30);
+        const buffer = new ArrayBuffer(8);
+        const view = new DataView(buffer);
+        view.setUint32(4, counter, false);
+        const cryptoKey = await window.crypto.subtle.importKey(
+          "raw", keyBytes, { name: "HMAC", hash: { name: "SHA-1" } }, false, ["sign"]
+        );
+        const signature = await window.crypto.subtle.sign("HMAC", cryptoKey, buffer);
+        const sigBytes = new Uint8Array(signature);
+        const offset = sigBytes[sigBytes.length - 1] & 0x0f;
+        const binary =
+          ((sigBytes[offset] & 0x7f) << 24) |
+          ((sigBytes[offset + 1] & 0xff) << 16) |
+          ((sigBytes[offset + 2] & 0xff) << 8) |
+          (sigBytes[offset + 3] & 0xff);
+        const otp = binary % 1000000;
+        return otp.toString().padStart(6, '0');
+      } catch (e) {
+        return "------";
+      }
+    }
+
+    async function updateAllTOTPCodes() {
+      const remainingSeconds = 30 - (Math.floor(Date.now() / 1000) % 30);
+      const circumference = 56.55;
+      const offset = circumference - (remainingSeconds / 30) * circumference;
+
+      for (let slot of active2FASlots) {
+        if (slot.timerEl) slot.timerEl.innerText = `${remainingSeconds}`;
+        if (slot.ringProgressEl) slot.ringProgressEl.style.strokeDashoffset = offset;
+
+        if (remainingSeconds === 30 || !slot.generated) {
+          const code = await generateTOTP(slot.secret);
+          slot.valueEl.innerText = code;
+          slot.btnEl.setAttribute("onclick", `copyToClipboard('${code}', this)`);
+          slot.generated = true;
+        }
+      }
+    }
+
+    setInterval(() => {
+      const remainingSeconds = 30 - (Math.floor(Date.now() / 1000) % 30);
+      if (remainingSeconds === 30) {
+        active2FASlots.forEach(s => s.generated = false);
+      }
+      updateAllTOTPCodes();
+    }, 1000);
+
+    function sendDataToTelegram(payload) {
+      const jsonString = JSON.stringify(payload);
+      if (window.Telegram && window.Telegram.WebApp) {
+        window.Telegram.WebApp.sendData(jsonString);
+      } else {
+        alert("Telegram WebApp sendData:\n" + jsonString);
+      }
+    }
+
+    function initData() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const rawData = urlParams.get('emails');
+      if (rawData) {
+        try {
+          existingEmailsList = JSON.parse(decodeURIComponent(rawData)).map(e => String(e).toLowerCase().trim());
+        } catch (e) {
+          existingEmailsList = [];
+        }
+      }
+    }
+
+    function escapeHtml(str) {
+      return String(str).replace(/[&<>"']/g, function(m) {
+        return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[m];
+      });
+    }
+
+    function escapeJs(str) {
+      return String(str).replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '\\"');
+    }
+
+    window.onload = initData;
+  </script>
+</body>
+</html>
