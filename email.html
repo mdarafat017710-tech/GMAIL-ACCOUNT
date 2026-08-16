@@ -40,7 +40,6 @@
       position: relative;
     }
 
-    /* Top Navigation Header with iOS Back Arrow */
     .top-nav {
       width: 100%;
       max-width: 420px;
@@ -82,7 +81,6 @@
       text-overflow: ellipsis;
     }
 
-    /* Step Containers */
     .step-container {
       width: 100%;
       max-width: 420px;
@@ -95,7 +93,6 @@
       display: flex;
     }
 
-    /* Box Item Style */
     .info-box-group {
       display: flex;
       flex-direction: column;
@@ -164,7 +161,6 @@
       display: flex;
     }
 
-    /* Field Error / Warning Message */
     .field-error-msg {
       display: none;
       align-items: center;
@@ -180,7 +176,6 @@
       display: flex;
     }
 
-    /* Action Container & Compact Proceed Button */
     .action-container {
       width: 100%;
       max-width: 420px;
@@ -213,10 +208,6 @@
       opacity: 0.7;
     }
 
-    .btn-proceed:not(:disabled):active {
-      opacity: 0.8;
-    }
-
     .ios-spinner {
       display: none;
       width: 18px;
@@ -229,7 +220,6 @@
       100% { transform: rotate(360deg); }
     }
 
-    /* Final Confirmation Page */
     .account-card {
       background: var(--card-bg);
       border-radius: 14px;
@@ -368,7 +358,6 @@
 </head>
 <body>
 
-  <!-- Top Navigation Header with iOS Back Arrow -->
   <div class="top-nav">
     <button class="back-btn" id="back-btn-elem" onclick="goBackStep()">
       <svg width="24" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
@@ -389,9 +378,10 @@
           <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
         </div>
       </div>
+      <!-- এই মেসেজটি এখন শুধু ডুপ্লিকেট ইমেইলের ক্ষেত্রে দেখাবে, @gmail.com না থাকলে দেখাবে না -->
       <div class="field-error-msg" id="email-error-msg">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
-        <span id="email-error-text">Must end with @gmail.com</span>
+        <span id="email-error-text">Email already submitted</span>
       </div>
     </div>
     <div class="action-container">
@@ -451,7 +441,7 @@
       </div>
       <div class="field-error-msg" id="recovery-error-msg">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
-        <span>Must end with @gmail.com</span>
+        <span>Email already submitted</span>
       </div>
     </div>
     <div class="action-container">
@@ -471,7 +461,7 @@
     </div>
   </div>
 
-  <!-- Step 4: 2FA Secret Key (Base32: A-Z, 2-7, Length 16 to 32) -->
+  <!-- Step 4: 2FA Secret Key -->
   <div id="step-4" class="step-container">
     <div class="info-box-group">
       <label class="box-label">Your 2FA Secret Key</label>
@@ -556,41 +546,41 @@
       });
     }
 
-    // Gmail Validation (With "Must end with @gmail.com" warning message below)
+    // Gmail Validation: Must end with @gmail.com but NO warning text shown below the box
     function validateGmailField(fieldName, stepNum) {
       const input = document.getElementById(`input-${fieldName}`);
       const indicator = document.getElementById(`${fieldName}-indicator`);
       const errorMsg = document.getElementById(`${fieldName}-error-msg`);
-      const errorText = fieldName === 'email' ? document.getElementById('email-error-text') : null;
       const btn = document.getElementById(`btn-${stepNum}`);
       const val = input.value.trim().toLowerCase();
 
       if (val.endsWith("@gmail.com") && val.length > 10) {
-        if (fieldName === 'email' && existingSavedEmails.includes(val)) {
-          input.classList.remove('valid');
-          input.classList.add('invalid');
-          indicator.classList.remove('show');
-          if (errorText) errorText.innerText = "Email already submitted";
-          errorMsg.classList.add('show');
-          btn.disabled = true;
-        } else {
-          input.classList.remove('invalid');
-          input.classList.add('valid');
-          indicator.classList.add('show');
-          errorMsg.classList.remove('show');
-          btn.disabled = false;
+        if (fieldName === 'email' || fieldName === 'recovery') {
+          // চেক করা হচ্ছে ইমেইলটি আগে থেকে সাবমিট করা আছে কি না
+          // এক্ষেত্রে ফিল্ড অনুযায়ী সঠিক চেক করা যেতে পারে, তবে ডুপ্লিকেট হলে এরর দেখাবে
+          if (fieldName === 'email' && existingSavedEmails.includes(val)) {
+            input.classList.remove('valid');
+            input.classList.add('invalid');
+            indicator.classList.remove('show');
+            errorMsg.classList.add('show');
+            btn.disabled = true;
+            return;
+          }
         }
+        input.classList.remove('invalid');
+        input.classList.add('valid');
+        indicator.classList.add('show');
+        errorMsg.classList.remove('show');
+        btn.disabled = false;
       } else {
         if (val.length > 0) {
           input.classList.remove('valid');
           input.classList.add('invalid');
-          if (fieldName === 'email' && errorText) errorText.innerText = "Must end with @gmail.com";
-          errorMsg.classList.add('show');
         } else {
           input.classList.remove('valid', 'invalid');
-          errorMsg.classList.remove('show');
         }
         indicator.classList.remove('show');
+        errorMsg.classList.remove('show'); // মাস্ট এন্ড উইথ লেখাটি এখানে হাইড রাখা হলো
         btn.disabled = true;
       }
     }
