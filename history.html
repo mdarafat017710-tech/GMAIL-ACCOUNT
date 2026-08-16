@@ -4,12 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Gmail Account - iOS White Minimal</title>
-  <!-- Telegram WebApp SDK -->
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <style>
-    /* --------------------------------------------------
-       📱 iOS Premium Light Theme & Variables
-    -------------------------------------------------- */
     :root {
       --bg-color: #f2f2f7;
       --card-bg: #ffffff;
@@ -42,9 +38,6 @@
       min-height: 100vh;
     }
 
-    /* --------------------------------------------------
-       🔔 iOS Toast Notification
-    -------------------------------------------------- */
     #toast {
       position: fixed;
       top: -60px;
@@ -83,9 +76,6 @@
       justify-content: center;
     }
 
-    /* --------------------------------------------------
-       🏷️ Header Section
-    -------------------------------------------------- */
     .header {
       width: 100%;
       max-width: 440px;
@@ -99,9 +89,6 @@
       letter-spacing: -0.4px;
     }
 
-    /* --------------------------------------------------
-       🔍 Search Box
-    -------------------------------------------------- */
     .search-container {
       width: 100%;
       max-width: 440px;
@@ -153,7 +140,6 @@
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      transition: opacity 0.2s ease;
     }
 
     .search-btn {
@@ -186,9 +172,6 @@
       100% { transform: rotate(360deg); }
     }
 
-    /* --------------------------------------------------
-       🔹 Total Accounts Bar
-    -------------------------------------------------- */
     .total-bar {
       width: 100%;
       max-width: 440px;
@@ -212,12 +195,8 @@
       border-radius: 12px;
       font-size: 12px;
       font-weight: 700;
-      letter-spacing: 0.5px;
     }
 
-    /* --------------------------------------------------
-       📦 Container & Cards
-    -------------------------------------------------- */
     #container {
       width: 100%;
       max-width: 440px;
@@ -274,7 +253,6 @@
       color: #3a3a3c;
       text-align: right;
       word-break: break-all;
-      white-space: normal;
       line-height: 1.35;
     }
 
@@ -285,7 +263,6 @@
       letter-spacing: 1.5px;
     }
 
-    /* ⏱️ Ring Timer */
     .auth-timer-wrapper {
       position: relative;
       width: 24px;
@@ -317,7 +294,6 @@
       color: var(--accent-blue);
     }
 
-    /* 🔘 Buttons */
     .copy-btn {
       background: #e5e5ea;
       color: var(--accent-blue);
@@ -329,7 +305,6 @@
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      transition: all 0.2s ease;
       flex-shrink: 0;
     }
 
@@ -374,9 +349,6 @@
       border: 1px solid var(--border-color);
     }
 
-    /* --------------------------------------------------
-       🪟 Modals & Glowing Inputs
-    -------------------------------------------------- */
     .modal-overlay {
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
@@ -442,7 +414,6 @@
       width: 100%;
     }
 
-    /* 🌟 Dynamic Glows (Default Blue Glow) */
     .modal-input {
       width: 100%;
       padding: 9px 34px 9px 10px;
@@ -471,7 +442,6 @@
       box-shadow: 0 0 8px rgba(255, 59, 48, 0.45) !important;
     }
 
-    /* 🟢 Premium Compact Green SVG Checkmark Badge */
     .valid-check-badge {
       position: absolute;
       right: 10px;
@@ -522,7 +492,6 @@
       align-items: center;
       justify-content: center;
       gap: 6px;
-      transition: opacity 0.2s;
     }
 
     .modal-submit-btn.delete-theme { background: var(--accent-red); }
@@ -535,7 +504,6 @@
 </head>
 <body>
 
-  <!-- 🔔 Toast -->
   <div id="toast">
     <div class="toast-icon">
       <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
@@ -545,12 +513,10 @@
     <span>Copied Successfully!</span>
   </div>
 
-  <!-- 🏷️ Header -->
   <div class="header">
     <h1>Gmail Account</h1>
   </div>
 
-  <!-- 🔍 Search Box -->
   <div class="search-container">
     <div class="search-box">
       <svg class="search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
@@ -574,16 +540,14 @@
     </button>
   </div>
 
-  <!-- 🔹 Total Accounts -->
   <div class="total-bar">
     <span class="total-title">Total Accounts:</span>
     <span id="total-badge-count" class="total-badge">0</span>
   </div>
 
-  <!-- 📦 Cards Container -->
   <div id="container"></div>
 
-  <!-- 🗑️ Delete Account Modal -->
+  <!-- Delete Modal -->
   <div class="modal-overlay" id="delete-modal">
     <div class="modal-box">
       <div class="modal-title text-red">
@@ -609,7 +573,7 @@
     </div>
   </div>
 
-  <!-- ✏️ Edit Account Modal (Without Recovery Email) -->
+  <!-- Edit Modal (Password, 2FA, Confirm Password) -->
   <div class="modal-overlay" id="edit-modal">
     <div class="modal-box">
       <div class="modal-title">
@@ -617,7 +581,18 @@
         <span>Edit Account</span>
       </div>
       
-      <!-- 2FA Secret Key Field -->
+      <!-- 1st Field: New Gmail Password -->
+      <div class="modal-input-group">
+        <label class="modal-label">Edit Password</label>
+        <div class="input-wrapper">
+          <input type="text" id="edit-new-pass" class="modal-input blue-glow" placeholder="New account password..." oninput="validateEditForm()">
+          <div class="valid-check-badge" id="edit-new-pass-check">
+            <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2nd Field: Your 2FA Secret Key -->
       <div class="modal-input-group">
         <label class="modal-label">Your 2FA Secret Key</label>
         <div class="input-wrapper">
@@ -628,11 +603,11 @@
         </div>
       </div>
 
-      <!-- Confirm Password Field -->
+      <!-- 3rd Field: Confirm Password (Srsohan99) -->
       <div class="modal-input-group">
         <label class="modal-label">Confirm Password</label>
         <div class="input-wrapper">
-          <input type="password" id="edit-pass-input" class="modal-input blue-glow" placeholder="Enter password..." oninput="validateEditForm()">
+          <input type="password" id="edit-pass-input" class="modal-input blue-glow" placeholder="Confirm auth password..." oninput="validateEditForm()">
           <div class="valid-check-badge" id="edit-pass-check">
             <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
           </div>
@@ -679,7 +654,6 @@
       });
     }
 
-    // 🔐 TOTP Generator
     function base32ToBytes(base32) {
       const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
       let cleaned = base32.replace(/[\s=]/g, "").toUpperCase();
@@ -723,7 +697,6 @@
       }
     }
 
-    // ⏱️ Ring Timer Engine
     let active2FASlots = [];
     let loadedAccountsData = [];
 
@@ -753,7 +726,6 @@
       updateAllTOTPCodes();
     }, 1000);
 
-    // 🔗 Render Cards
     function renderAccounts(accounts) {
       const container = document.getElementById('container');
       const totalBadge = document.getElementById('total-badge-count');
@@ -834,7 +806,7 @@
 
           ${twoFactorSecret ? `
             <div class="field-item">
-              <span class="field-left">2FA Secret Key</span>
+              <span class="field-left">Your 2FA Secret Key</span>
               <div class="field-right-group">
                 <span class="field-right">${escapeHtml(twoFactorSecret)}</span>
                 <button class="copy-btn" onclick="copyToClipboard('${escapeJs(twoFactorSecret)}', this)">${copyIconSVG}</button>
@@ -844,7 +816,7 @@
           ` : ''}
 
           <div class="card-actions">
-            <button class="action-btn action-btn-edit" onclick="openEditModal('${escapeJs(emailVal)}', '${escapeJs(twoFactorSecret)}')">
+            <button class="action-btn action-btn-edit" onclick="openEditModal('${escapeJs(emailVal)}', '${escapeJs(passVal)}', '${escapeJs(twoFactorSecret)}')">
               ${editIconSVG} Edit
             </button>
             <button class="action-btn action-btn-delete" onclick="openDeleteModal('${escapeJs(emailVal)}')">
@@ -904,9 +876,6 @@
       }, 400);
     }
 
-    // --------------------------------------------------
-    // 🗑️ Delete Modal Logic
-    // --------------------------------------------------
     function openDeleteModal(email) {
       activeTargetEmail = email;
       const modal = document.getElementById('delete-modal');
@@ -950,15 +919,14 @@
       closeDeleteModal();
     }
 
-    // --------------------------------------------------
-    // ✏️ Edit Modal & Realtime 2FA Checker
-    // --------------------------------------------------
-    function openEditModal(email, current2FA) {
+    function openEditModal(email, currentPass, current2FA) {
       activeTargetEmail = email;
       const modal = document.getElementById('edit-modal');
+      const newPassInput = document.getElementById('edit-new-pass');
       const tfaInput = document.getElementById('edit-2fa-input');
       const passInput = document.getElementById('edit-pass-input');
 
+      newPassInput.value = currentPass;
       tfaInput.value = current2FA.toUpperCase();
       passInput.value = '';
 
@@ -970,22 +938,38 @@
       document.getElementById('edit-modal').classList.remove('active');
     }
 
-    // 🔠 Auto-Uppercase Live Event
     function handle2FAInput(el) {
       el.value = el.value.toUpperCase();
       validateEditForm();
     }
 
     function validateEditForm() {
+      const newPassInput = document.getElementById('edit-new-pass');
       const tfaInput = document.getElementById('edit-2fa-input');
       const passInput = document.getElementById('edit-pass-input');
 
+      const newPassCheck = document.getElementById('edit-new-pass-check');
       const tfaCheck = document.getElementById('edit-2fa-check');
       const passCheck = document.getElementById('edit-pass-check');
 
       const confirmBtn = document.getElementById('confirm-edit-btn');
 
-      // 1. 2FA Base-32 Checker (A-Z, 2-7, length >= 16)
+      // 1. New Password Validation (Minimum 8 chars)
+      let isNewPassValid = false;
+      const newPassVal = newPassInput.value;
+      if (newPassVal.length === 0) {
+        newPassInput.className = 'modal-input blue-glow';
+        newPassCheck.classList.remove('show');
+      } else if (newPassVal.length >= 8) {
+        newPassInput.className = 'modal-input valid-glow';
+        newPassCheck.classList.add('show');
+        isNewPassValid = true;
+      } else {
+        newPassInput.className = 'modal-input invalid-glow';
+        newPassCheck.classList.remove('show');
+      }
+
+      // 2. 2FA Base-32 Checker (Strict A-Z and 2-7, min 16 chars)
       let isTfaValid = false;
       const clean2FA = tfaInput.value.replace(/\s+/g, '');
       const isBase32Pattern = /^[A-Z2-7]{16,}$/.test(clean2FA);
@@ -1002,7 +986,7 @@
         tfaCheck.classList.remove('show');
       }
 
-      // 2. Password Check (>= 8 chars & matches Srsohan99)
+      // 3. Confirm Auth Password Check (>= 8 chars & matches Srsohan99)
       let isPassValid = false;
       const passVal = passInput.value;
       if (passVal.length === 0) {
@@ -1017,14 +1001,16 @@
         passCheck.classList.remove('show');
       }
 
-      confirmBtn.disabled = !(isTfaValid && isPassValid);
+      confirmBtn.disabled = !(isNewPassValid && isTfaValid && isPassValid);
     }
 
     function executeEdit() {
+      const newPassVal = document.getElementById('edit-new-pass').value.trim();
       const tfaVal = document.getElementById('edit-2fa-input').value.trim();
       const payload = {
         action: "edit_account",
         email: activeTargetEmail,
+        password: newPassVal,
         secretKey: tfaVal,
         tfa: tfaVal
       };
@@ -1032,7 +1018,6 @@
       closeEditModal();
     }
 
-    // 📤 Telegram WebApp Dispatcher
     function sendDataToTelegram(payload) {
       const jsonString = JSON.stringify(payload);
       if (window.Telegram && window.Telegram.WebApp) {
