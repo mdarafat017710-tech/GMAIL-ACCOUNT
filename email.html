@@ -220,16 +220,17 @@
       100% { transform: rotate(360deg); }
     }
 
+    /* History/List style matched card layout */
     .account-card {
       background: var(--card-bg);
-      border-radius: 14px;
-      border: 1px solid var(--border-color);
-      padding: 4px 12px 12px;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+      border-radius: 12px;
+      border: 1.5px solid var(--border-color);
+      overflow: hidden;
       display: flex;
       flex-direction: column;
       width: 100%;
       max-width: 420px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
     }
 
     .field-item {
@@ -237,8 +238,9 @@
       justify-content: space-between;
       align-items: center;
       gap: 8px;
-      padding: 12px 0;
-      border-bottom: 0.5px solid var(--divider-color);
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--divider-color);
+      background: var(--card-bg);
     }
 
     .field-item:last-child {
@@ -247,7 +249,7 @@
 
     .field-left {
       font-size: 13px;
-      font-weight: 700;
+      font-weight: 600;
       color: var(--text-main);
       white-space: nowrap;
     }
@@ -274,16 +276,16 @@
     }
 
     .totp-value {
-      font-size: 15px;
+      font-size: 14px;
       font-weight: 700;
       color: var(--accent-blue) !important;
-      letter-spacing: 1.5px;
+      letter-spacing: 1.2px;
     }
 
     .auth-timer-wrapper {
       position: relative;
-      width: 24px;
-      height: 24px;
+      width: 22px;
+      height: 22px;
       display: inline-flex;
       align-items: center;
       justify-content: center;
@@ -292,8 +294,8 @@
 
     .auth-timer-wrapper svg {
       transform: rotate(-90deg);
-      width: 24px;
-      height: 24px;
+      width: 22px;
+      height: 22px;
     }
 
     .auth-timer-bg { stroke: #c6c6c8; }
@@ -306,23 +308,24 @@
 
     .auth-timer-text {
       position: absolute;
-      font-size: 9px;
+      font-size: 8px;
       font-weight: 700;
       color: var(--accent-blue);
     }
 
     .copy-btn {
-      background: #f0f0f5;
+      background: #f2f2f7;
       color: var(--accent-blue);
       border: none;
       width: 28px;
       height: 28px;
-      border-radius: 50%;
+      border-radius: 8px;
       display: inline-flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
       flex-shrink: 0;
+      transition: background 0.2s;
     }
 
     .copy-btn.copied {
@@ -331,12 +334,9 @@
     }
 
     .card-actions {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      padding-top: 14px;
-      margin-top: 4px;
-      border-top: 0.5px solid var(--divider-color);
+      padding: 12px 14px;
+      background: #fafafc;
+      border-top: 1px solid var(--border-color);
     }
 
     .action-btn-confirm {
@@ -345,14 +345,15 @@
       width: 100%;
       border: none;
       padding: 12px;
-      border-radius: 12px;
+      border-radius: 10px;
       font-size: 15px;
-      font-weight: 700;
+      font-weight: 600;
       cursor: pointer;
       display: inline-flex;
       align-items: center;
       justify-content: center;
       gap: 8px;
+      box-shadow: 0 2px 8px rgba(52, 199, 89, 0.25);
     }
   </style>
 </head>
@@ -378,7 +379,6 @@
           <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
         </div>
       </div>
-      <!-- এই মেসেজটি এখন শুধু ডুপ্লিকেট ইমেইলের ক্ষেত্রে দেখাবে, @gmail.com না থাকলে দেখাবে না -->
       <div class="field-error-msg" id="email-error-msg">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
         <span id="email-error-text">Email already submitted</span>
@@ -546,7 +546,6 @@
       });
     }
 
-    // Gmail Validation: Must end with @gmail.com but NO warning text shown below the box
     function validateGmailField(fieldName, stepNum) {
       const input = document.getElementById(`input-${fieldName}`);
       const indicator = document.getElementById(`${fieldName}-indicator`);
@@ -556,8 +555,6 @@
 
       if (val.endsWith("@gmail.com") && val.length > 10) {
         if (fieldName === 'email' || fieldName === 'recovery') {
-          // চেক করা হচ্ছে ইমেইলটি আগে থেকে সাবমিট করা আছে কি না
-          // এক্ষেত্রে ফিল্ড অনুযায়ী সঠিক চেক করা যেতে পারে, তবে ডুপ্লিকেট হলে এরর দেখাবে
           if (fieldName === 'email' && existingSavedEmails.includes(val)) {
             input.classList.remove('valid');
             input.classList.add('invalid');
@@ -580,7 +577,7 @@
           input.classList.remove('valid', 'invalid');
         }
         indicator.classList.remove('show');
-        errorMsg.classList.remove('show'); // মাস্ট এন্ড উইথ লেখাটি এখানে হাইড রাখা হলো
+        errorMsg.classList.remove('show');
         btn.disabled = true;
       }
     }
@@ -608,13 +605,11 @@
       }
     }
 
-    // 2FA Validator: Base32 (A-Z, 2-7) & Length 16 to 32
     function validate2FAField() {
       const input = document.getElementById('input-2fa');
       const indicator = document.getElementById('2fa-indicator');
       const btn = document.getElementById('btn-4');
       const val = input.value.trim().toUpperCase();
-      
       const base32Regex = /^[A-Z2-7]+$/;
 
       if (val.length >= 16 && val.length <= 32 && base32Regex.test(val)) {
