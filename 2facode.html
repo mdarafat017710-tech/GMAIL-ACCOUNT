@@ -50,6 +50,31 @@
       height: 36px;
     }
 
+    .back-btn {
+      position: absolute;
+      left: 0;
+      background: none;
+      border: none;
+      color: var(--accent-blue);
+      font-size: 16px;
+      font-weight: 500;
+      cursor: pointer;
+      display: none;
+      align-items: center;
+      gap: 4px;
+      z-index: 10;
+      padding: 4px 8px 4px 0;
+    }
+
+    .back-btn svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    .back-btn.show {
+      display: flex;
+    }
+
     .header-title {
       font-size: 18px;
       font-weight: 600;
@@ -342,6 +367,9 @@
   </div>
 
   <div class="top-nav">
+    <button class="back-btn" id="back-btn" onclick="goBackStep()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+    </button>
     <h1 class="header-title" id="main-title">2FA Code Generator</h1>
   </div>
 
@@ -454,6 +482,14 @@
       }, 1000);
     }
 
+    function goBackStep() {
+      document.getElementById('step-2').classList.remove('active');
+      document.getElementById('step-1').classList.add('active');
+      document.getElementById('back-btn').classList.remove('show');
+      document.getElementById('main-title').innerText = "2FA Code Generator";
+      isCodeGenerated = false;
+    }
+
     async function generateTOTP(secretBase32) {
       try {
         if (!secretBase32) return "------";
@@ -524,6 +560,7 @@
 
     function buildResultCard() {
       document.getElementById('main-title').innerText = "2FA Code Generator";
+      document.getElementById('back-btn').classList.add('show');
       document.getElementById('step-1').classList.remove('active');
       document.getElementById('step-2').classList.add('active');
 
