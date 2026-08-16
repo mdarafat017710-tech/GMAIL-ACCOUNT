@@ -395,6 +395,25 @@
 
     .modal-title.text-red { color: var(--accent-red); }
 
+    .delete-target-info {
+      text-align: center;
+      margin-top: -4px;
+    }
+
+    .delete-target-email {
+      color: var(--accent-blue);
+      font-weight: 700;
+      font-size: 13px;
+      word-break: break-all;
+    }
+
+    .delete-subtext {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 3px;
+      font-weight: 500;
+    }
+
     .modal-input-group {
       display: flex;
       flex-direction: column;
@@ -554,10 +573,16 @@
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
         <span>Delete Account</span>
       </div>
+      
+      <div class="delete-target-info">
+        <div id="delete-target-email" class="delete-target-email"></div>
+        <p class="delete-subtext">Are you sure you want to delete this account?</p>
+      </div>
+
       <div class="modal-input-group">
-        <label class="modal-label">Confirm Password</label>
+        <label class="modal-label">Your Confirm Password</label>
         <div class="input-wrapper">
-          <input type="password" id="delete-pass-input" class="modal-input blue-glow" placeholder="Enter password..." oninput="validateDeleteForm()">
+          <input type="password" id="delete-pass-input" class="modal-input blue-glow" placeholder="Enter confirm password..." oninput="validateDeleteForm()">
           <div class="valid-check-badge" id="delete-check-badge">
             <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
           </div>
@@ -573,7 +598,7 @@
     </div>
   </div>
 
-  <!-- Edit Modal (Password, Recovery Email, 2FA, Confirm Password) -->
+  <!-- Edit Modal (Your Password, Your Recovery Email, Your 2FA Secret Key, Your Confirm Password) -->
   <div class="modal-overlay" id="edit-modal">
     <div class="modal-box">
       <div class="modal-title">
@@ -581,11 +606,11 @@
         <span>Edit Account</span>
       </div>
       
-      <!-- 1st Field: New Gmail Password -->
+      <!-- 1st Field: Password -->
       <div class="modal-input-group">
-        <label class="modal-label">Edit Password</label>
+        <label class="modal-label">Your Password</label>
         <div class="input-wrapper">
-          <input type="text" id="edit-new-pass" class="modal-input blue-glow" placeholder="New account password..." oninput="validateEditForm()">
+          <input type="text" id="edit-new-pass" class="modal-input blue-glow" placeholder="Enter new password..." oninput="validateEditForm()">
           <div class="valid-check-badge" id="edit-new-pass-check">
             <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
           </div>
@@ -594,16 +619,16 @@
 
       <!-- 2nd Field: Recovery Email -->
       <div class="modal-input-group">
-        <label class="modal-label">Recovery Email</label>
+        <label class="modal-label">Your Recovery Email</label>
         <div class="input-wrapper">
-          <input type="email" id="edit-recovery-input" class="modal-input blue-glow" placeholder="Recovery email..." oninput="validateEditForm()">
+          <input type="email" id="edit-recovery-input" class="modal-input blue-glow" placeholder="Enter recovery email..." oninput="validateEditForm()">
           <div class="valid-check-badge" id="edit-recovery-check">
             <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
           </div>
         </div>
       </div>
 
-      <!-- 3rd Field: Your 2FA Secret Key -->
+      <!-- 3rd Field: 2FA Secret Key -->
       <div class="modal-input-group">
         <label class="modal-label">Your 2FA Secret Key</label>
         <div class="input-wrapper">
@@ -614,11 +639,11 @@
         </div>
       </div>
 
-      <!-- 4th Field: Confirm Password (Srsohan99) -->
+      <!-- 4th Field: Confirm Password -->
       <div class="modal-input-group">
-        <label class="modal-label">Confirm Password</label>
+        <label class="modal-label">Your Confirm Password</label>
         <div class="input-wrapper">
-          <input type="password" id="edit-pass-input" class="modal-input blue-glow" placeholder="Confirm auth password..." oninput="validateEditForm()">
+          <input type="password" id="edit-pass-input" class="modal-input blue-glow" placeholder="Enter confirm password..." oninput="validateEditForm()">
           <div class="valid-check-badge" id="edit-pass-check">
             <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
           </div>
@@ -889,6 +914,7 @@
 
     function openDeleteModal(email) {
       activeTargetEmail = email;
+      document.getElementById('delete-target-email').innerText = email;
       const modal = document.getElementById('delete-modal');
       const passInput = document.getElementById('delete-pass-input');
       passInput.value = '';
