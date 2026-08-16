@@ -40,25 +40,25 @@
     }
 
     /* --------------------------------------------------
-       🔔 iOS Premium Toast Notification (Clear & Bold)
+       🔔 iOS Medium/Compact Toast Notification
     -------------------------------------------------- */
     #toast {
       position: fixed;
-      top: -70px;
+      top: -60px;
       left: 50%;
       transform: translateX(-50%);
-      background: rgba(0, 0, 0, 0.88);
+      background: rgba(0, 0, 0, 0.85);
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
       color: #ffffff;
-      padding: 10px 20px;
-      border-radius: 30px;
-      font-size: 14px;
+      padding: 7px 14px;
+      border-radius: 20px;
+      font-size: 13px;
       font-weight: 600;
       display: flex;
       align-items: center;
-      gap: 10px;
-      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.25);
+      gap: 7px;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
       transition: top 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s ease;
       opacity: 0;
       z-index: 9999;
@@ -66,14 +66,14 @@
     }
 
     #toast.show {
-      top: 20px;
+      top: 18px;
       opacity: 1;
     }
 
     #toast .toast-icon {
       background: var(--accent-green);
-      width: 22px;
-      height: 22px;
+      width: 18px;
+      height: 18px;
       border-radius: 50%;
       display: flex;
       align-items: center;
@@ -97,7 +97,7 @@
     }
 
     /* --------------------------------------------------
-       🔍 Search Box & Button
+       🔍 Search Box & iOS Clear (Cross) Button
     -------------------------------------------------- */
     .search-container {
       width: 100%;
@@ -115,7 +115,7 @@
       align-items: center;
     }
 
-    .search-box svg {
+    .search-box .search-icon {
       position: absolute;
       left: 10px;
       color: var(--text-muted);
@@ -124,7 +124,7 @@
 
     .search-box input {
       width: 100%;
-      padding: 8px 10px 8px 32px;
+      padding: 8px 30px 8px 32px;
       background: var(--search-bg);
       border: none;
       border-radius: 10px;
@@ -135,6 +135,27 @@
 
     .search-box input::placeholder {
       color: var(--text-muted);
+    }
+
+    /* iOS Style Clear Button */
+    .clear-btn {
+      position: absolute;
+      right: 8px;
+      background: #8e8e93;
+      color: #ffffff;
+      border: none;
+      width: 17px;
+      height: 17px;
+      border-radius: 50%;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: opacity 0.2s ease;
+    }
+
+    .clear-btn:active {
+      opacity: 0.7;
     }
 
     .search-btn {
@@ -273,7 +294,7 @@
     }
 
     /* --------------------------------------------------
-       ⏱️ Google Authenticator Ring Timer (Placed Left of Code)
+       ⏱️ Google Authenticator Ring Timer
     -------------------------------------------------- */
     .auth-timer-wrapper {
       position: relative;
@@ -310,7 +331,7 @@
     }
 
     /* --------------------------------------------------
-       🔘 Copy Button
+       🔘 Micro Copy Button
     -------------------------------------------------- */
     .copy-btn {
       background: #e5e5ea;
@@ -351,10 +372,10 @@
 </head>
 <body>
 
-  <!-- 🔔 iOS Premium Toast Notification -->
+  <!-- 🔔 iOS Medium Toast Notification -->
   <div id="toast">
     <div class="toast-icon">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
         <polyline points="20 6 9 17 4 12"></polyline>
       </svg>
     </div>
@@ -366,11 +387,14 @@
     <h1>Gmail Account</h1>
   </div>
 
-  <!-- 🔍 Search Box -->
+  <!-- 🔍 Search Box with iOS Clear Cross Button -->
   <div class="search-container">
     <div class="search-box">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-      <input type="text" id="search-input" placeholder="Search email exact match...">
+      <svg class="search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+      <input type="text" id="search-input" placeholder="Search by email address..." oninput="handleInputText()">
+      <button class="clear-btn" id="clear-btn" onclick="clearSearchInput()" aria-label="Clear">
+        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+      </button>
     </div>
     <button class="search-btn" id="search-btn" onclick="handleSearch()">
       <span id="btn-text">Search</span>
@@ -541,7 +565,6 @@
             <div class="field-item">
               <span class="field-left label-blue">2FA Verification Code</span>
               <div class="field-right-group">
-                <!-- ⏱️ Authenticator Ring Timer positioned LEFT of 6-digit code -->
                 <div class="auth-timer-wrapper">
                   <svg viewBox="0 0 24 24">
                     <circle class="auth-timer-bg" cx="12" cy="12" r="9" fill="none" stroke-width="2.5"/>
@@ -617,7 +640,26 @@
       });
     }
 
-    // Search Logic (Exact Match)
+    // ❌ Clear Button Logic
+    function handleInputText() {
+      const input = document.getElementById('search-input');
+      const clearBtn = document.getElementById('clear-btn');
+      if (input.value.trim().length > 0) {
+        clearBtn.style.display = 'flex';
+      } else {
+        clearBtn.style.display = 'none';
+      }
+    }
+
+    function clearSearchInput() {
+      const input = document.getElementById('search-input');
+      const clearBtn = document.getElementById('clear-btn');
+      input.value = '';
+      clearBtn.style.display = 'none';
+      renderAccounts(loadedAccountsData);
+    }
+
+    // Search Logic (Exact Match on Email Only)
     function handleSearch() {
       const btnText = document.getElementById('btn-text');
       const btnSpinner = document.getElementById('btn-spinner');
