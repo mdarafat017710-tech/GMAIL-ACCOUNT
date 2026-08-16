@@ -13,6 +13,7 @@
       --text-main: #000000;
       --text-muted: #8e8e93;
       --border-color: #c6c6c8;
+      --divider-color: #e5e5ea;
       --font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Helvetica Neue", Arial, sans-serif;
     }
 
@@ -34,9 +35,47 @@
       flex-direction: column;
       align-items: center;
       min-height: 100vh;
+      position: relative;
     }
 
-    /* Top Nav / Title */
+    /* Toast Notification */
+    #toast {
+      position: fixed;
+      top: -60px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      color: #ffffff;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+      transition: top 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s ease;
+      opacity: 0;
+      z-index: 9999;
+    }
+
+    #toast.show {
+      top: 14px;
+      opacity: 1;
+    }
+
+    #toast .toast-icon {
+      background: var(--accent-green);
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
     .header-title {
       font-size: 20px;
       font-weight: 600;
@@ -44,78 +83,96 @@
       letter-spacing: -0.4px;
     }
 
-    /* Main Container Card */
-    .container {
+    /* iOS Card Style */
+    .form-card {
+      background: var(--card-bg);
       width: 100%;
       max-width: 420px;
+      border-radius: 12px;
+      border: 0.5px solid var(--border-color);
+      padding: 16px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.02);
       display: flex;
       flex-direction: column;
-      gap: 16px;
+      gap: 14px;
     }
 
-    /* Box Item Style */
-    .info-box-group {
+    /* Field Item (History.html Style) */
+    .field-item {
       display: flex;
-      flex-direction: column;
-      gap: 6px;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 0;
+      border-bottom: 0.5px solid var(--divider-color);
     }
 
-    .box-label {
+    .field-item:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    .field-item:first-child {
+      padding-top: 0;
+    }
+
+    .field-left {
       font-size: 12px;
       font-weight: 600;
       color: var(--text-muted);
       text-transform: uppercase;
       letter-spacing: 0.3px;
-      padding-left: 4px;
     }
 
-    .input-wrapper {
-      position: relative;
+    .field-right-group {
       display: flex;
       align-items: center;
-      width: 100%;
+      justify-content: flex-end;
+      gap: 8px;
+      flex: 1;
     }
 
-    /* Small Compact Input/Box */
-    .ios-box {
-      width: 100%;
-      padding: 12px 40px 12px 14px;
-      background: var(--card-bg);
-      border: 1.5px solid var(--accent-green);
-      border-radius: 10px;
-      font-size: 15px;
+    .field-right {
+      font-size: 13px;
       font-family: monospace, var(--font-family);
       color: var(--text-main);
-      outline: none;
-      box-shadow: 0 2px 8px rgba(52, 199, 89, 0.08);
-      transition: all 0.3s ease;
+      text-align: right;
+      word-break: break-all;
+      background: #fafafc;
+      padding: 6px 10px;
+      border: 1.5px solid var(--accent-green);
+      border-radius: 6px;
+      box-shadow: 0 1px 4px rgba(52, 199, 89, 0.08);
       user-select: text;
       -webkit-user-select: text;
     }
 
-    /* Green Tick Badge Icon inside Box */
-    .badge-icon {
-      position: absolute;
-      right: 14px;
-      width: 20px;
-      height: 20px;
-      background: var(--accent-green);
+    /* Copy Button (History.html Style) */
+    .copy-btn {
+      background: var(--divider-color);
+      color: var(--accent-blue);
+      border: none;
+      width: 26px;
+      height: 26px;
       border-radius: 50%;
-      display: flex;
+      display: inline-flex;
       align-items: center;
       justify-content: center;
-      pointer-events: none;
-      box-shadow: 0 2px 4px rgba(52, 199, 89, 0.2);
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: background 0.2s ease;
     }
 
-    /* Button Area */
+    .copy-btn.copied {
+      background: var(--accent-green) !important;
+      color: #ffffff !important;
+    }
+
+    /* Change Action Button */
     .action-container {
       width: 100%;
       max-width: 420px;
-      margin-top: 10px;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
+      margin-top: 16px;
     }
 
     .btn-change {
@@ -123,28 +180,22 @@
       background: var(--accent-blue);
       color: #ffffff;
       border: none;
-      padding: 14px;
-      border-radius: 12px;
-      font-size: 16px;
+      padding: 13px;
+      border-radius: 10px;
+      font-size: 15px;
       font-weight: 600;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 8px;
-      box-shadow: 0 4px 12px rgba(0, 122, 255, 0.25);
-      transition: opacity 0.2s ease;
+      box-shadow: 0 2px 8px rgba(0, 122, 255, 0.25);
     }
 
-    .btn-change:active {
-      opacity: 0.8;
-    }
-
-    /* iOS Spinner Animation */
     .ios-spinner {
       display: none;
-      width: 18px;
-      height: 18px;
+      width: 16px;
+      height: 16px;
       animation: iosRotate 0.8s steps(8, end) infinite;
     }
 
@@ -156,46 +207,55 @@
 </head>
 <body onload="generateAccount()">
 
+  <!-- Toast Notification -->
+  <div id="toast">
+    <div class="toast-icon">
+      <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="20 6 9 17 4 12"></polyline>
+      </svg>
+    </div>
+    <span>Copied Successfully!</span>
+  </div>
+
   <h1 class="header-title">Generated Account</h1>
 
-  <div class="container">
+  <div class="form-card">
     
-    <!-- Username Box -->
-    <div class="info-box-group">
-      <label class="box-label">Username</label>
-      <div class="input-wrapper">
-        <input type="text" id="username-box" class="ios-box" readonly>
-        <div class="badge-icon">
-          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
-        </div>
+    <!-- Username -->
+    <div class="field-item">
+      <span class="field-left">Username</span>
+      <div class="field-right-group">
+        <span class="field-right" id="val-username">---</span>
+        <button class="copy-btn" id="btn-copy-username" onclick="copyValue('val-username', this)">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+        </button>
       </div>
     </div>
 
-    <!-- Email Box -->
-    <div class="info-box-group">
-      <label class="box-label">Email Address</label>
-      <div class="input-wrapper">
-        <input type="text" id="email-box" class="ios-box" readonly>
-        <div class="badge-icon">
-          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
-        </div>
+    <!-- Email -->
+    <div class="field-item">
+      <span class="field-left">Email</span>
+      <div class="field-right-group">
+        <span class="field-right" id="val-email">---</span>
+        <button class="copy-btn" id="btn-copy-email" onclick="copyValue('val-email', this)">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+        </button>
       </div>
     </div>
 
-    <!-- Password Box -->
-    <div class="info-box-group">
-      <label class="box-label">Password</label>
-      <div class="input-wrapper">
-        <input type="text" id="password-box" class="ios-box" readonly>
-        <div class="badge-icon">
-          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
-        </div>
+    <!-- Password -->
+    <div class="field-item">
+      <span class="field-left">Password</span>
+      <div class="field-right-group">
+        <span class="field-right" id="val-password">---</span>
+        <button class="copy-btn" id="btn-copy-password" onclick="copyValue('val-password', this)">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+        </button>
       </div>
     </div>
 
   </div>
 
-  <!-- Action Button -->
   <div class="action-container">
     <button class="btn-change" id="change-btn" onclick="refreshData()">
       <span class="btn-text">⟳ Change</span>
@@ -213,12 +273,36 @@
   </div>
 
   <script>
+    const copyIconSVG = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>`;
+    const copiedCheckSVG = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>`;
+    let toastTimer;
+
+    function showToast() {
+      const toast = document.getElementById('toast');
+      toast.classList.add('show');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => { toast.classList.remove('show'); }, 2000);
+    }
+
+    function copyValue(elementId, btnElement) {
+      const text = document.getElementById(elementId).innerText;
+      if (!text || text === '---') return;
+      navigator.clipboard.writeText(text).then(() => {
+        btnElement.classList.add('copied');
+        btnElement.innerHTML = copiedCheckSVG;
+        showToast();
+        setTimeout(() => {
+          btnElement.classList.remove('copied');
+          btnElement.innerHTML = copyIconSVG;
+        }, 2000);
+      });
+    }
+
     function generateAccount() {
       let chars = "abcdefghijklmnopqrstuvwxyz";
       let nums = "0123456789";
       let upperChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
-      // ১. ইউজারনেম জেনারেট (৮-১০ লেটার + ২-৪ ডিজিট)
       let uLength = Math.floor(Math.random() * 3) + 8;
       let nLength = Math.floor(Math.random() * 3) + 2;
       let username = "";
@@ -232,7 +316,6 @@
 
       let email = username + "@gmail.com";
 
-      // ২. পাসওয়ার্ড জেনারেট
       let passLength = Math.floor(Math.random() * 3) + 10;
       let password = upperChars.charAt(Math.floor(Math.random() * upperChars.length));
       let numCount = Math.floor(Math.random() * 2) + 3;
@@ -246,7 +329,6 @@
         remArr.push(chars.charAt(Math.floor(Math.random() * chars.length)));
       }
 
-      // সাফল করা
       for (let i = remArr.length - 1; i > 0; i--) {
         let j = Math.floor(Math.random() * (i + 1));
         let temp = remArr[i];
@@ -256,10 +338,9 @@
 
       password += remArr.join("");
 
-      // বক্সে ডেটা বসানো
-      document.getElementById('username-box').value = username;
-      document.getElementById('email-box').value = email;
-      document.getElementById('password-box').value = password;
+      document.getElementById('val-username').innerText = username;
+      document.getElementById('val-email').innerText = email;
+      document.getElementById('val-password').innerText = password;
     }
 
     function refreshData() {
