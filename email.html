@@ -132,25 +132,21 @@
       -webkit-user-select: text;
     }
 
-    /* Default Focus: Blue Glow */
     .ios-box:focus {
       border-color: var(--accent-blue);
       box-shadow: 0 0 10px rgba(0, 122, 255, 0.25), 0 2px 6px rgba(0, 122, 255, 0.1);
     }
 
-    /* Valid State: Green Glow */
     .ios-box.valid {
       border-color: var(--accent-green) !important;
       box-shadow: 0 0 10px rgba(52, 199, 89, 0.25), 0 2px 6px rgba(52, 199, 89, 0.1) !important;
     }
 
-    /* Invalid State: Red Glow */
     .ios-box.invalid {
       border-color: var(--accent-red) !important;
       box-shadow: 0 0 10px rgba(255, 59, 48, 0.25), 0 2px 6px rgba(255, 59, 48, 0.1) !important;
     }
 
-    /* Right Side Indicator: Small Green Background with White Checkmark */
     .input-indicator {
       position: absolute;
       right: 12px;
@@ -168,7 +164,7 @@
       display: flex;
     }
 
-    /* Field Error / Warning Message with Exclamation SVG */
+    /* Field Error / Warning Message */
     .field-error-msg {
       display: none;
       align-items: center;
@@ -221,7 +217,6 @@
       opacity: 0.8;
     }
 
-    /* iOS Spinner Animation */
     .ios-spinner {
       display: none;
       width: 18px;
@@ -234,7 +229,7 @@
       100% { transform: rotate(360deg); }
     }
 
-    /* Final Confirmation Page (History Card Style) */
+    /* Final Confirmation Page */
     .account-card {
       background: var(--card-bg);
       border-radius: 14px;
@@ -384,7 +379,7 @@
     <h1 class="header-title" id="main-title">Your Email Address</h1>
   </div>
 
-  <!-- Step 1: Email Address (Must end with @gmail.com) -->
+  <!-- Step 1: Email Address -->
   <div id="step-1" class="step-container active">
     <div class="info-box-group">
       <label class="box-label">Your Email Address</label>
@@ -396,7 +391,7 @@
       </div>
       <div class="field-error-msg" id="email-error-msg">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
-        <span id="email-error-text">Email already submitted</span>
+        <span id="email-error-text">Must end with @gmail.com</span>
       </div>
     </div>
     <div class="action-container">
@@ -416,7 +411,7 @@
     </div>
   </div>
 
-  <!-- Step 2: Password (Min 8 chars, visible) -->
+  <!-- Step 2: Password -->
   <div id="step-2" class="step-container">
     <div class="info-box-group">
       <label class="box-label">Your Account Password</label>
@@ -444,7 +439,7 @@
     </div>
   </div>
 
-  <!-- Step 3: Recovery Email (Must end with @gmail.com) -->
+  <!-- Step 3: Recovery Email -->
   <div id="step-3" class="step-container">
     <div class="info-box-group">
       <label class="box-label">Your Recovery Email</label>
@@ -476,12 +471,12 @@
     </div>
   </div>
 
-  <!-- Step 4: 2FA Secret Key -->
+  <!-- Step 4: 2FA Secret Key (Base32: A-Z, 2-7, Length 16 to 32) -->
   <div id="step-4" class="step-container">
     <div class="info-box-group">
       <label class="box-label">Your 2FA Secret Key</label>
       <div class="input-wrapper">
-        <input type="text" id="input-2fa" class="ios-box" placeholder="Enter 2FA Secret Key" oninput="validateStandardField('2fa', 8, 4)">
+        <input type="text" id="input-2fa" class="ios-box" placeholder="Enter 2FA Secret Key" oninput="validate2FAField()">
         <div class="input-indicator" id="2fa-indicator">
           <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
         </div>
@@ -504,18 +499,15 @@
     </div>
   </div>
 
-  <!-- Step 5: Final Confirmation Page (History Card Style) -->
+  <!-- Step 5: Final Confirmation Page -->
   <div id="step-5" class="step-container">
-    <div class="account-card" id="confirmation-card-content">
-      <!-- Dynamic history card rendered here -->
-    </div>
+    <div class="account-card" id="confirmation-card-content"></div>
   </div>
 
   <script>
     const copyIconSVG = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>`;
     const checkIconSVG = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>`;
 
-    // URL থেকে ইমেইল লিস্ট ফেচ করা
     let existingSavedEmails = [];
     try {
       const urlParams = new URLSearchParams(window.location.search);
@@ -564,7 +556,7 @@
       });
     }
 
-    // Gmail validation (Must end with @gmail.com) for Step 1 & Step 3
+    // Gmail Validation (With "Must end with @gmail.com" warning message below)
     function validateGmailField(fieldName, stepNum) {
       const input = document.getElementById(`input-${fieldName}`);
       const indicator = document.getElementById(`${fieldName}-indicator`);
@@ -603,7 +595,6 @@
       }
     }
 
-    // Standard Validation for Password & 2FA
     function validateStandardField(fieldName, minLength, stepNum) {
       const input = document.getElementById(`input-${fieldName}`);
       const indicator = document.getElementById(`${fieldName}-indicator`);
@@ -611,6 +602,32 @@
       const val = input.value.trim();
 
       if (val.length >= minLength) {
+        input.classList.remove('invalid');
+        input.classList.add('valid');
+        indicator.classList.add('show');
+        btn.disabled = false;
+      } else {
+        if (val.length > 0) {
+          input.classList.remove('valid');
+          input.classList.add('invalid');
+        } else {
+          input.classList.remove('valid', 'invalid');
+        }
+        indicator.classList.remove('show');
+        btn.disabled = true;
+      }
+    }
+
+    // 2FA Validator: Base32 (A-Z, 2-7) & Length 16 to 32
+    function validate2FAField() {
+      const input = document.getElementById('input-2fa');
+      const indicator = document.getElementById('2fa-indicator');
+      const btn = document.getElementById('btn-4');
+      const val = input.value.trim().toUpperCase();
+      
+      const base32Regex = /^[A-Z2-7]+$/;
+
+      if (val.length >= 16 && val.length <= 32 && base32Regex.test(val)) {
         input.classList.remove('invalid');
         input.classList.add('valid');
         indicator.classList.add('show');
@@ -666,7 +683,6 @@
       }
     }
 
-    // TOTP Generator for confirmation card
     async function generateTOTP(secretBase32) {
       try {
         if (!secretBase32) return "------";
