@@ -39,7 +39,6 @@
       min-height: 100vh;
     }
 
-    /* Toast Notification */
     #toast {
       position: fixed;
       top: -60px;
@@ -133,7 +132,6 @@
       width: 100%;
     }
 
-    /* Input Glow Styles */
     .modal-input {
       width: 100%;
       padding: 10px 34px 10px 12px;
@@ -159,7 +157,6 @@
       box-shadow: 0 0 8px rgba(255, 59, 48, 0.45) !important;
     }
 
-    /* Circular SVG Check Badge */
     .valid-check-badge {
       position: absolute;
       right: 10px;
@@ -178,22 +175,25 @@
       display: flex;
     }
 
-    /* Duplicate Email Error Text Style */
+    /* SVG Exclamation Red Warning */
     .error-text {
       font-size: 12px;
       color: var(--accent-red);
       font-weight: 600;
       display: none;
-      margin-top: 3px;
+      margin-top: 4px;
       align-items: center;
-      gap: 4px;
+      gap: 5px;
     }
 
     .error-text.show {
       display: flex;
     }
 
-    /* Small Compact Process Button */
+    .error-text svg {
+      flex-shrink: 0;
+    }
+
     .process-btn {
       background: var(--accent-blue);
       color: #ffffff;
@@ -218,7 +218,6 @@
       cursor: not-allowed;
     }
 
-    /* iOS Rotating Spinner */
     .ios-spinner {
       display: none;
       width: 14px;
@@ -231,7 +230,6 @@
       100% { transform: rotate(360deg); }
     }
 
-    /* Confirmation Card Style */
     .account-card {
       background: var(--card-bg);
       border-radius: 14px;
@@ -340,7 +338,6 @@
       color: #ffffff !important;
     }
 
-    /* Save Account Button */
     .save-account-btn {
       width: 100%;
       background: var(--accent-green);
@@ -362,7 +359,6 @@
 </head>
 <body onload="initApp()">
 
-  <!-- Toast -->
   <div id="toast">
     <div class="toast-icon">
       <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
@@ -388,7 +384,16 @@
             <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
           </div>
         </div>
-        <span class="error-text" id="email-error">❗ email already submitted</span>
+        
+        <!-- SVG Exclamation Warning Message -->
+        <span class="error-text" id="email-error">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" y1="8" x2="12" y2="12"></line>
+            <line x1="12" y1="16" x2="12.01" y2="16"></line>
+          </svg>
+          email already submitted
+        </span>
       </div>
       <button class="process-btn" id="btn-step-1" disabled onclick="processNextStep(1, 2, 'Create Password')">
         <span class="btn-txt">Proceed</span>
@@ -485,9 +490,7 @@
 
     <!-- STEP 5: CONFIRMATION PAGE -->
     <div class="step-card" id="step-5" style="padding: 0; background: transparent; border: none; box-shadow: none;">
-      
       <div class="account-card">
-        <!-- Email -->
         <div class="field-item">
           <span class="field-left">Email</span>
           <div class="field-right-group">
@@ -498,7 +501,6 @@
           </div>
         </div>
 
-        <!-- Password -->
         <div class="field-item">
           <span class="field-left">Password</span>
           <div class="field-right-group">
@@ -509,7 +511,6 @@
           </div>
         </div>
 
-        <!-- Recovery Email -->
         <div class="field-item">
           <span class="field-left">Recovery Email</span>
           <div class="field-right-group">
@@ -520,7 +521,6 @@
           </div>
         </div>
 
-        <!-- 2FA Secret Key -->
         <div class="field-item">
           <span class="field-left">2FA Secret Key</span>
           <div class="field-right-group">
@@ -531,7 +531,6 @@
           </div>
         </div>
 
-        <!-- 2FA Verification Code -->
         <div class="field-item">
           <span class="field-left label-blue">2FA Verification Code</span>
           <div class="field-right-group">
@@ -550,7 +549,6 @@
         </div>
       </div>
 
-      <!-- Save Account Button -->
       <button class="save-account-btn" onclick="saveAccountToTG()">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
         <span>Save Account</span>
@@ -588,6 +586,7 @@
       });
     }
 
+    // URL parameter থেকে আসা সকল ইমেইল ডাটা রিসিভ করা
     function initApp() {
       const urlParams = new URLSearchParams(window.location.search);
       const rawData = urlParams.get('data');
@@ -595,13 +594,18 @@
         try {
           let parsed = JSON.parse(decodeURIComponent(rawData));
           if (Array.isArray(parsed)) {
-            existingAccounts = parsed.map(a => a.email ? a.email.trim().toLowerCase() : "");
+            existingAccounts = parsed.map(item => {
+              if (typeof item === 'string') return item.trim().toLowerCase();
+              return item && item.email ? item.email.trim().toLowerCase() : "";
+            }).filter(Boolean);
           }
-        } catch (e) {}
+        } catch (e) {
+          console.error("Data parse error:", e);
+        }
       }
     }
 
-    /* STEP 1 VALIDATION */
+    // ইমেইল ইনপুটের সাথে সাথে লাইভ চেকার
     function validateEmail() {
       const input = document.getElementById('email-input');
       const badge = document.getElementById('email-check');
@@ -616,11 +620,13 @@
         badge.classList.remove('show');
         btn.disabled = true;
       } else if (existingAccounts.includes(val)) {
+        // ইমেইল আগের থেকে থাকলে লাল বক্স + লাল SVG Exclamation মেসেজ
         input.className = 'modal-input invalid-glow';
         badge.classList.remove('show');
-        errorText.classList.add('show'); // Exclamation warning below box
+        errorText.classList.add('show');
         btn.disabled = true;
       } else if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val)) {
+        // নতুন ও সঠিক ফরম্যাটের ইমেইল হলে সবুজ চেক ব্যাজ
         input.className = 'modal-input valid-glow';
         badge.classList.add('show');
         btn.disabled = false;
@@ -631,7 +637,6 @@
       }
     }
 
-    /* STEP 2 VALIDATION */
     function validatePassword() {
       const input = document.getElementById('password-input');
       const badge = document.getElementById('pass-check');
@@ -653,7 +658,6 @@
       }
     }
 
-    /* STEP 3 VALIDATION */
     function validateRecovery() {
       const input = document.getElementById('recovery-input');
       const badge = document.getElementById('recovery-check');
@@ -675,7 +679,6 @@
       }
     }
 
-    /* STEP 4 VALIDATION */
     function handle2FAInput(el) {
       el.value = el.value.toUpperCase();
       const badge = document.getElementById('tfa-check');
@@ -698,7 +701,6 @@
       }
     }
 
-    /* PROCESS BUTTON WITH LOADING SPINNER */
     function processNextStep(currentStep, nextStep, titleText) {
       const btn = document.getElementById(`btn-step-${currentStep}`);
       const btnTxt = btn.querySelector('.btn-txt');
@@ -723,7 +725,6 @@
       }, 450);
     }
 
-    /* POPULATE CONFIRMATION CARD DATA */
     function setupConfirmationData() {
       const email = document.getElementById('email-input').value.trim();
       const pass = document.getElementById('password-input').value.trim();
@@ -738,7 +739,6 @@
       startTOTPGenerator(tfa);
     }
 
-    /* TOTP CODE GENERATION & TIMER */
     function base32ToBytes(base32) {
       const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
       let cleaned = base32.replace(/[\s=]/g, "").toUpperCase();
@@ -806,7 +806,6 @@
       totpInterval = setInterval(updateCode, 1000);
     }
 
-    /* SAVE DATA TO TELEGRAM */
     function saveAccountToTG() {
       const payload = {
         action: "save_account",
